@@ -15,26 +15,24 @@ import java.util.concurrent.TimeoutException;
  */
 
 public class NetworkUtil {
-    private final InternetListener listener;
-    private final Activity activity;
     private static NetworkUtil networkUtil;
-
+    private final Activity activity;
     private final String TAG = NetworkUtil.class.getName();
+    private InternetListener listener;
 
-    public static NetworkUtil getInstance(@NonNull Activity activity, @NonNull InternetListener listener)
-    {
-        if(networkUtil==null)
-            networkUtil = new NetworkUtil(activity,listener);
+    private NetworkUtil(@NonNull Activity activity) {
+        this.activity = activity;
+    }
+
+    public static NetworkUtil getInstance(@NonNull Activity activity) {
+        if (networkUtil == null)
+            networkUtil = new NetworkUtil(activity);
 
         return networkUtil;
     }
 
-    private NetworkUtil(@NonNull Activity activity, @NonNull InternetListener listener) {
-        this.activity = activity;
+    public void isConnectedToInternet(@NonNull InternetListener listener) {
         this.listener = listener;
-    }
-
-    public void isConnectedToInternet() {
         new SyncTask().execute();
 
     }
@@ -43,6 +41,50 @@ public class NetworkUtil {
         ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnected();
+    }
+
+    private boolean run(String command, long replyTimeout) throws IOException, TimeoutException, InterruptedException {
+
+        Process p = Runtime.getRuntime().exec(command);
+
+        Worker worker = new Worker(p);
+        worker.start();
+
+        try {
+            worker.join(replyTimeout);
+            if (worker.exit != null) {
+                if (worker.exit <= 0) {
+                    return true;
+                }
+            } else {
+                worker.interrupt();
+                Thread.currentThread().interrupt();
+                throw new TimeoutException();
+            }
+        } catch (InterruptedException ex) {
+            worker.interrupt();
+            Thread.currentThread().interrupt();
+            throw ex;
+        } finally {
+            p.destroy();
+        }
+        return false;
+    }
+
+    private static class Worker extends Thread {
+        private final Process process;
+        private Integer exit;
+
+        private Worker(Process process) {
+            this.process = process;
+        }
+
+        public void run() {
+            try {
+                exit = process.waitFor();
+            } catch (InterruptedException ignore) {
+            }
+        }
     }
 
     private class SyncTask extends AsyncTask<Void, Void, Boolean> {
@@ -66,54 +108,9 @@ public class NetworkUtil {
 
         @Override
         protected void onPostExecute(Boolean isConnected) {
-            listener.isConnected(isConnected);
+            if (listener != null)
+                listener.isConnected(isConnected);
         }
-    }
-
-    private static class Worker extends Thread {
-        private final Process process;
-        private Integer exit;
-
-        private Worker(Process process) {
-            this.process = process;
-        }
-
-        public void run() {
-            try {
-                exit = process.waitFor();
-            } catch (InterruptedException ignore) {
-            }
-        }
-    }
-
-    private boolean run(String command, long replyTimeout) throws IOException, TimeoutException, InterruptedException {
-
-        Process p = Runtime.getRuntime().exec(command);
-
-        Worker worker = new Worker(p);
-        worker.start();
-
-        try {
-            worker.join(replyTimeout);
-
-
-            if (worker.exit != null) {
-                if (worker.exit <= 0) {
-                    return true;
-                }
-            } else {
-                worker.interrupt();
-                Thread.currentThread().interrupt();
-                throw new TimeoutException();
-            }
-        } catch (InterruptedException ex) {
-            worker.interrupt();
-            Thread.currentThread().interrupt();
-            throw ex;
-        } finally {
-            p.destroy();
-        }
-        return false;
     }
 
 }
