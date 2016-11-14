@@ -10,6 +10,30 @@ import android.util.Log;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * to use this class put this code in Application class.
+ * <p>
+ * <p>
+ * AppForegroundChecker.Listener listener = new AppForegroundChecker.Listener() {
+ * public void onBecameForeground() {
+ * Toast.makeText(CoreApp.this, "foreground", Toast.LENGTH_SHORT).show();
+ * }
+ * <p>
+ * public void onBecameBackground() {
+ * Toast.makeText(CoreApp.this, "background", Toast.LENGTH_SHORT).show();
+ * }
+ * };
+ *
+ * @Override public void onCreate() {
+ * super.onCreate();
+ * mInstance = this;
+ * AppForegroundChecker.get(mInstance).addListener(listener);
+ * }
+ * @Override public void onTerminate() {
+ * AppForegroundChecker.get(getInstance()).removeListener(listener);
+ * super.onTerminate();
+ * }
+ */
 public class AppForegroundChecker implements Application.ActivityLifecycleCallbacks {
 
     public static final long CHECK_DELAY = 500;
@@ -20,15 +44,6 @@ public class AppForegroundChecker implements Application.ActivityLifecycleCallba
     private List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
     private Runnable check;
 
-    /**
-     * Its not strictly necessary to use this method - _usually_ invoking
-     * get with a Context gives us a path to retrieve the Application and
-     * initialise, but sometimes (e.g. in test harness) the ApplicationContext
-     * is != the Application, and the docs make no guarantees.
-     *
-     * @param application
-     * @return an initialised AppForegroundChecker instance
-     */
     public static AppForegroundChecker init(Application application) {
         if (instance == null) {
             instance = new AppForegroundChecker();
