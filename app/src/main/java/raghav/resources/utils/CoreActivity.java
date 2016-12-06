@@ -3,7 +3,7 @@ package raghav.resources.utils;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
-import android.support.v4.content.ContextCompat;
+import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,10 +15,20 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 import raghav.resources.R;
+import raghav.resources.utils.widgets.TextViewPlus;
 
 
 public abstract class CoreActivity extends AppCompatActivity {
     Toolbar toolbar = null;
+
+    public void setDefaults(@LayoutRes int layoutRes, @StringRes int title, @DrawableRes int backgroundDrawable, @IdRes int backgroundID) {
+        setDefaults(layoutRes, ResourceUtils.getString(title), backgroundDrawable, backgroundID, false, false);
+    }
+
+    public void setDefaults(@LayoutRes int layoutRes, @StringRes int title, boolean isBackEnabled,
+                            boolean isToolBarEnabled) {
+        setDefaults(layoutRes, ResourceUtils.getString(title), 0, 0, isBackEnabled, isToolBarEnabled);
+    }
 
     public void setDefaults(@LayoutRes int layoutRes, String title, @DrawableRes int backgroundDrawable, @IdRes int backgroundID) {
         setDefaults(layoutRes, title, backgroundDrawable, backgroundID, false, false);
@@ -33,9 +43,13 @@ public abstract class CoreActivity extends AppCompatActivity {
         setDefaults(layoutRes, null, 0, 0, false, false);
     }
 
+    public void setDefaults(@LayoutRes int layoutRes, @StringRes int title, @DrawableRes int backgroundDrawable, @IdRes int backgroundID, boolean isBackEnabled, boolean isToolBarEnabled) {
+        setDefaults(layoutRes, ResourceUtils.getString(title), backgroundDrawable, backgroundID, isBackEnabled, isToolBarEnabled);
+    }
+
     /**
      * @param layoutRes          id of layout file
-     * @param title              activity title
+     * @param title              activity title in String or @StringRes
      * @param backgroundDrawable background image drawable
      * @param backgroundID       background image resource id
      * @param isBackEnabled      enable going back into previous activity with toolbar back button
@@ -54,7 +68,6 @@ public abstract class CoreActivity extends AppCompatActivity {
 
             ActionBar actionBar = getSupportActionBar();
             assert actionBar != null;
-            actionBar.setDisplayShowTitleEnabled(false);
             if (isBackEnabled) {
                 try {
                     actionBar.setDisplayHomeAsUpEnabled(true);
@@ -63,12 +76,38 @@ public abstract class CoreActivity extends AppCompatActivity {
                 }
             }
             if (title != null && !title.isEmpty()) {
-                toolbar.setTitle(title);
-                toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.tool_bar_text_color));
-                toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.ic_left_arrow));
+                actionBar.setDisplayShowTitleEnabled(false);
+
+                changeTitleTV(title);
+//                toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.ic_left_arrow));
             }
         }
         createReference();
+    }
+
+    private void changeTitleTV(String title) {
+        if (toolbar != null && title != null) {
+            TextViewPlus toolBarTitle = (TextViewPlus) toolbar.findViewById(R.id.txt_tool_bar_title);
+            toolBarTitle.setTextColor(ResourceUtils.getColor(R.color.tool_bar_text_color));
+            toolBarTitle.setText(title);
+        }
+    }
+
+    public void changeTitleTV(@StringRes int titleRes) {
+        String title = ResourceUtils.getString(titleRes);
+        changeTitleTV(title);
+    }
+
+    public void changeTitle(String title) {
+        if (toolbar != null && title != null) {
+            toolbar.setTitle(title);
+            toolbar.setTitleTextColor(ResourceUtils.getColor(R.color.tool_bar_text_color));
+        }
+    }
+
+    public void changeTitle(@StringRes int titleRes) {
+        String title = ResourceUtils.getString(titleRes);
+        changeTitle(title);
     }
 
     @SuppressWarnings("unchecked")

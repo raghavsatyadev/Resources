@@ -6,8 +6,7 @@ import android.content.SharedPreferences;
 import java.util.Set;
 import java.util.TreeSet;
 
-import dezinebrainz.tod.R;
-
+import raghav.resources.R;
 
 public class SharedPrefsHelper {
     private static final String SHARED_PREFS_NAME = ResourceUtils.getString(R.string.app_name);

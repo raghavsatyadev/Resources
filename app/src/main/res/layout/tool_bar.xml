@@ -4,4 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/tool_bar_height"
     android:background="@color/toolbar_background"
-    app:elevation="@dimen/space_5" />
+    app:elevation="@dimen/space_5"
+    app:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+    <android.support.percent.PercentRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_15"
+        android:layout_marginRight="@dimen/space_15">
+
+        <com.cocarrier.app.utils.widgets.TextViewPlus
+            android:id="@+id/txt_tool_bar_title"
+            style="@style/WrapContent"
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/tool_bar_text_size" />
+    </android.support.percent.PercentRelativeLayout>
+</android.support.v7.widget.Toolbar>
