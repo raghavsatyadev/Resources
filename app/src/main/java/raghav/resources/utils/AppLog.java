@@ -6,7 +6,7 @@ import android.util.Log;
 public class AppLog {
 
     public final static int V = 4, D = 1, E = 2, I = 3;
-    private static final String TAG = AppLog.class.getName();
+    public static final String TAG = AppLog.class.getSimpleName();
 
     public static void log(int logLevel, String tag, @NonNull String message) {
         boolean isDebug = true;
