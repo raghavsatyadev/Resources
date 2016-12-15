@@ -1,4 +1,4 @@
-package raghav.resources.utils;
+package raghav.resources.support.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
