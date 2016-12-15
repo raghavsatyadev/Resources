@@ -1,4 +1,4 @@
-package raghav.resources.utils;
+package raghav.resources.support.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,9 +10,6 @@ import android.support.annotation.NonNull;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-/**
- * Created by raghav on 31/8/16.
- */
 
 public class NetworkUtil {
     private static NetworkUtil networkUtil;
@@ -25,8 +22,8 @@ public class NetworkUtil {
     }
 
     public static NetworkUtil getInstance(@NonNull Activity activity) {
-        if (networkUtil == null)
-            networkUtil = new NetworkUtil(activity);
+
+        networkUtil = new NetworkUtil(activity);
 
         return networkUtil;
     }
@@ -98,7 +95,7 @@ public class NetworkUtil {
             try {
                 return run(command, 10000);
             } catch (InterruptedException | IOException e) {
-                AppLog.log(AppLog.D, TAG, e.getMessage());
+                AppLog.log(AppLog.D, true, TAG, e.getMessage());
                 return false;
             } catch (Exception e) {
                 e.printStackTrace();

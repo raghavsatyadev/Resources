@@ -1,4 +1,4 @@
-package raghav.resources.utils;
+package raghav.resources.support.utils;
 
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -12,9 +12,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-/**
- * Created by raghav on 4/11/16.
- */
+import raghav.resources.support.base.CoreApp;
+
+
 
 public class StorageUtils {
 

@@ -1,4 +1,4 @@
-package raghav.resources.utils;
+package raghav.resources.support.utils;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -7,6 +7,8 @@ import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
+
+import raghav.resources.support.base.CoreApp;
 
 public class ResourceUtils {
 

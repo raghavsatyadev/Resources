@@ -1,11 +1,11 @@
-package raghav.resources.utils;
+package raghav.resources.support.base;
 
 import android.app.Application;
 import android.widget.Toast;
 
-/**
- * Created by raghav on 4/11/16.
- */
+import raghav.resources.support.utils.AppForegroundChecker;
+
+
 
 public class CoreApp extends Application {
     private static CoreApp mInstance;

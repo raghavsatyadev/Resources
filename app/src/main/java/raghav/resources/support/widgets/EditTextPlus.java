@@ -1,29 +1,28 @@
-package raghav.resources.utils.widgets;
+package raghav.resources.support.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 
 import raghav.resources.R;
-/**
- * Created by raghav on 16/8/16.
- */
-public class ButtonPlus extends AppCompatButton {
+
+
+public class EditTextPlus extends AppCompatEditText {
     private static Typeface typeface = null;
     private static String customFont = "";
 
-    public ButtonPlus(Context context) {
+    public EditTextPlus(Context context) {
         super(context);
     }
 
-    public ButtonPlus(Context context, AttributeSet attrs) {
+    public EditTextPlus(Context context, AttributeSet attrs) {
         super(context, attrs);
         setCustomTypeFace(context, attrs);
     }
 
-    public ButtonPlus(Context context, AttributeSet attrs, int defStyleAttr) {
+    public EditTextPlus(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setCustomTypeFace(context, attrs);
     }

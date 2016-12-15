@@ -1,4 +1,4 @@
-package raghav.resources.utils;
+package raghav.resources.support.base;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
@@ -15,7 +15,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 import raghav.resources.R;
-import raghav.resources.utils.widgets.TextViewPlus;
+import raghav.resources.support.utils.ResourceUtils;
+import raghav.resources.support.widgets.TextViewPlus;
 
 
 public abstract class CoreActivity extends AppCompatActivity {

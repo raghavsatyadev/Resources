@@ -1,4 +1,4 @@
-package raghav.resources.utils;
+package raghav.resources.support.utils;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -7,6 +7,8 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+
+import raghav.resources.support.base.CoreApp;
 
 public class DeviceUtils {
 

@@ -1,12 +1,9 @@
-package raghav.resources.utils;
+package raghav.resources.support.utils;
 
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
-/**
- * Created by raghav on 4/11/16.
- */
 
 public class SnackBarUtil {
 

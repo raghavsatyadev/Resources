@@ -1,4 +1,4 @@
-package raghav.resources.utils.widgets;
+package raghav.resources.support.widgets;
 
 import android.content.Context;
 import android.content.res.TypedArray;

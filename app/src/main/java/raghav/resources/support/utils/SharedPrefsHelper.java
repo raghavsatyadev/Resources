@@ -1,4 +1,4 @@
-package raghav.resources.utils;
+package raghav.resources.support.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import raghav.resources.R;
+import raghav.resources.support.base.CoreApp;
 
 public class SharedPrefsHelper {
     private static final String SHARED_PREFS_NAME = ResourceUtils.getString(R.string.app_name);

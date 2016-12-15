@@ -1,8 +1,6 @@
-package raghav.resources.utils;
+package raghav.resources.support.utils;
 
-/**
- * Created by raghav on 31/8/16.
- */
+
 public interface InternetListener {
     void isConnected(boolean isConnected);
 }

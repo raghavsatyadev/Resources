@@ -1,11 +1,8 @@
-package raghav.resources.utils;
+package raghav.resources.support.utils;
 
 import android.text.TextUtils;
 import android.util.Patterns;
 
-/**
- * Created by raghav on 4/11/16.
- */
 
 public class Validators {
     public static boolean isValidEmail(String email) {

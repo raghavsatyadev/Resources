@@ -1,4 +1,4 @@
-package raghav.resources.utils;
+package raghav.resources.support.utils;
 
 import android.graphics.Rect;
 import android.support.annotation.IntDef;
@@ -9,10 +9,9 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
-public class Toaster {
+import raghav.resources.support.base.CoreApp;
 
-    @IntDef({Toast.LENGTH_LONG, Toast.LENGTH_SHORT})
-    private @interface ToastLength {}
+public class Toaster {
 
     public static void shortToast(View view, Window window, @StringRes int text) {
         Toast toast = makeToast(CoreApp.getInstance().getString(text), Toast.LENGTH_SHORT);
@@ -59,5 +58,9 @@ public class Toaster {
 
     private static void show(String text, @ToastLength int length) {
         makeToast(text, length).show();
+    }
+
+    @IntDef({Toast.LENGTH_LONG, Toast.LENGTH_SHORT})
+    private @interface ToastLength {
     }
 }
