@@ -4,6 +4,9 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="progress_dialog_background">#FFF</color>
+    <color name="progress_dialog_text">@color/colorPrimary</color>
+    <color name="progress_dialog_ring">@color/colorPrimary</color>
 
     <color name="toolbar_background">#E8E6E7</color>
     <color name="tool_bar_text_color">#000000</color>
