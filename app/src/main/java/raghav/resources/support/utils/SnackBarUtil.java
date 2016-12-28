@@ -24,4 +24,16 @@ public class SnackBarUtil {
         snackbar.show();
         return snackbar;
     }
+
+    public static Snackbar showSnackBar(View view, String message) {
+        Snackbar snackbar = Snackbar.make(view, message.trim(), Snackbar.LENGTH_LONG);
+        snackbar.show();
+        return snackbar;
+    }
+
+    public static Snackbar showSnackBar(View view, @StringRes int messageID) {
+        Snackbar snackbar = Snackbar.make(view, ResourceUtils.getString(messageID).trim(), Snackbar.LENGTH_LONG);
+        snackbar.show();
+        return snackbar;
+    }
 }
