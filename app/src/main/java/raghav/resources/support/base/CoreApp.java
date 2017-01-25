@@ -1,10 +1,9 @@
 package raghav.resources.support.base;
 
 import android.app.Application;
-import android.widget.Toast;
 
 import raghav.resources.support.utils.AppForegroundChecker;
-
+import raghav.resources.support.utils.Toaster;
 
 
 public class CoreApp extends Application {
@@ -12,11 +11,11 @@ public class CoreApp extends Application {
 
     AppForegroundChecker.Listener listener = new AppForegroundChecker.Listener() {
         public void onBecameForeground() {
-            Toast.makeText(CoreApp.this, "foreground", Toast.LENGTH_SHORT).show();
+            Toaster.shortToast("foreground");
         }
 
         public void onBecameBackground() {
-            Toast.makeText(CoreApp.this, "background", Toast.LENGTH_SHORT).show();
+            Toaster.shortToast("background");
         }
     };
 

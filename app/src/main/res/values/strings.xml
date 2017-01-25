@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Resources</string>
-    <string name="phone_state_permission_title">Phone State Permission is neccessary</string>
+    <string name="phone_state_permission_title">Phone State Permission is necessary</string>
 </resources>
