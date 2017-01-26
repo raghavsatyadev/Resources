@@ -11,4 +11,5 @@
 
     <color name="toolbar_background">@color/colorPrimary</color>
     <color name="tool_bar_text_color">#FFF</color>
+    <color name="icon_background">#888</color>
 </resources>
