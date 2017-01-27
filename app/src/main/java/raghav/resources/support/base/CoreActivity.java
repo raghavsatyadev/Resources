@@ -7,6 +7,7 @@ import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -72,15 +73,19 @@ public abstract class CoreActivity extends AppCompatActivity {
             if (isBackEnabled) {
                 try {
                     actionBar.setDisplayHomeAsUpEnabled(true);
+                    if (toolbar != null)
+                        toolbar.setNavigationIcon(ResourceUtils.getDrawable(R.drawable.ic_left_arrow));
                 } catch (NullPointerException ignored) {
 
                 }
             }
-            if (title != null && !title.isEmpty()) {
+            if (!TextUtils.isEmpty(title)) {
                 actionBar.setDisplayShowTitleEnabled(false);
 
                 changeTitleTV(title);
-//                toolbar.setNavigationIcon(ContextCompat.getDrawable(this, R.drawable.ic_left_arrow));
+            }
+            if (toolbar != null) {
+                toolbar.setTitleTextColor(ResourceUtils.getColor(R.color.tool_bar_text_color));
             }
         }
         createReference();
@@ -100,9 +105,8 @@ public abstract class CoreActivity extends AppCompatActivity {
     }
 
     public void changeTitle(String title) {
-        if (toolbar != null && title != null) {
+        if (toolbar != null && !TextUtils.isEmpty(title)) {
             toolbar.setTitle(title);
-            toolbar.setTitleTextColor(ResourceUtils.getColor(R.color.tool_bar_text_color));
         }
     }
 
