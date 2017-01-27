@@ -3,6 +3,8 @@ package raghav.resources.support.utils;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 public class AppLog {
 
     public final static int V = 4, D = 1, E = 2, I = 3;
@@ -16,23 +18,23 @@ public class AppLog {
             }
             switch (logLevel) {
                 case D:
-//                    if (!local) Mint.logEvent(message, MintLogLevel.Debug);
+//                    if (!local) Crashlytics.log(Log.DEBUG, TAG, message);
                     Log.d(tag, message);
                     break;
                 case V:
-//                    if (!local) Mint.logEvent(message, MintLogLevel.Verbose);
+//                    if (!local) Crashlytics.log(Log.VERBOSE, TAG, message);
                     Log.v(tag, message);
                     break;
                 case E:
-//                    if (!local) Mint.logEvent(message, MintLogLevel.Error);
+//                    if (!local) Crashlytics.log(Log.ERROR, TAG, message);
                     Log.e(tag, message);
                     break;
                 case I:
-//                    if (!local) Mint.logEvent(message, MintLogLevel.Info);
+//                    if (!local) Crashlytics.log(Log.INFO, TAG, message);
                     Log.i(tag, message);
                     break;
                 default:
-//                    if (!local) Mint.logEvent(message);
+                    if (!local) Crashlytics.log(Log.WARN, TAG, message);
                     Log.v(tag, message);
             }
         }
