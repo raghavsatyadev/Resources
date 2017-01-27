@@ -3,8 +3,6 @@ package raghav.resources.support.utils;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
-
 public class AppLog {
 
     public final static int V = 4, D = 1, E = 2, I = 3;
@@ -34,7 +32,7 @@ public class AppLog {
                     Log.i(tag, message);
                     break;
                 default:
-                    if (!local) Crashlytics.log(Log.WARN, TAG, message);
+//                    if (!local) Crashlytics.log(Log.WARN, TAG, message);
                     Log.v(tag, message);
             }
         }

@@ -5,7 +5,6 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -107,16 +106,16 @@ public class AppForegroundChecker implements Application.ActivityLifecycleCallba
             handler.removeCallbacks(check);
 
         if (wasBackground) {
-            Log.i(TAG, "went foreground");
+            AppLog.log(AppLog.I, true, AppLog.TAG, "onActivityResumed" + "went foreground");
             for (Listener l : listeners) {
                 try {
                     l.onBecameForeground();
                 } catch (Exception exc) {
-                    Log.e(TAG, "Listener threw exception!", exc);
+                    AppLog.log(AppLog.E, false, AppLog.TAG, "onActivityResumed" + "Listener threw exception!" + exc.getMessage());
                 }
             }
         } else {
-            Log.i(TAG, "still foreground");
+            AppLog.log(AppLog.I, true, AppLog.TAG, "onActivityResumed" + "still foreground");
         }
     }
 
@@ -132,16 +131,16 @@ public class AppForegroundChecker implements Application.ActivityLifecycleCallba
             public void run() {
                 if (foreground && paused) {
                     foreground = false;
-                    Log.i(TAG, "went background");
+                    AppLog.log(AppLog.I, true, AppLog.TAG, "run" + "went background");
                     for (Listener l : listeners) {
                         try {
                             l.onBecameBackground();
                         } catch (Exception exc) {
-                            Log.e(TAG, "Listener threw exception!", exc);
+                            AppLog.log(AppLog.E, false, AppLog.TAG, "run" + "Listener threw exception!" + exc.getMessage());
                         }
                     }
                 } else {
-                    Log.i(TAG, "still foreground");
+                    AppLog.log(AppLog.I, true, AppLog.TAG, "run" + "still foreground");
                 }
             }
         }, CHECK_DELAY);
