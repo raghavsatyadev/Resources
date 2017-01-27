@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Resources</string>
     <string name="phone_state_permission_title">Phone State Permission is necessary</string>
+    <string name="default_notification_message">You have a new notifications</string>
 </resources>

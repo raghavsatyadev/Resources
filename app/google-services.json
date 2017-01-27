@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "368131858559",
+    "firebase_url": "https://resources-5ede9.firebaseio.com",
+    "project_id": "resources-5ede9",
+    "storage_bucket": "resources-5ede9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368131858559:android:7de6d98a5e6f6a1e",
+        "android_client_info": {
+          "package_name": "raghav.resources"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368131858559-u8n0o7ih4b39ljbp7gejguojjmamrlll.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "raghav.resources",
+            "certificate_hash": "CBF34120055F44E09F7E0EA0897E840B847D06D5"
+          }
+        },
+        {
+          "client_id": "368131858559-b81re1fld5e104ggidbnrsge32vsjpmg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9wm96r450WcV3NN0f0DQjo2Vg0gVfG5k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368131858559-b81re1fld5e104ggidbnrsge32vsjpmg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

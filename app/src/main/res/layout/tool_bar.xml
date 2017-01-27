@@ -13,7 +13,7 @@
         android:layout_marginEnd="@dimen/space_15"
         android:layout_marginRight="@dimen/space_15">
 
-        <com.cocarrier.app.utils.widgets.TextViewPlus
+        <raghav.resources.support.widgets.TextViewPlus
             android:id="@+id/txt_tool_bar_title"
             style="@style/WrapContent"
             android:layout_centerInParent="true"
