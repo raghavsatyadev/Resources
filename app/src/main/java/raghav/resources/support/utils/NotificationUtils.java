@@ -26,7 +26,7 @@ public class NotificationUtils {
 
     private static int getSmallIcon() {
         boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP);
-        return useWhiteIcon ? /*R.drawable.ic_small_icon*/ 0 : R.mipmap.ic_launcher;
+        return useWhiteIcon ? R.drawable.ic_small_icon : R.mipmap.ic_launcher;
     }
 
     public static NotificationCompat.Builder buildBigTextNotification(Context context, @NonNull String title,
