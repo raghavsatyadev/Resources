@@ -69,6 +69,7 @@ public class NotificationUtils {
                     .setTicker(message);
             if (!TextUtils.isEmpty(imageURL)) {
                 builder.setStyle(new NotificationCompat.BigPictureStyle()
+                        .bigLargeIcon(((BitmapDrawable) ResourceUtils.getDrawable(R.mipmap.ic_launcher)).getBitmap())
                         .setSummaryText(message)
                         .setBigContentTitle(title)
                         .bigPicture(getBitmapFromUrl(imageURL)));
