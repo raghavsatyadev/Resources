@@ -9,7 +9,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import java.io.InputStream;
@@ -39,7 +38,7 @@ public class NotificationUtils {
                     .setContentTitle(title)
                     .setAutoCancel(true)
                     .setSmallIcon(getSmallIcon())
-                    .setLargeIcon(((BitmapDrawable) ContextCompat.getDrawable(context, R.mipmap.ic_launcher)).getBitmap())
+                    .setLargeIcon(((BitmapDrawable) ResourceUtils.getDrawable(R.mipmap.ic_launcher)).getBitmap())
                     .setSound(defaultSoundUri)
                     .setContentText(message)
                     .setContentIntent(pendingIntent)
@@ -62,7 +61,7 @@ public class NotificationUtils {
                     .setContentTitle(title)
                     .setAutoCancel(true)
                     .setSmallIcon(getSmallIcon())
-                    .setLargeIcon(((BitmapDrawable) ContextCompat.getDrawable(context, R.mipmap.ic_launcher)).getBitmap())
+                    .setLargeIcon(((BitmapDrawable) ResourceUtils.getDrawable(R.mipmap.ic_launcher)).getBitmap())
                     .setSound(defaultSoundUri)
                     .setContentText(message)
                     .setContentIntent(pendingIntent)

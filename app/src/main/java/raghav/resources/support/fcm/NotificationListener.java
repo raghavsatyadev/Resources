@@ -74,7 +74,7 @@ public class NotificationListener extends FirebaseMessagingService {
 
         NotificationCompat.Builder builder = NotificationUtils.buildBigTextNotification(this,
                 ResourceUtils.getString(R.string.app_name),
-                ResourceUtils.getString(R.string.default_notification_message),
+                message,
                 pendingIntent);
 
         if (builder != null) {
