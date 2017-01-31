@@ -35,6 +35,10 @@ public class SharedPrefsHelper {
         }
     }
 
+    public void deleteAll() {
+        getEditor().clear().commit();
+    }
+
     public void save(String key, Object value) {
         SharedPreferences.Editor editor = getEditor();
         if (value instanceof Boolean) {
