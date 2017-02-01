@@ -42,7 +42,7 @@ public class NotificationUtils {
                     .setSound(defaultSoundUri)
                     .setContentText(message)
                     .setContentIntent(pendingIntent)
-                    .setColor(ResourceUtils.getColor(R.color.icon_background))
+                    .setColor(ResourceUtils.getColor(R.color.notification_color))
                     .setTicker(message)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
         } catch (NullPointerException e) {
@@ -65,7 +65,7 @@ public class NotificationUtils {
                     .setSound(defaultSoundUri)
                     .setContentText(message)
                     .setContentIntent(pendingIntent)
-                    .setColor(ResourceUtils.getColor(R.color.icon_background))
+                    .setColor(ResourceUtils.getColor(R.color.notification_color))
                     .setTicker(message);
             if (!TextUtils.isEmpty(imageURL)) {
                 builder.setStyle(new NotificationCompat.BigPictureStyle()
