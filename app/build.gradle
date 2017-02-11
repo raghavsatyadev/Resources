@@ -18,7 +18,7 @@ android {
         }
     }
 }
-def androidVersion = "25.1.0";
+def androidVersion = "25.1.1";
 def googleVersion = "10.0.1";
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
