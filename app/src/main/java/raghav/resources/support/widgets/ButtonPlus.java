@@ -28,7 +28,7 @@ public class ButtonPlus extends AppCompatButton {
     }
 
     private void setCustomTypeFace(Context context, AttributeSet set) {
-        if (set != null && !isInEditMode()) {
+        if (set != null) {
             TypedArray a = context.obtainStyledAttributes(set, R.styleable.WidgetPlus);
             String fontLink = a.getString(R.styleable.WidgetPlus_textFont);
             a.recycle();
