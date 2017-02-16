@@ -7,6 +7,7 @@ import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 
 import raghav.resources.R;
+import raghav.resources.support.utils.ResourceUtils;
 
 
 public class EditTextPlus extends AppCompatEditText {
@@ -28,21 +29,22 @@ public class EditTextPlus extends AppCompatEditText {
     }
 
     private void setCustomTypeFace(Context context, AttributeSet set) {
-        if (set != null && !isInEditMode()) {
+        if (set != null) {
             TypedArray a = context.obtainStyledAttributes(set, R.styleable.WidgetPlus);
             String fontLink = a.getString(R.styleable.WidgetPlus_textFont);
             a.recycle();
-            if (fontLink != null) {
-                if (!customFont.equals(fontLink)) {
-                    customFont = fontLink;
-                    try {
-                        typeface = Typeface.createFromAsset(context.getAssets(), "font/" + customFont);
-                    } catch (Exception e) {
-                        return;
-                    }
-                }
-                setTypeface(typeface);
+            if (fontLink == null) {
+                fontLink = ResourceUtils.getString(R.string.default_font);
             }
+            if (!customFont.equals(fontLink)) {
+                customFont = fontLink;
+                try {
+                    typeface = Typeface.createFromAsset(context.getAssets(), "font/" + customFont);
+                } catch (Exception e) {
+                    return;
+                }
+            }
+            setTypeface(typeface);
         }
     }
 }

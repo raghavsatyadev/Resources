@@ -1,5 +1,7 @@
 package raghav.resources.support.base;
 
+import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
@@ -12,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -22,6 +25,21 @@ import raghav.resources.support.widgets.TextViewPlus;
 
 public abstract class CoreActivity extends AppCompatActivity {
     Toolbar toolbar = null;
+
+    public static void applyFontForToolbarTitle(Toolbar toolbar, Context context) {
+        for (int i = 0; i < toolbar.getChildCount(); i++) {
+            View view = toolbar.getChildAt(i);
+            if (view instanceof TextView) {
+                TextView tv = (TextView) view;
+                Typeface titleFont = Typeface.
+                        createFromAsset(context.getAssets(), "font/" + ResourceUtils.getString(R.string.default_font));
+                if (tv.getText().equals(toolbar.getTitle())) {
+                    tv.setTypeface(titleFont);
+                    break;
+                }
+            }
+        }
+    }
 
     public void setDefaults(@LayoutRes int layoutRes, @StringRes int title, @DrawableRes int backgroundDrawable, @IdRes int backgroundID) {
         setDefaults(layoutRes, ResourceUtils.getString(title), backgroundDrawable, backgroundID, false, false);
@@ -86,6 +104,7 @@ public abstract class CoreActivity extends AppCompatActivity {
             }
             if (toolbar != null) {
                 toolbar.setTitleTextColor(ResourceUtils.getColor(R.color.tool_bar_text_color));
+                applyFontForToolbarTitle(toolbar, this);
             }
         }
         createReference();
