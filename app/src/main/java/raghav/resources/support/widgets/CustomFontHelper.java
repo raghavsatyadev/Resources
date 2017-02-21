@@ -8,11 +8,6 @@ import android.util.AttributeSet;
 
 import raghav.resources.R;
 
-
-/**
- * Created by FirebaseChatDemo on 21/2/17.
- */
-
 public class CustomFontHelper {
     private static Typeface typeface = null;
     private static String customFont = "";
