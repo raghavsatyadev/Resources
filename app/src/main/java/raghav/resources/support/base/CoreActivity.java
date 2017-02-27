@@ -97,7 +97,7 @@ public abstract class CoreActivity extends AppCompatActivity {
 
                 }
             }
-            if (!TextUtils.isEmpty(title)) {
+            if (title != null) {
                 actionBar.setDisplayShowTitleEnabled(false);
 
                 changeTitleTV(title);
