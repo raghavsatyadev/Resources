@@ -83,13 +83,16 @@ public class PermissionUtil {
 
     public interface PermissionMessage {
         String READ_PHONE_STATE = ResourceUtils.getString(R.string.phone_state_permission_title);
+        String WRITE_EXTERNAL_STORAGE = ResourceUtils.getString(R.string.write_external_storage_title);
     }
 
-    public class Permissions {
-        public static final String READ_PHONE_STATE = Manifest.permission.READ_PHONE_STATE;
+    public interface Permissions {
+        String READ_PHONE_STATE = Manifest.permission.READ_PHONE_STATE;
+        String WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
     }
 
-    public class PermissionCode {
-        public static final int READ_PHONE_STATE = 1002;
+    public interface PermissionCode {
+        int READ_PHONE_STATE = 1002;
+        int WRITE_EXTERNAL_STORAGE = 1003;
     }
 }
