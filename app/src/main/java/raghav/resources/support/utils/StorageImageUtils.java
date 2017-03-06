@@ -88,7 +88,7 @@ public class StorageImageUtils {
             builder.setTitle("Choose Image")
                     .setPositiveButton("Camera", new DialogInterface.OnClickListener() {
                         public void onClick(final DialogInterface dialog, int id) {
-                            if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE)) {
+                            if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.CAMERA)) {
                                 startCameraIntent(activity, fileName);
                             } else {
                                 PermissionUtil.getPermission(activity,
