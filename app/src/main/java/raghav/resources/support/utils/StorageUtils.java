@@ -15,7 +15,6 @@ import java.io.ObjectOutputStream;
 import raghav.resources.support.base.CoreApp;
 
 
-
 public class StorageUtils {
 
     public static String createExternalDirectory() {
@@ -31,6 +30,10 @@ public class StorageUtils {
             baseDir = CoreApp.getInstance().getFilesDir().getAbsolutePath();
         }
         return baseDir;
+    }
+
+    public static String createInternalDirectoy() {
+        return CoreApp.getInstance().getFilesDir().getAbsolutePath();
     }
 
     public static File createFile(String fileName) {

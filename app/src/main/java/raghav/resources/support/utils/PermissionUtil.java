@@ -35,14 +35,12 @@ import raghav.resources.R;
 
 public class PermissionUtil {
     public static boolean getPermission(final Context context, final String permission, final
-    int permissionCode, String permissionDialogTitle, String
-                                                permissionDialogMessage) {
+    int permissionCode, String permissionDialogTitle, String permissionDialogMessage) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
         if (currentAPIVersion >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(context, permission) != PackageManager
                     .PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context,
-                        permission)) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, permission)) {
                     final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
                     alertBuilder.setCancelable(true);
                     if (TextUtils.isEmpty(permissionDialogMessage)) {
@@ -54,9 +52,7 @@ public class PermissionUtil {
                     alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface
                             .OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions((Activity) context, new
-                                            String[]{permission},
-                                    permissionCode);
+                            ActivityCompat.requestPermissions((Activity) context, new String[]{permission}, permissionCode);
                         }
                     });
 
@@ -84,15 +80,18 @@ public class PermissionUtil {
     public interface PermissionMessage {
         String READ_PHONE_STATE = ResourceUtils.getString(R.string.phone_state_permission_title);
         String WRITE_EXTERNAL_STORAGE = ResourceUtils.getString(R.string.write_external_storage_title);
+        String CAMERA = ResourceUtils.getString(R.string.camera_title);
     }
 
     public interface Permissions {
         String READ_PHONE_STATE = Manifest.permission.READ_PHONE_STATE;
         String WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        String CAMERA = Manifest.permission.CAMERA;
     }
 
     public interface PermissionCode {
         int READ_PHONE_STATE = 1002;
         int WRITE_EXTERNAL_STORAGE = 1003;
+        int CAMERA = 1004;
     }
 }
