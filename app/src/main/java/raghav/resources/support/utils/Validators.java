@@ -18,8 +18,8 @@ public class Validators {
     /**
      * Checks for 1 Uppercase Alphabet, 1 Number, 1 Special Character and at least 8 character length
      *
-     * @param password
-     * @return
+     * @param password String password to validate
+     * @return returns true if password is in correct format
      */
     public static boolean isValidPassword(String password) {
         password = password.trim();

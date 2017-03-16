@@ -70,7 +70,7 @@ public class NotificationListener extends FirebaseMessagingService {
                 Intent.FLAG_ACTIVITY_CLEAR_TASK |
                 Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, NOTIFICATION_ID, intent, PendingIntent.FLAG_ONE_SHOT);
 
         NotificationCompat.Builder builder = NotificationUtils.buildBigTextNotification(this,
                 ResourceUtils.getString(R.string.app_name),
@@ -79,7 +79,7 @@ public class NotificationListener extends FirebaseMessagingService {
 
         if (builder != null) {
             ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
-                    .notify(0, builder.build());
+                    .notify(NOTIFICATION_ID, builder.build());
         }
     }
 }

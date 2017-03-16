@@ -41,7 +41,7 @@ public class LocaleHelper {
         SharedPreferences.Editor editor = preferences.edit();
 
         editor.putString(SELECTED_LANGUAGE, language);
-        editor.commit();
+        editor.apply();
     }
 
     private static void updateResources(Context context, String language) {

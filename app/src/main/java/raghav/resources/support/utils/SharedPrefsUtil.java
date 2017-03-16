@@ -6,7 +6,7 @@ import java.util.TreeSet;
 public class SharedPrefsUtil {
 
     public static Set<String> getFCMTopics() {
-        return SharedPrefsHelper.getInstance().getSet(FCM.TOPICS, new TreeSet<String>());
+        return SharedPrefsHelper.getInstance().getSet(FCM.TOPICS, new TreeSet<>());
     }
 
     public static void setFCMTopics(TreeSet<String> topics) {

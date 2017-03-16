@@ -3,7 +3,6 @@ package raghav.resources.support.utils;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
@@ -49,12 +48,7 @@ public class PermissionUtil {
                         alertBuilder.setTitle(permissionDialogTitle);
                         alertBuilder.setMessage(permissionDialogMessage);
                     }
-                    alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface
-                            .OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions((Activity) context, new String[]{permission}, permissionCode);
-                        }
-                    });
+                    alertBuilder.setPositiveButton(android.R.string.yes, (dialog, which) -> ActivityCompat.requestPermissions((Activity) context, new String[]{permission}, permissionCode));
 
                     final AlertDialog alert = alertBuilder.create();
                     alert.show();

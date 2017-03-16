@@ -48,7 +48,7 @@ public class TokenRefresh extends FirebaseInstanceIdService {
         SharedPrefsUtil.setFCMTopics(TOPICS);
     }
 
-    public static void unsubscribeTopics() {
+    public static void unSubscribeTopics() {
         ArrayList<String> strings = new ArrayList<>(SharedPrefsUtil.getFCMTopics());
         FirebaseMessaging pubSub = FirebaseMessaging.getInstance();
         for (int i = 0; i < strings.size(); i++) {

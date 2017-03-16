@@ -20,14 +20,14 @@ public class GlideBasicAuth implements GlideModule {
     private static String API_USERNAME = "";
 
     @Override
-    public void applyOptions(Context context, GlideBuilder builder) { /* no costumization */ }
+    public void applyOptions(Context context, GlideBuilder builder) { /* no customization */ }
 
     @Override
     public void registerComponents(Context context, Glide glide) {
-        glide.register(String.class, InputStream.class, new HeaderedLoader.Factory());
+        glide.register(String.class, InputStream.class, new HeaderLoader.Factory());
     }
 
-    private static class HeaderedLoader extends BaseGlideUrlLoader<String> {
+    private static class HeaderLoader extends BaseGlideUrlLoader<String> {
 
         static String credentials = API_USERNAME + ":" + API_PASSWORD;
         static String basic =
@@ -37,7 +37,7 @@ public class GlideBasicAuth implements GlideModule {
                 .addHeader("Accept", "application/json")
                 .build();
 
-        public HeaderedLoader(Context context) {
+        public HeaderLoader(Context context) {
             super(context);
         }
 
@@ -54,7 +54,7 @@ public class GlideBasicAuth implements GlideModule {
         public static class Factory implements ModelLoaderFactory<String, InputStream> {
             @Override
             public StreamModelLoader<String> build(Context context, GenericLoaderFactory factories) {
-                return new HeaderedLoader(context);
+                return new HeaderLoader(context);
             }
 
             @Override

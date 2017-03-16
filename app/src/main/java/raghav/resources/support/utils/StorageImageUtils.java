@@ -3,7 +3,6 @@ package raghav.resources.support.utils;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -86,30 +85,19 @@ public class StorageImageUtils {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
             builder.setTitle("Choose Image")
-                    .setPositiveButton("Camera", new DialogInterface.OnClickListener() {
-                        public void onClick(final DialogInterface dialog, int id) {
-                            if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.CAMERA)) {
-                                startCameraIntent(activity, fileName);
-                            } else {
-                                PermissionUtil.getPermission(activity,
-                                        PermissionUtil.Permissions.CAMERA,
-                                        PermissionUtil.PermissionCode.CAMERA,
-                                        PermissionUtil.PermissionMessage.CAMERA,
-                                        null);
-                            }
+                    .setPositiveButton("Camera", (dialog, id) -> {
+                        if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.CAMERA)) {
+                            startCameraIntent(activity, fileName);
+                        } else {
+                            PermissionUtil.getPermission(activity,
+                                    PermissionUtil.Permissions.CAMERA,
+                                    PermissionUtil.PermissionCode.CAMERA,
+                                    PermissionUtil.PermissionMessage.CAMERA,
+                                    null);
                         }
                     })
-                    .setNegativeButton("Gallery", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            startGalleryIntent(activity);
-                        }
-                    })
-                    .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+                    .setNegativeButton("Gallery", (dialog, id) -> startGalleryIntent(activity))
+                    .setNeutralButton("Cancel", (dialog, which) -> dialog.dismiss());
 
             AlertDialog dialog = builder.create();
 
@@ -131,7 +119,7 @@ public class StorageImageUtils {
     }
 
     public static void startCameraIntent(Activity activity, String fileName) {
-        File path = new File(StorageUtils.createInternalDirectoy(), IMAGE_DIRECTORY);
+        File path = new File(StorageUtils.createInternalDirectory(), IMAGE_DIRECTORY);
 
         if (!path.exists()) path.mkdirs();
 
@@ -182,13 +170,13 @@ public class StorageImageUtils {
     }
 
     public static File getCameraImageFile(String fileName) {
-        File path = new File(StorageUtils.createInternalDirectoy(), IMAGE_DIRECTORY);
+        File path = new File(StorageUtils.createInternalDirectory(), IMAGE_DIRECTORY);
         if (!path.exists()) path.mkdirs();
         return new File(path, fileName + FILE_EXTENSION);
     }
 
     public static File saveImageToStorage(Bitmap finalBitmap, String path, String imageName) {
-        String root = StorageUtils.createInternalDirectoy();
+        String root = StorageUtils.createInternalDirectory();
         File myDir = new File(root + "/" + path);
         if (!myDir.exists()) {
             myDir.mkdirs();

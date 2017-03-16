@@ -20,7 +20,6 @@ public class Toaster {
         window.getDecorView().getWindowVisibleDisplayFrame(rect);
         int[] viewLocation = new int[2];
         view.getLocationInWindow(viewLocation);
-        int viewLeft = viewLocation[0] - rect.left;
         int viewTop = viewLocation[1] - rect.top;
 
         DisplayMetrics metrics = new DisplayMetrics();

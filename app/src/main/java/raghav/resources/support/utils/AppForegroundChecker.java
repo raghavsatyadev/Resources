@@ -23,12 +23,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * }
  * };
  *
- * @Override public void onCreate() {
+ *  public void onCreate() {
  * super.onCreate();
  * mInstance = this;
  * AppForegroundChecker.get(mInstance).addListener(listener);
  * }
- * @Override public void onTerminate() {
+ * public void onTerminate() {
  * AppForegroundChecker.get(getInstance()).removeListener(listener);
  * super.onTerminate();
  * }
@@ -40,7 +40,7 @@ public class AppForegroundChecker implements Application.ActivityLifecycleCallba
     private static AppForegroundChecker instance;
     private boolean foreground = false, paused = true;
     private Handler handler = new Handler();
-    private List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
+    private List<Listener> listeners = new CopyOnWriteArrayList<>();
     private Runnable check;
 
     public static AppForegroundChecker init(Application application) {
@@ -75,7 +75,7 @@ public class AppForegroundChecker implements Application.ActivityLifecycleCallba
         if (instance == null) {
             throw new IllegalStateException(
                     "AppForegroundChecker is not initialised - invoke " +
-                            "at least once with parameterised init/get");
+                            "at least once with parametrised init/get");
         }
         return instance;
     }
@@ -126,22 +126,19 @@ public class AppForegroundChecker implements Application.ActivityLifecycleCallba
         if (check != null)
             handler.removeCallbacks(check);
 
-        handler.postDelayed(check = new Runnable() {
-            @Override
-            public void run() {
-                if (foreground && paused) {
-                    foreground = false;
-                    AppLog.log(AppLog.I, true, AppLog.TAG, "run" + "went background");
-                    for (Listener l : listeners) {
-                        try {
-                            l.onBecameBackground();
-                        } catch (Exception exc) {
-                            AppLog.log(AppLog.E, false, AppLog.TAG, "run" + "Listener threw exception!" + exc.getMessage());
-                        }
+        handler.postDelayed(check = () -> {
+            if (foreground && paused) {
+                foreground = false;
+                AppLog.log(AppLog.I, true, AppLog.TAG, "run" + "went background");
+                for (Listener l : listeners) {
+                    try {
+                        l.onBecameBackground();
+                    } catch (Exception exc) {
+                        AppLog.log(AppLog.E, false, AppLog.TAG, "run" + "Listener threw exception!" + exc.getMessage());
                     }
-                } else {
-                    AppLog.log(AppLog.I, true, AppLog.TAG, "run" + "still foreground");
                 }
+            } else {
+                AppLog.log(AppLog.I, true, AppLog.TAG, "run" + "still foreground");
             }
         }, CHECK_DELAY);
     }

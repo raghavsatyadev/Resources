@@ -32,7 +32,7 @@ public class StorageUtils {
         return baseDir;
     }
 
-    public static String createInternalDirectoy() {
+    public static String createInternalDirectory() {
         return CoreApp.getInstance().getFilesDir().getAbsolutePath();
     }
 

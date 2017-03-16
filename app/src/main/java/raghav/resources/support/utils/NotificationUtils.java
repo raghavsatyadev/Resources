@@ -17,10 +17,6 @@ import java.net.URL;
 
 import raghav.resources.R;
 
-/**
- * Created by resources on 26/1/17.
- */
-
 public class NotificationUtils {
 
     private static int getSmallIcon() {
