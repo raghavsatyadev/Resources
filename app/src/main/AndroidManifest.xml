@@ -12,7 +12,9 @@
         <meta-data
             android:name="raghav.resources.support.utils.GlideBasicAuth"
             android:value="GlideModule" />
-        <activity android:name=".SplashActivity">
+        <activity
+            android:name=".SplashActivity"
+            android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

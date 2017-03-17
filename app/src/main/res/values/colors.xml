@@ -12,4 +12,5 @@
     <color name="toolbar_background">@color/colorPrimary</color>
     <color name="tool_bar_text_color">#FFF</color>
     <color name="notification_color">#888</color>
+    <color name="gray">#444440</color>
 </resources>
