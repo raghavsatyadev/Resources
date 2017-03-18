@@ -24,7 +24,7 @@ public class TokenRefresh extends FirebaseInstanceIdService {
 
     public static void subscribeTopics() {
         TreeSet<String> TOPICS = new TreeSet<>();
-        TOPICS.add(ResourceUtils.getString(R.string.app_name).replaceAll("(\\W|^_)*", ""));
+        TOPICS.add(makeTopic(ResourceUtils.getString(R.string.app_name)));
         FirebaseMessaging pubSub = FirebaseMessaging.getInstance();
         for (String topic : TOPICS) {
             pubSub.subscribeToTopic(topic);
@@ -32,13 +32,18 @@ public class TokenRefresh extends FirebaseInstanceIdService {
         SharedPrefsUtil.setFCMTopics(TOPICS);
     }
 
-    public static void subscribeTopics(JSONArray jsonArray) {
+    private static String makeTopic(String string) {
+        return string.replaceAll("(\\W|^_)*", "");
+    }
+
+    public static void subscribeTopics(JSONArray topics) {
         TreeSet<String> TOPICS = new TreeSet<>();
         FirebaseMessaging pubSub = FirebaseMessaging.getInstance();
-        for (int i = 0; i < jsonArray.length(); i++) {
+        for (int i = 0; i < topics.length(); i++) {
             try {
-                TOPICS.add(jsonArray.getString(i).replaceAll(" ", ""));
-                pubSub.subscribeToTopic(jsonArray.getString(i));
+                String topic = makeTopic(topics.getString(i));
+                TOPICS.add(topic);
+                pubSub.subscribeToTopic(topic);
             } catch (JSONException e) {
                 AppLog.log(AppLog.D, true, AppLog.TAG, "subscribeTopics" + e.getMessage());
             }
