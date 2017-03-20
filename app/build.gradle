@@ -24,7 +24,7 @@ android {
         }
     }
 }
-def androidVersion = "25.3.0";
+def androidVersion = "25.2.0";
 def googleVersion = "10.2.0";
 def retrofitVersion = "2.1.0";
 dependencies {
