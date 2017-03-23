@@ -126,19 +126,22 @@ public class AppForegroundChecker implements Application.ActivityLifecycleCallba
         if (check != null)
             handler.removeCallbacks(check);
 
-        handler.postDelayed(check = () -> {
-            if (foreground && paused) {
-                foreground = false;
-                AppLog.log(AppLog.I, true, AppLog.TAG, "run" + "went background");
-                for (Listener l : listeners) {
-                    try {
-                        l.onBecameBackground();
-                    } catch (Exception exc) {
-                        AppLog.log(AppLog.E, false, AppLog.TAG, "run" + "Listener threw exception!" + exc.getMessage());
+        handler.postDelayed(check = new Runnable() {
+            @Override
+            public void run() {
+                if (foreground && paused) {
+                    foreground = false;
+                    AppLog.log(AppLog.I, true, AppLog.TAG, "run" + "went background");
+                    for (Listener l : listeners) {
+                        try {
+                            l.onBecameBackground();
+                        } catch (Exception exc) {
+                            AppLog.log(AppLog.E, false, AppLog.TAG, "run" + "Listener threw exception!" + exc.getMessage());
+                        }
                     }
+                } else {
+                    AppLog.log(AppLog.I, true, AppLog.TAG, "run" + "still foreground");
                 }
-            } else {
-                AppLog.log(AppLog.I, true, AppLog.TAG, "run" + "still foreground");
             }
         }, CHECK_DELAY);
     }

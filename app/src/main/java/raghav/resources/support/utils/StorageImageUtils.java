@@ -3,6 +3,7 @@ package raghav.resources.support.utils;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -85,19 +86,32 @@ public class StorageImageUtils {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
             builder.setTitle("Choose Image")
-                    .setPositiveButton("Camera", (dialog, id) -> {
-                        if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.CAMERA)) {
-                            startCameraIntent(activity, fileName);
-                        } else {
-                            PermissionUtil.getPermission(activity,
-                                    PermissionUtil.Permissions.CAMERA,
-                                    PermissionUtil.PermissionCode.CAMERA,
-                                    PermissionUtil.PermissionMessage.CAMERA,
-                                    null);
+                    .setPositiveButton("Camera", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.CAMERA)) {
+                                startCameraIntent(activity, fileName);
+                            } else {
+                                PermissionUtil.getPermission(activity,
+                                        PermissionUtil.Permissions.CAMERA,
+                                        PermissionUtil.PermissionCode.CAMERA,
+                                        PermissionUtil.PermissionMessage.CAMERA,
+                                        null);
+                            }
                         }
                     })
-                    .setNegativeButton("Gallery", (dialog, id) -> startGalleryIntent(activity))
-                    .setNeutralButton("Cancel", (dialog, which) -> dialog.dismiss());
+                    .setNegativeButton("Gallery", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            startGalleryIntent(activity);
+                        }
+                    })
+                    .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
 
             AlertDialog dialog = builder.create();
 

@@ -10,12 +10,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        jackOptions.enabled true
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -24,7 +20,7 @@ android {
         }
     }
 }
-def androidVersion = "25.2.0";
+def androidVersion = "25.3.0";
 def googleVersion = "10.2.0";
 def retrofitVersion = "2.1.0";
 dependencies {
