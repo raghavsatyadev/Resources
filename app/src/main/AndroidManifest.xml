@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="raghav.resources">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name=".support.base.CoreApp"
         android:allowBackup="true"
