@@ -54,3 +54,7 @@
 
 #Glide Module
 -keep public class * implements com.bumptech.glide.module.GlideModule
+
+#Support Library
+-keep class android.support.v7.** { *; }
+-keep interface android.support.v7.** { *; }
