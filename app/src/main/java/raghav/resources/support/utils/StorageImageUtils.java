@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.util.List;
 
 import raghav.resources.BuildConfig;
+
 
 /* Usage:
 
@@ -125,11 +127,62 @@ public class StorageImageUtils {
         }
     }
 
+    public static void openChooserDialog(final Fragment fragment, final String fileName) {
+        if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getContext());
+
+            builder.setTitle("Choose Image")
+                    .setPositiveButton("Camera", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.CAMERA)) {
+                                startCameraIntent(fragment, fileName);
+                            } else {
+                                PermissionUtil.getPermission(fragment.getContext(),
+                                        PermissionUtil.Permissions.CAMERA,
+                                        PermissionUtil.PermissionCode.CAMERA,
+                                        PermissionUtil.PermissionMessage.CAMERA,
+                                        null);
+                            }
+                        }
+                    })
+                    .setNegativeButton("Gallery", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            startGalleryIntent(fragment);
+                        }
+                    })
+                    .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+            AlertDialog dialog = builder.create();
+
+            dialog.setCanceledOnTouchOutside(true);
+            dialog.setCancelable(true);
+            builder.show();
+        } else
+
+        {
+            Toaster.shortToast("No permission to write");
+        }
+    }
+
     public static void startGalleryIntent(Activity activity) {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         activity.startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
+    }
+
+    public static void startGalleryIntent(Fragment fragment) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        fragment.startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
     }
 
     public static void startCameraIntent(Activity activity, String fileName) {
@@ -167,6 +220,41 @@ public class StorageImageUtils {
         activity.startActivityForResult(intent, REQUEST_CAMERA);
     }
 
+    public static void startCameraIntent(Fragment fragment, String fileName) {
+        File path = new File(StorageUtils.createInternalDirectory(), IMAGE_DIRECTORY);
+
+        if (!path.exists()) path.mkdirs();
+
+        File image = new File(path, fileName + FILE_EXTENSION);
+
+        Uri imageUri = FileProvider.getUriForFile(fragment.getContext(), CAPTURE_IMAGE_FILE_PROVIDER, image);
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            ClipData clip =
+                    ClipData.newUri(fragment.getContext().getContentResolver(), "A photo", imageUri);
+
+            intent.setClipData(clip);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        } else {
+            List<ResolveInfo> resInfoList =
+                    fragment.getContext().getPackageManager()
+                            .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+            for (ResolveInfo resolveInfo : resInfoList) {
+                String packageName = resolveInfo.activityInfo.packageName;
+                fragment.getContext().grantUriPermission(packageName, imageUri,
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            }
+        }
+
+        fragment.startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
     public static File getGalleryImageFile(Intent data, ContentResolver resolver, String fileName) {
         if (data != null) {
             try {
@@ -175,7 +263,7 @@ public class StorageImageUtils {
                         IMAGE_DIRECTORY,
                         fileName);
             } catch (IOException e) {
-                AppLog.log(AppLog.D, false, AppLog.TAG, "getGalleryImageFile: " + e.getMessage());
+                AppLog.log(AppLog.D, false, AppLog.TAG, "StorageImageUtils " + "getGalleryImageFile: " + e.getMessage());
                 return null;
             }
         } else {
@@ -206,7 +294,7 @@ public class StorageImageUtils {
             out.close();
             return file;
         } catch (Exception e) {
-            AppLog.log(AppLog.D, false, AppLog.TAG, "saveImageToStorage: " + e.getMessage());
+            AppLog.log(AppLog.D, false, AppLog.TAG, "StorageImageUtils " + "saveImageToStorage: " + e.getMessage());
             return file;
         }
     }
