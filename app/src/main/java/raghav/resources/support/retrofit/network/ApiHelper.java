@@ -26,8 +26,10 @@ public class ApiHelper<T> {
     }
 
     public static MultipartBody.Part getMultipartFile(String fileParameter, File file) {
-        return MultipartBody.Part.createFormData(fileParameter, file.getName(),
-                RequestBody.create(MediaType.parse("image/*"), file));
+        if (file != null)
+            return MultipartBody.Part.createFormData(fileParameter, file.getName(),
+                    RequestBody.create(MediaType.parse("image/*"), file));
+        return null;
     }
 
     public static RequestBody getMultipartString(String string) {
