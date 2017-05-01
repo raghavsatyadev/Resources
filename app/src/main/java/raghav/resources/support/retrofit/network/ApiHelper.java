@@ -40,15 +40,15 @@ public class ApiHelper<T> {
         call.enqueue(new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
-
-                retrofitApiResponse.onResponse(response, apiNames);
+                if (retrofitApiResponse != null)
+                    retrofitApiResponse.onResponse(response, apiNames);
             }
 
             @Override
             public void onFailure(Call<T> call, Throwable t) {
                 // Log error here since request failed
-
-                retrofitApiResponse.error(t, apiNames);
+                if (retrofitApiResponse != null)
+                    retrofitApiResponse.error(t, apiNames);
             }
         });
     }
