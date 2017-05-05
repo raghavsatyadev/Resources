@@ -24,6 +24,7 @@ import java.util.List;
 import raghav.resources.BuildConfig;
 
 
+
 /* Usage:
 
      1. declare provider in manifest
@@ -73,12 +74,36 @@ import raghav.resources.BuildConfig;
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
+      5. Add onActivityResult
+
+       @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            switch (requestCode) {
+                case StorageImageUtils.REQUEST_GALLERY:
+                case StorageImageUtils.REQUEST_CAMERA:
+                    if (resultCode == RESULT_OK) {
+                        new StorageImageUtils.SaveImageTask(activity,
+                                data,
+                                requestCode,
+                                String.valueOf(goodsFileName),
+                                new StorageImageUtils.SaveImageTask.FileSaveListener() {
+                                    @Override
+                                    public void fileSaved(File file) {
+                                        goodsPhotoAdapter.addItem(file.getAbsolutePath());
+                                    }
+                                }).execute();
+                    }
+                    break;
+            }
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+
       */
 
 public class StorageImageUtils {
 
-    public static final int REQUEST_GALLERY = 20005;
-    public static final int REQUEST_CAMERA = 20006;
+    public static final int REQUEST_GALLERY = 123;
+    public static final int REQUEST_CAMERA = 1234;
     private static final String IMAGE_DIRECTORY = "Images";
     private static final String CAPTURE_IMAGE_FILE_PROVIDER = BuildConfig.APPLICATION_ID + ".fileprovider";
     private static String FILE_EXTENSION = ".jpg";
@@ -86,7 +111,6 @@ public class StorageImageUtils {
     public static void openChooserDialog(final Activity activity, final String fileName) {
         if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-
             builder.setTitle("Choose Image")
                     .setPositiveButton("Camera", new DialogInterface.OnClickListener() {
                         @Override
