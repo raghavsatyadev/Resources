@@ -1,10 +1,13 @@
 package raghav.resources.support.retrofit.network;
 
+import android.text.TextUtils;
+
 import java.io.File;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import raghav.resources.support.utils.AppLog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,11 +28,26 @@ public class ApiHelper<T> {
         return apiHelper;
     }
 
-    public static MultipartBody.Part getMultipartFile(String fileParameter, File file) {
+    public static MultipartBody.Part getMultiPartImage(String fileParameter, File file) {
         if (file != null)
             return MultipartBody.Part.createFormData(fileParameter, file.getName(),
                     RequestBody.create(MediaType.parse("image/*"), file));
         return null;
+    }
+
+    public static MultipartBody.Part getMultiPartImage(String fileParameter, String filepath) {
+        if (!TextUtils.isEmpty(filepath)) {
+            File file = new File(filepath);
+            try {
+                return getMultiPartImage(fileParameter, file);
+            } catch (Exception e) {
+                AppLog.log(AppLog.D, true, AppLog.TAG, "ApiHelper " + "getMultiPartImage: " + e.getMessage());
+                return null;
+            }
+        } else {
+            return null;
+        }
+
     }
 
     public static RequestBody getMultipartString(String string) {
@@ -40,15 +58,16 @@ public class ApiHelper<T> {
         call.enqueue(new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
-                if (retrofitApiResponse != null)
+                if (retrofitApiResponse != null) {
                     retrofitApiResponse.onResponse(response, apiNames);
+                }
             }
 
             @Override
             public void onFailure(Call<T> call, Throwable t) {
-                // Log error here since request failed
-                if (retrofitApiResponse != null)
-                    retrofitApiResponse.error(t, apiNames);
+                AppLog.log(false, "ApiHelper " + "onFailure: " + t.getMessage());
+                if (!call.isCanceled() && retrofitApiResponse != null)
+                    retrofitApiResponse.error(call, t, apiNames);
             }
         });
     }
