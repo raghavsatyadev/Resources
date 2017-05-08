@@ -75,6 +75,12 @@ public class ApiClient {
         return okHttpClient;
     }
 
+    /**
+     * call this method to cancel all the calls of retrofit
+     * Example
+     * 1. In CoreActivity in onDestroy(); method
+     * 2. In CoreFragment in onDestroyView(); method
+     */
     public static void cancelAll() {
         getOKHttpClient().dispatcher().cancelAll();
     }
