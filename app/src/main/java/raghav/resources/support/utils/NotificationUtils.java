@@ -42,7 +42,7 @@ public class NotificationUtils {
                     .setTicker(message)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(message));
         } catch (NullPointerException e) {
-            AppLog.log(AppLog.D, true, AppLog.TAG, "buildBigTextNotification" + e.getMessage());
+            AppLog.log(false, "NotificationUtils " + "buildBigTextNotification: ", e);
         }
         return null;
     }
@@ -74,7 +74,7 @@ public class NotificationUtils {
             }
             return builder;
         } catch (NullPointerException e) {
-            AppLog.log(AppLog.D, true, AppLog.TAG, "buildBigPictureNotification" + e.getMessage());
+            AppLog.log(false, "NotificationUtils " + "buildBigPictureNotification: ", e);
         }
         return null;
     }
@@ -89,7 +89,7 @@ public class NotificationUtils {
             return BitmapFactory.decodeStream(input);
 
         } catch (Exception e) {
-            AppLog.log(AppLog.D, false, AppLog.TAG, "getBitmapFromUrl" + e.getMessage());
+            AppLog.log(false, "NotificationUtils " + "getBitmapFromUrl: ", e);
             return null;
         }
     }

@@ -22,8 +22,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Toast.makeText(CoreApp.this, "background", Toast.LENGTH_SHORT).show();
  * }
  * };
- *
- *  public void onCreate() {
+ * <p>
+ * public void onCreate() {
  * super.onCreate();
  * mInstance = this;
  * AppForegroundChecker.get(mInstance).addListener(listener);
@@ -106,16 +106,16 @@ public class AppForegroundChecker implements Application.ActivityLifecycleCallba
             handler.removeCallbacks(check);
 
         if (wasBackground) {
-            AppLog.log(AppLog.I, true, AppLog.TAG, "onActivityResumed" + "went foreground");
+            AppLog.log(false, "AppForegroundChecker " + "onActivityResumed: " + "went foreground");
             for (Listener l : listeners) {
                 try {
                     l.onBecameForeground();
                 } catch (Exception exc) {
-                    AppLog.log(AppLog.E, false, AppLog.TAG, "onActivityResumed" + "Listener threw exception!" + exc.getMessage());
+                    AppLog.log(false, "AppForegroundChecker " + "onActivityResumed: " + "Listener threw exception!" + exc.getMessage());
                 }
             }
         } else {
-            AppLog.log(AppLog.I, true, AppLog.TAG, "onActivityResumed" + "still foreground");
+            AppLog.log(false, "AppForegroundChecker " + "onActivityResumed: " + "still foreground");
         }
     }
 
@@ -131,16 +131,16 @@ public class AppForegroundChecker implements Application.ActivityLifecycleCallba
             public void run() {
                 if (foreground && paused) {
                     foreground = false;
-                    AppLog.log(AppLog.I, true, AppLog.TAG, "run" + "went background");
+                    AppLog.log(false, "AppForegroundChecker " + "run: " + "went background");
                     for (Listener l : listeners) {
                         try {
                             l.onBecameBackground();
                         } catch (Exception exc) {
-                            AppLog.log(AppLog.E, false, AppLog.TAG, "run" + "Listener threw exception!" + exc.getMessage());
+                            AppLog.log(false, "AppForegroundChecker " + "run: " + "Listener threw exception!" + exc.getMessage());
                         }
                     }
                 } else {
-                    AppLog.log(AppLog.I, true, AppLog.TAG, "run" + "still foreground");
+                    AppLog.log(false, "AppForegroundChecker " + "run: " + "still foreground");
                 }
             }
         }, CHECK_DELAY);

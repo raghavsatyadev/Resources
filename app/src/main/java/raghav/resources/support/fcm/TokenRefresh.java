@@ -45,7 +45,7 @@ public class TokenRefresh extends FirebaseInstanceIdService {
                 TOPICS.add(topic);
                 pubSub.subscribeToTopic(topic);
             } catch (JSONException e) {
-                AppLog.log(AppLog.D, true, AppLog.TAG, "subscribeTopics" + e.getMessage());
+                AppLog.log(false, "TokenRefresh " + "subscribeTopics: ", e);
             }
 
         }

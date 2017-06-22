@@ -41,7 +41,7 @@ public class ApiHelper<T> {
             try {
                 return getMultiPartImage(fileParameter, file);
             } catch (Exception e) {
-                AppLog.log(AppLog.D, true, AppLog.TAG, "ApiHelper " + "getMultiPartImage: " + e.getMessage());
+                AppLog.log(false, "ApiHelper " + "getMultiPartImage: ", e);
                 return null;
             }
         } else {
@@ -65,7 +65,7 @@ public class ApiHelper<T> {
 
             @Override
             public void onFailure(Call<T> call, Throwable t) {
-                AppLog.log(false, "ApiHelper " + "onFailure: " + t.getMessage());
+                AppLog.log(false, "ApiHelper " + "onFailure: ", t);
                 if (!call.isCanceled() && retrofitApiResponse != null)
                     retrofitApiResponse.error(call, t, apiNames);
             }

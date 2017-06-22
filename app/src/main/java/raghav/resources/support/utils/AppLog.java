@@ -38,4 +38,12 @@ public class AppLog {
     public static void log(boolean isLocal, @NonNull String message) {
         log(D, isLocal, TAG, message);
     }
+
+    public static void log(boolean isLocal, String location, @NonNull Exception exception) {
+        log(E, isLocal, TAG, exception.getLocalizedMessage());
+    }
+
+    public static void log(boolean isLocal, String location, @NonNull Throwable throwable) {
+        log(E, isLocal, TAG, throwable.getLocalizedMessage());
+    }
 }

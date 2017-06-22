@@ -95,7 +95,7 @@ public class NetworkUtil {
             try {
                 return run(command, 10000);
             } catch (InterruptedException | IOException e) {
-                AppLog.log(AppLog.D, true, TAG, e.getMessage());
+                AppLog.log(false, "SyncTask " + "doInBackground: ", e);
                 return false;
             } catch (Exception e) {
                 e.printStackTrace();

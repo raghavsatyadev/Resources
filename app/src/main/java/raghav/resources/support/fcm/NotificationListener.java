@@ -45,8 +45,8 @@ public class NotificationListener extends FirebaseMessagingService {
                 if (SharedPrefsUtil.getFCMTopics().contains(topic)) {
                     sendNotification(topic);
                 }
-            } catch (NullPointerException ignored) {
-                AppLog.log(AppLog.D, false, AppLog.TAG, "onMessageReceived" + ignored.getMessage());
+            } catch (NullPointerException e) {
+                AppLog.log(false, "NotificationListener " + "onMessageReceived: ", e);
             }
         } else {
             if (message != null) {

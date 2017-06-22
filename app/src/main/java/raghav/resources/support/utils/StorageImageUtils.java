@@ -287,7 +287,7 @@ public class StorageImageUtils {
                         IMAGE_DIRECTORY,
                         fileName);
             } catch (IOException e) {
-                AppLog.log(AppLog.D, false, AppLog.TAG, "StorageImageUtils " + "getGalleryImageFile: " + e.getMessage());
+                AppLog.log(false, "StorageImageUtils " + "getGalleryImageFile: ", e);
                 return null;
             }
         } else {
@@ -318,7 +318,7 @@ public class StorageImageUtils {
             out.close();
             return file;
         } catch (Exception e) {
-            AppLog.log(AppLog.D, false, AppLog.TAG, "StorageImageUtils " + "saveImageToStorage: " + e.getMessage());
+            AppLog.log(false, "StorageImageUtils " + "saveImageToStorage: ", e);
             return file;
         }
     }
