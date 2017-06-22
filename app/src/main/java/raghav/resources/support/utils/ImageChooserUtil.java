@@ -61,13 +61,13 @@ import raghav.resources.BuildConfig;
                 case PermissionUtil.PermissionCode.WRITE_EXTERNAL_STORAGE:
                     if (grantResults.length > 0 && grantResults[0] == PackageManager
                             .PERMISSION_GRANTED) {
-                        StorageImageUtils.openChooserDialog(activity, String.valueOf(fileName));
+                        ImageChooserUtil.openChooserDialog(activity, String.valueOf(fileName));
                     }
                     break;
                 case PermissionUtil.PermissionCode.CAMERA:
                     if (grantResults.length > 0 && grantResults[0] == PackageManager
                             .PERMISSION_GRANTED) {
-                        StorageImageUtils.startCameraIntent(activity, String.valueOf(fileName));
+                        ImageChooserUtil.startCameraIntent(activity, String.valueOf(fileName));
                     }
                     break;
             }
@@ -79,14 +79,14 @@ import raghav.resources.BuildConfig;
        @Override
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
             switch (requestCode) {
-                case StorageImageUtils.REQUEST_GALLERY:
-                case StorageImageUtils.REQUEST_CAMERA:
+                case ImageChooserUtil.REQUEST_GALLERY:
+                case ImageChooserUtil.REQUEST_CAMERA:
                     if (resultCode == RESULT_OK) {
-                        new StorageImageUtils.SaveImageTask(activity,
+                        new ImageChooserUtil.SaveImageTask(activity,
                                 data,
                                 requestCode,
                                 String.valueOf(goodsFileName),
-                                new StorageImageUtils.SaveImageTask.FileSaveListener() {
+                                new ImageChooserUtil.SaveImageTask.FileSaveListener() {
                                     @Override
                                     public void fileSaved(File file) {
                                         goodsPhotoAdapter.addItem(file.getAbsolutePath());
@@ -100,7 +100,7 @@ import raghav.resources.BuildConfig;
 
       */
 
-public class StorageImageUtils {
+public class ImageChooserUtil {
 
     public static final int REQUEST_GALLERY = 123;
     public static final int REQUEST_CAMERA = 1234;
@@ -287,7 +287,7 @@ public class StorageImageUtils {
                         IMAGE_DIRECTORY,
                         fileName);
             } catch (IOException e) {
-                AppLog.log(false, "StorageImageUtils " + "getGalleryImageFile: ", e);
+                AppLog.log(false, "ImageChooserUtil " + "getGalleryImageFile: ", e);
                 return null;
             }
         } else {
@@ -318,7 +318,7 @@ public class StorageImageUtils {
             out.close();
             return file;
         } catch (Exception e) {
-            AppLog.log(false, "StorageImageUtils " + "saveImageToStorage: ", e);
+            AppLog.log(false, "ImageChooserUtil " + "saveImageToStorage: ", e);
             return file;
         }
     }
@@ -347,13 +347,13 @@ public class StorageImageUtils {
         protected File doInBackground(Void... pObjects) {
             File file = null;
 
-            if (requestCode == StorageImageUtils.REQUEST_GALLERY) {
-                file = StorageImageUtils
+            if (requestCode == ImageChooserUtil.REQUEST_GALLERY) {
+                file = ImageChooserUtil
                         .getGalleryImageFile(data,
                                 activity.getContentResolver()
                                 , String.valueOf(fileName));
-            } else if (requestCode == StorageImageUtils.REQUEST_CAMERA) {
-                file = StorageImageUtils.getCameraImageFile(String.valueOf(fileName));
+            } else if (requestCode == ImageChooserUtil.REQUEST_CAMERA) {
+                file = ImageChooserUtil.getCameraImageFile(String.valueOf(fileName));
             }
 
             return file;
