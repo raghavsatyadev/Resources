@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import raghav.resources.R;
-import raghav.resources.support.retrofit.network.ApiClient;
 import raghav.resources.support.utils.ResourceUtils;
 import raghav.resources.support.widgets.TextViewPlus;
 
@@ -113,7 +112,7 @@ public abstract class CoreActivity extends AppCompatActivity {
 
     private void changeTitleTV(String title) {
         if (toolbar != null && title != null) {
-            TextViewPlus toolBarTitle = (TextViewPlus) toolbar.findViewById(R.id.txt_tool_bar_title);
+            TextViewPlus toolBarTitle = toolbar.findViewById(R.id.txt_tool_bar_title);
             toolBarTitle.setTextColor(ResourceUtils.getColor(R.color.tool_bar_text_color));
             toolBarTitle.setText(title);
         }
@@ -176,11 +175,5 @@ public abstract class CoreActivity extends AppCompatActivity {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
-    }
-
-    @Override
-    protected void onDestroy() {
-        ApiClient.cancelAll();
-        super.onDestroy();
     }
 }
