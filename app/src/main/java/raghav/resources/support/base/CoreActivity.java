@@ -108,6 +108,7 @@ public abstract class CoreActivity extends AppCompatActivity {
             }
         }
         createReference();
+        setListeners(true);
     }
 
     private void changeTitleTV(String title) {
@@ -149,18 +150,6 @@ public abstract class CoreActivity extends AppCompatActivity {
      * @param state it displays if listeners are enable or not, call this method in onResume() & onPause()
      */
     protected abstract void setListeners(boolean state);
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setListeners(true);
-    }
-
-    @Override
-    protected void onPause() {
-        setListeners(false);
-        super.onPause();
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
