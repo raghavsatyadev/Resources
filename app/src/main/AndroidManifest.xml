@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
-            android:name="raghav.resources.support.utils.GlideBasicAuth"
+            android:name="${applicationId}.support.utils.GlideBasicAuth"
             android:value="GlideModule" />
         <activity
             android:name=".SplashActivity"
