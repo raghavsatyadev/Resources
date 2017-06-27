@@ -9,10 +9,6 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import raghav.resources.support.utils.AppLog;
 
-/**
- * Created by raghav on 24-06-2017.
- */
-
 public class MultiPartUtil {
     public static MultipartBody.Part getMultiPartImage(String fileParameter, File file) {
         if (file != null)
