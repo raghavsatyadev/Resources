@@ -1,4 +1,4 @@
-package raghav.resources.support.retrofit;
+package raghav.resources.support.utils;
 
 import android.text.TextUtils;
 
@@ -7,7 +7,6 @@ import java.io.File;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import raghav.resources.support.utils.AppLog;
 
 public class MultiPartUtil {
     public static MultipartBody.Part getMultiPartImage(String fileParameter, File file) {
@@ -23,7 +22,7 @@ public class MultiPartUtil {
             try {
                 return getMultiPartImage(fileParameter, file);
             } catch (Exception e) {
-                AppLog.log(false, "ApiHelper " + "getMultiPartImage: ", e);
+                AppLog.log(false, "MultiPartUtil " + "getMultiPartImage: ", e);
                 return null;
             }
         } else {

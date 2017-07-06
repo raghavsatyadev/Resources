@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import io.reactivex.disposables.CompositeDisposable;
 import raghav.resources.R;
 import raghav.resources.support.utils.ResourceUtils;
 import raghav.resources.support.widgets.TextViewPlus;
@@ -25,6 +26,7 @@ import raghav.resources.support.widgets.TextViewPlus;
 
 public abstract class CoreActivity extends AppCompatActivity {
     Toolbar toolbar = null;
+    private CompositeDisposable compositeDisposable;
 
     public static void applyFontForToolbarTitle(Toolbar toolbar, Context context) {
         for (int i = 0; i < toolbar.getChildCount(); i++) {
@@ -113,7 +115,7 @@ public abstract class CoreActivity extends AppCompatActivity {
 
     private void changeTitleTV(String title) {
         if (toolbar != null && title != null) {
-            TextViewPlus toolBarTitle = toolbar.findViewById(R.id.txt_tool_bar_title);
+            TextViewPlus toolBarTitle = (TextViewPlus) toolbar.findViewById(R.id.txt_tool_bar_title);
             toolBarTitle.setTextColor(ResourceUtils.getColor(R.color.tool_bar_text_color));
             toolBarTitle.setText(title);
         }
@@ -160,6 +162,19 @@ public abstract class CoreActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public CompositeDisposable getCompositeDisposable() {
+        if (compositeDisposable != null) {
+            compositeDisposable = new CompositeDisposable();
+        }
+        return compositeDisposable;
+    }
+
+    @Override
+    protected void onDestroy() {
+        compositeDisposable.clear();
+        super.onDestroy();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
