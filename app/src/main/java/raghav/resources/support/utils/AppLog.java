@@ -3,10 +3,12 @@ package raghav.resources.support.utils;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import raghav.resources.BuildConfig;
+
 public class AppLog {
     public final static int V = 4, D = 1, E = 2, I = 3;
     public static final String TAG = AppLog.class.getSimpleName();
-    private static boolean isDebug = true;
+    private static boolean isDebug = BuildConfig.DEBUG;
 
     public static void log(int logLevel, boolean isLocal, String tag, @NonNull String message) {
         if (tag == null || tag.equals("")) {
