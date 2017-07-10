@@ -1,6 +1,9 @@
 package raghav.resources.support.retrofit.network;
 
+import java.util.List;
+
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
@@ -8,6 +11,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class ObserverUtil {
@@ -17,11 +21,18 @@ public class ObserverUtil {
      * @param apiNames            APIName which will help identify it
      * @param callback            to receive callback
      */
-    public static <T> void subscribeToList(Observable<T> observable,
+    public static <T> void subscribeToList(Observable<List<T>> observable,
                                            CompositeDisposable compositeDisposable,
                                            WebserviceBuilder.ApiNames apiNames,
                                            ListCallback callback) {
-        makeObservable(observable).subscribe(getObserver(compositeDisposable, apiNames, callback));
+        makeObservable(observable)
+                .flatMap(new Function<List<T>, ObservableSource<T>>() {
+                    @Override
+                    public ObservableSource<T> apply(@NonNull List<T> ts) throws Exception {
+                        return Observable.fromIterable(ts);
+                    }
+                })
+                .subscribe(getObserver(compositeDisposable, apiNames, callback));
     }
 
     /**
