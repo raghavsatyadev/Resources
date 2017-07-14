@@ -164,6 +164,11 @@ public abstract class CoreActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * get {@link CompositeDisposable} for RXJava
+     *
+     * @return {@link CompositeDisposable}
+     */
     public CompositeDisposable getCompositeDisposable() {
         if (compositeDisposable != null) {
             compositeDisposable = new CompositeDisposable();
@@ -171,10 +176,13 @@ public abstract class CoreActivity extends AppCompatActivity {
         return compositeDisposable;
     }
 
-    @Override
-    protected void onDestroy() {
-        compositeDisposable.clear();
-        super.onDestroy();
+    /**
+     * call this in {@link android.app.Activity}.onDestroy()
+     */
+    public void cancelCalls() {
+        if (compositeDisposable != null) {
+            compositeDisposable.clear();
+        }
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

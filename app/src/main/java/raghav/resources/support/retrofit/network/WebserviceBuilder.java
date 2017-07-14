@@ -6,7 +6,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import raghav.resources.support.retrofit.model.AndroidVersionModel;
+import raghav.resources.support.retrofit.model.ContactInfoModel;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -15,6 +15,10 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 
+/**
+ * Declare all the APIs in this class with specific interface
+ * e.g. Profile for Login/Register Apis
+ */
 public interface WebserviceBuilder {
     /**
      * normal POST method
@@ -25,7 +29,7 @@ public interface WebserviceBuilder {
      */
     @FormUrlEncoded
     @POST("postMethodURLLastPart")
-    Observable<AndroidVersionModel> postMethod(
+    Observable<ContactInfoModel> postMethod(
             @Field("some_field_1") String some_field_1,
             @Field("some_field_2") String some_field_2);
 
@@ -35,7 +39,7 @@ public interface WebserviceBuilder {
      * @return Observable with single JSON Object
      */
     @GET("volley/person_object.json")
-    Observable<AndroidVersionModel> getSingleObject();
+    Observable<ContactInfoModel> getSingleObject();
 
     /**
      * normal GET Method
@@ -43,10 +47,10 @@ public interface WebserviceBuilder {
      * @return Observable with JSON Array
      */
     @GET("volley/person_array.json")
-    Observable<List<AndroidVersionModel>> getListObject();
+    Observable<List<ContactInfoModel>> getListObject();
 
     @GET("volley/person_object.json")
-    Call<AndroidVersionModel> getCall();
+    Call<ContactInfoModel> getCall();
 
     /**
      * For sending file in multipart call MultiPartUtil.getMultipartFile(File file);
@@ -58,7 +62,7 @@ public interface WebserviceBuilder {
      * @param file        random file
      */
     @POST("update-profile")
-    Observable<AndroidVersionModel> multipart(
+    Observable<ContactInfoModel> multipart(
             @Part("someInteger") int someInteger,
             @Part("someString") RequestBody someString,
             @Part MultipartBody.Part file);
@@ -71,11 +75,14 @@ public interface WebserviceBuilder {
      */
     //    for custom get URL
     @GET("getsubmenu/{URL}")
-    Observable<AndroidVersionModel> customGetURl(
+    Observable<ContactInfoModel> customGetURl(
             @Path("URL") String URL);
 
+    /**
+     * ApiNames to differentiate APIs
+     */
     enum ApiNames {
-        login, profile, forgotPassword
+        single, profile, list, forgotPassword
     }
 
 }

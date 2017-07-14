@@ -2,7 +2,7 @@ package raghav.resources.support.retrofit.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class AndroidVersionModel {
+public class ContactInfoModel {
     @SerializedName("name")
     private String name;
     @SerializedName("email")

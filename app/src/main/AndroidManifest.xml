@@ -13,8 +13,9 @@
         <meta-data
             android:name="${applicationId}.support.utils.GlideBasicAuth"
             android:value="GlideModule" />
+
         <activity
-            android:name=".SplashActivity"
+            android:name=".ui.activity.SplashActivity"
             android:theme="@style/AppTheme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,6 +23,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activity.ListActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activity.SingleActivity"
+            android:theme="@style/AppTheme" />
 
         <service
             android:name=".support.fcm.NotificationListener"

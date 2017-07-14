@@ -30,6 +30,11 @@ public class ApiClient {
     private static Retrofit retrofit = null;
     private static OkHttpClient okHttpClient;
 
+    /**
+     * You can create multiple methods for different BaseURL
+     *
+     * @return {@link Retrofit} object
+     */
     public static Retrofit getClient() {
         if (retrofit == null) {
             Gson gson = new GsonBuilder()
@@ -37,7 +42,7 @@ public class ApiClient {
                     .create();
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl(WebService.BASE_LINK)
+                    .baseUrl(WebService.BaseLink + WebService.Version)
                     .client(getOKHttpClient())
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .addConverterFactory(ScalarsConverterFactory.create())
@@ -47,7 +52,13 @@ public class ApiClient {
         return retrofit;
     }
 
-    public static OkHttpClient getOKHttpClient() {
+
+    /**
+     * settings like caching, Request Timeout, Logging can be configured here.
+     *
+     * @return {@link OkHttpClient}
+     */
+    private static OkHttpClient getOKHttpClient() {
         if (okHttpClient == null) {
             Cache cache = new Cache(new File(CoreApp.getInstance().getCacheDir(), "http")
                     , DISK_CACHE_SIZE);
@@ -64,45 +75,35 @@ public class ApiClient {
                 builder.addInterceptor(loggingInterceptor);
             }
 
-//            addBasicAuth(builder);
+//            Code for basic Authentication
+            if (!TextUtils.isEmpty(WebService.API_USERNAME) && !TextUtils.isEmpty(WebService.API_PASSWORD)) {
+                String credentials = WebService.API_USERNAME + ":" + WebService.API_PASSWORD;
+                final String basic =
+                        "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 
+                builder.addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request original = chain.request();
+
+                        Request.Builder requestBuilder = original.newBuilder()
+                                .header("Authorization", basic)
+                                .header("Accept", "application/json")
+                                .method(original.method(), original.body());
+
+                        Request request = requestBuilder.build();
+                        return chain.proceed(request);
+                    }
+                });
+            }
             okHttpClient = builder.build();
         }
         return okHttpClient;
     }
 
-    /**
-     * Code for basic Authentication
-     *
-     * @param builder OkHttpClient.Builder
-     */
-    private static void addBasicAuth(OkHttpClient.Builder builder) {
-        if (!TextUtils.isEmpty(WebService.API_USERNAME) && !TextUtils.isEmpty(WebService.API_PASSWORD)) {
-            String credentials = WebService.API_USERNAME + ":" + WebService.API_PASSWORD;
-            final String basic =
-                    "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-
-            builder.addInterceptor(new Interceptor() {
-                @Override
-                public Response intercept(Chain chain) throws IOException {
-                    Request original = chain.request();
-
-                    Request.Builder requestBuilder = original.newBuilder()
-                            .header("Authorization", basic)
-                            .header("Accept", "application/json")
-                            .method(original.method(), original.body());
-
-                    Request request = requestBuilder.build();
-                    return chain.proceed(request);
-                }
-            });
-        }
-    }
-
     public interface WebService {
-        String DOMAIN = "http://api.androidhive.info/";
-        String VERSION = "";
-        String BASE_LINK = DOMAIN + VERSION;
+        String BaseLink = "http://api.androidhive.info";
+        String Version = "";
         String API_USERNAME = null;
         String API_PASSWORD = null;
     }

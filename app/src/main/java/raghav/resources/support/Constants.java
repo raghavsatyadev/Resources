@@ -6,4 +6,8 @@ public interface Constants {
             String MAIN_KEY = "message";
         }
     }
+
+    interface Other {
+        long SPLASH_COUNTER = 3000;
+    }
 }

@@ -9,6 +9,12 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 public class MultiPartUtil {
+    /**
+     * Converts File into Multipart Object
+     *
+     * @param fileParameter parameter name which goes into APIs
+     * @return {@link okhttp3.MultipartBody.Part}
+     */
     public static MultipartBody.Part getMultiPartImage(String fileParameter, File file) {
         if (file != null)
             return MultipartBody.Part.createFormData(fileParameter, file.getName(),
@@ -16,6 +22,13 @@ public class MultiPartUtil {
         return null;
     }
 
+    /**
+     * Converts File into Multipart Object
+     *
+     * @param fileParameter parameter name which goes into APIs
+     * @param filepath      Absolute path of the file
+     * @return {@link okhttp3.MultipartBody.Part}
+     */
     public static MultipartBody.Part getMultiPartImage(String fileParameter, String filepath) {
         if (!TextUtils.isEmpty(filepath)) {
             File file = new File(filepath);
@@ -28,9 +41,11 @@ public class MultiPartUtil {
         } else {
             return null;
         }
-
     }
 
+    /**
+     * @return RequestBody of given String
+     */
     public static RequestBody getMultipartString(String string) {
         return RequestBody.create(MediaType.parse("text/plain"), string);
     }

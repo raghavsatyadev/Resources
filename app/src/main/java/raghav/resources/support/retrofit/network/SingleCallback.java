@@ -1,11 +1,15 @@
 package raghav.resources.support.retrofit.network;
 
-/**
- * Created by raghav on 24-06-2017.
- */
-
 public interface SingleCallback {
-    void onSingleSuccess(Object t, WebserviceBuilder.ApiNames apiNames);
+    /**
+     * @param o        Whole response Object
+     * @param apiNames {@link raghav.resources.support.retrofit.network.WebserviceBuilder.ApiNames} to differentiate Apis
+     */
+    void onSingleSuccess(Object o, WebserviceBuilder.ApiNames apiNames);
 
+    /**
+     * @param throwable returns {@link Throwable} for checking Exception
+     * @param apiNames  {@link raghav.resources.support.retrofit.network.WebserviceBuilder.ApiNames} to differentiate Apis
+     */
     void onFailure(Throwable throwable, WebserviceBuilder.ApiNames apiNames);
 }

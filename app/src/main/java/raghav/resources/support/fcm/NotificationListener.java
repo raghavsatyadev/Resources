@@ -13,12 +13,12 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Map;
 
 import raghav.resources.R;
-import raghav.resources.SplashActivity;
 import raghav.resources.support.Constants;
 import raghav.resources.support.utils.AppLog;
 import raghav.resources.support.utils.NotificationUtils;
 import raghav.resources.support.utils.ResourceUtils;
 import raghav.resources.support.utils.SharedPrefsUtil;
+import raghav.resources.ui.activity.SplashActivity;
 
 public class NotificationListener extends FirebaseMessagingService {
 
