@@ -1,10 +1,7 @@
 package raghav.resources.support.fcm;
 
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -14,11 +11,10 @@ import java.util.Map;
 
 import raghav.resources.R;
 import raghav.resources.support.Constants;
-import raghav.resources.support.utils.AppLog;
 import raghav.resources.support.utils.NotificationUtils;
 import raghav.resources.support.utils.ResourceUtils;
 import raghav.resources.support.utils.SharedPrefsUtil;
-import raghav.resources.ui.activity.SplashActivity;
+import raghav.resources.ui.activity.MainActivity;
 
 public class NotificationListener extends FirebaseMessagingService {
 
@@ -43,17 +39,17 @@ public class NotificationListener extends FirebaseMessagingService {
             String topic = from.replace("/topics/", "");
             try {
                 if (SharedPrefsUtil.getFCMTopics().contains(topic)) {
-                    sendNotification(topic);
+                    buildPayload(topic);
                 }
             } catch (NullPointerException e) {
-                AppLog.log(false, "NotificationListener " + "onMessageReceived: ", e);
+
             }
         } else {
             if (message != null) {
 //                try {
 //                    JSONObject messageJSON = new JSONObject(message);
 
-                sendNotification(message);
+                buildPayload(message);
 //                } catch (JSONException e) {
 //                    AppLog.log(AppLog.D, false, AppLog.TAG, "onMessageReceived" + e.getMessage());
 //                }
@@ -61,25 +57,18 @@ public class NotificationListener extends FirebaseMessagingService {
         }
     }
 
-    private void sendNotification(String message) {
+    private void buildPayload(String message) {
 
         int NOTIFICATION_ID = 0;
 
-        Intent intent = new Intent(this, SplashActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
                 Intent.FLAG_ACTIVITY_CLEAR_TASK |
                 Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, NOTIFICATION_ID, intent, PendingIntent.FLAG_ONE_SHOT);
-
-        NotificationCompat.Builder builder = NotificationUtils.buildBigTextNotification(this,
-                ResourceUtils.getString(R.string.app_name),
-                message,
-                pendingIntent);
-
-        if (builder != null) {
-            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
-                    .notify(NOTIFICATION_ID, builder.build());
-        }
+        NotificationUtils.sendNotification(this, NOTIFICATION_ID, message, null,
+                intent, PendingIntent.FLAG_ONE_SHOT);
     }
+
 }
