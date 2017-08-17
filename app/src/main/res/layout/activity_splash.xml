@@ -18,7 +18,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/tool_bar">
 
-        <TextView
+        <com.support.widgets.TextViewPlus
             android:id="@+id/txt_funny"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

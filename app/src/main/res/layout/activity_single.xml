@@ -38,7 +38,7 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.95" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <com.support.widgets.TextViewPlus
             android:id="@+id/txt_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
             app:layout_constraintLeft_toLeftOf="@id/guideline2"
             app:layout_constraintRight_toLeftOf="@id/guideline" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <com.support.widgets.TextViewPlus
             android:id="@+id/txt_name_val"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
             app:layout_constraintRight_toLeftOf="@id/guideline3"
             tools:text="Raghav" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <com.support.widgets.TextViewPlus
             android:id="@+id/txt_email"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
             app:layout_constraintRight_toLeftOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/txt_name" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <com.support.widgets.TextViewPlus
             android:id="@+id/txt_email_val"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
             app:layout_constraintRight_toLeftOf="@id/guideline3"
             tools:text="RaghavSatyadev@gmail.com" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <com.support.widgets.TextViewPlus
             android:id="@+id/txt_phone_header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
             app:layout_constraintRight_toLeftOf="@id/guideline3"
             app:layout_constraintTop_toBottomOf="@id/txt_email" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <com.support.widgets.TextViewPlus
             android:id="@+id/txt_phone_home"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
             app:layout_constraintRight_toLeftOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/txt_phone_header" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <com.support.widgets.TextViewPlus
             android:id="@+id/txt_phone_home_val"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -114,7 +114,7 @@
             app:layout_constraintRight_toLeftOf="@id/guideline3"
             tools:text="+02812596452" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <com.support.widgets.TextViewPlus
             android:id="@+id/txt_phone_mobile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -126,7 +126,7 @@
             app:layout_constraintRight_toLeftOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/txt_phone_home" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <com.support.widgets.TextViewPlus
             android:id="@+id/txt_phone_mobile_val"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="app_background">#FF4081</color>
+
+    <color name="progress_dialog_background">#FFF</color>
+    <color name="progress_dialog_text">@color/colorPrimary</color>
+    <color name="progress_dialog_ring">@color/colorPrimary</color>
+
+    <color name="toolbar_background">@color/colorPrimary</color>
+    <color name="tool_bar_text_color">#FFF</color>
+    <color name="notification_color">#888</color>
+    <color name="gray">#444440</color>
+</resources>

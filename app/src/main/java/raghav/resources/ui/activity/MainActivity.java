@@ -5,15 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.support.base.CoreActivity;
+
 import raghav.resources.R;
-import raghav.resources.support.base.CoreActivity;
 
 public class MainActivity extends CoreActivity {
+
+    private MainActivity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setDefaults(R.layout.activity_main, "", false, true);
+        activity = this;
+        setDefaults(activity, R.layout.activity_main, "", false, true);
     }
 
     public void openListActivity(View view) {

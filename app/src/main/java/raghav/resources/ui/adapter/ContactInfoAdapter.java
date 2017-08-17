@@ -9,12 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.support.retrofit.model.ContactInfoModel;
 import com.yqritc.recyclerviewflexibledivider.FlexibleDividerDecoration;
 
 import java.util.ArrayList;
 
 import raghav.resources.R;
-import raghav.resources.support.retrofit.model.ContactInfoModel;
 
 
 public class ContactInfoAdapter extends RecyclerView.Adapter<ContactInfoAdapter.DataObjectHolder> implements FlexibleDividerDecoration.ColorProvider {

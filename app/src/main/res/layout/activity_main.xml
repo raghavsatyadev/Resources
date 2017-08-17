@@ -16,14 +16,14 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <Button
+        <com.support.widgets.ButtonPlus
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:onClick="openSingleActivity"
             android:text="Single Object Call" />
 
-        <Button
+        <com.support.widgets.ButtonPlus
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

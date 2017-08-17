@@ -4,9 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.support.Constants;
+import com.support.base.CoreActivity;
+
 import raghav.resources.R;
-import raghav.resources.support.Constants;
-import raghav.resources.support.base.CoreActivity;
 
 public class SplashActivity extends CoreActivity {
 
@@ -17,12 +18,12 @@ public class SplashActivity extends CoreActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setDefaults(R.layout.activity_splash);
+        activity = this;
+        setDefaults(activity, R.layout.activity_splash);
     }
 
     @Override
     public void createReference() {
-        activity = this;
 
         new Handler().postDelayed(new Runnable() {
             @Override
