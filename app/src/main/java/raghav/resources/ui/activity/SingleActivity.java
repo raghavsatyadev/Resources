@@ -3,14 +3,15 @@ package raghav.resources.ui.activity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 
+import com.support.retrofit.model.ContactInfoModel;
+import com.support.retrofit.network.ApiClient;
+import com.support.retrofit.network.ObserverUtil;
+import com.support.retrofit.network.SingleCallback;
+import com.support.retrofit.network.WebserviceBuilder;
+import com.support.utils.AppLog;
+
 import raghav.resources.R;
-import raghav.resources.support.base.CoreActivity;
-import raghav.resources.support.retrofit.model.ContactInfoModel;
-import raghav.resources.support.retrofit.network.ApiClient;
-import raghav.resources.support.retrofit.network.ObserverUtil;
-import raghav.resources.support.retrofit.network.SingleCallback;
-import raghav.resources.support.retrofit.network.WebserviceBuilder;
-import raghav.resources.support.utils.AppLog;
+import raghav.resources.support.CoreActivity;
 
 public class SingleActivity extends CoreActivity implements SingleCallback {
 
@@ -18,11 +19,13 @@ public class SingleActivity extends CoreActivity implements SingleCallback {
     private AppCompatTextView txtEmailVal;
     private AppCompatTextView txtPhoneHomeVal;
     private AppCompatTextView txtPhoneMobileVal;
+    private SingleActivity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setDefaults(R.layout.activity_main, "", true, true);
+        activity = this;
+        setDefaults(activity, R.layout.activity_main, "", true, true);
     }
 
     private void callAPI() {

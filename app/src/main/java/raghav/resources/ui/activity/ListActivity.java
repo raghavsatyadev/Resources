@@ -4,6 +4,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.support.retrofit.model.ContactInfoModel;
+import com.support.retrofit.network.ApiClient;
+import com.support.retrofit.network.ListCallback;
+import com.support.retrofit.network.ObserverUtil;
+import com.support.retrofit.network.WebserviceBuilder;
+import com.support.utils.AppLog;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.ArrayList;
@@ -11,13 +17,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import raghav.resources.R;
-import raghav.resources.support.base.CoreActivity;
-import raghav.resources.support.retrofit.model.ContactInfoModel;
-import raghav.resources.support.retrofit.network.ApiClient;
-import raghav.resources.support.retrofit.network.ListCallback;
-import raghav.resources.support.retrofit.network.ObserverUtil;
-import raghav.resources.support.retrofit.network.WebserviceBuilder;
-import raghav.resources.support.utils.AppLog;
+import raghav.resources.support.CoreActivity;
 import raghav.resources.ui.adapter.ContactInfoAdapter;
 
 public class ListActivity extends CoreActivity implements ListCallback {
@@ -28,12 +28,12 @@ public class ListActivity extends CoreActivity implements ListCallback {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setDefaults(R.layout.activity_main, "", true, true);
+        activity = this;
+        setDefaults(activity, R.layout.activity_main, "", true, true);
     }
 
     @Override
     public void createReference() {
-        activity = this;
 
         RecyclerView listContact = (RecyclerView) findViewById(R.id.list_contact);
         listContact.setHasFixedSize(false);
