@@ -25,7 +25,7 @@ public class SingleActivity extends CoreActivity implements SingleCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = this;
-        setDefaults(activity, R.layout.activity_main, "", true, true);
+        setDefaults(activity, R.layout.activity_single, "", true, true);
     }
 
     private void callAPI() {

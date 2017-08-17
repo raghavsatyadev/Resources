@@ -29,7 +29,7 @@ public class ListActivity extends CoreActivity implements ListCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = this;
-        setDefaults(activity, R.layout.activity_main, "", true, true);
+        setDefaults(activity, R.layout.activity_list, "", true, true);
     }
 
     @Override
