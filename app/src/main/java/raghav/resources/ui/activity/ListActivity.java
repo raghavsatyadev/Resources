@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.support.base.CoreActivity;
 import com.support.retrofit.model.ContactInfoModel;
 import com.support.retrofit.network.ApiClient;
 import com.support.retrofit.network.ListCallback;
@@ -17,7 +18,6 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import raghav.resources.R;
-import raghav.resources.support.CoreActivity;
 import raghav.resources.ui.adapter.ContactInfoAdapter;
 
 public class ListActivity extends CoreActivity implements ListCallback {

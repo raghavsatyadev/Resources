@@ -3,6 +3,7 @@ package raghav.resources.ui.activity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 
+import com.support.base.CoreActivity;
 import com.support.retrofit.model.ContactInfoModel;
 import com.support.retrofit.network.ApiClient;
 import com.support.retrofit.network.ObserverUtil;
@@ -11,7 +12,6 @@ import com.support.retrofit.network.WebserviceBuilder;
 import com.support.utils.AppLog;
 
 import raghav.resources.R;
-import raghav.resources.support.CoreActivity;
 
 public class SingleActivity extends CoreActivity implements SingleCallback {
 

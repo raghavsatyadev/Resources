@@ -5,8 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.support.base.CoreActivity;
+
 import raghav.resources.R;
-import raghav.resources.support.CoreActivity;
 
 public class MainActivity extends CoreActivity {
 

@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.support.Constants;
+import com.support.base.CoreActivity;
 
 import raghav.resources.R;
-import raghav.resources.support.CoreActivity;
 
 public class SplashActivity extends CoreActivity {
 
