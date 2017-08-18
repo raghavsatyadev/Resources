@@ -18,7 +18,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-
 public abstract class NotificationUtils {
     private static Uri defaultSoundUri;
     private static Bitmap icLauncher;
@@ -62,6 +61,8 @@ public abstract class NotificationUtils {
 
     public abstract int getSmallIcon();
 
+    public abstract int getBigIcon();
+
     public NotificationCompat.Builder getNotificationBuilder(Context context,
                                                              String title,
                                                              String message,
@@ -72,7 +73,7 @@ public abstract class NotificationUtils {
             if (defaultSoundUri == null)
                 defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             if (icLauncher == null)
-                icLauncher = ((BitmapDrawable) ResourceUtils.getDrawable(/*R.drawable.ic_launcher*/ 0)).getBitmap();
+                icLauncher = ((BitmapDrawable) ResourceUtils.getDrawable(getBigIcon())).getBitmap();
             if (notificationColor == 0) {
                 notificationColor = ResourceUtils.getColor(R.color.notification_color);
             }
