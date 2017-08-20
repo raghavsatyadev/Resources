@@ -75,30 +75,33 @@ public class ApiClient {
                 builder.addInterceptor(loggingInterceptor);
             }
 
-//            Code for basic Authentication
-            if (!TextUtils.isEmpty(WebService.API_USERNAME) && !TextUtils.isEmpty(WebService.API_PASSWORD)) {
-                String credentials = WebService.API_USERNAME + ":" + WebService.API_PASSWORD;
-                final String basic =
-                        "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-
-                builder.addInterceptor(new Interceptor() {
-                    @Override
-                    public Response intercept(Chain chain) throws IOException {
-                        Request original = chain.request();
-
-                        Request.Builder requestBuilder = original.newBuilder()
-                                .header("Authorization", basic)
-                                .header("Accept", "application/json")
-                                .method(original.method(), original.body());
-
-                        Request request = requestBuilder.build();
-                        return chain.proceed(request);
-                    }
-                });
-            }
+            setupBasicAuth(builder);
             okHttpClient = builder.build();
         }
         return okHttpClient;
+    }
+
+    private static void setupBasicAuth(OkHttpClient.Builder builder) {
+        if (!TextUtils.isEmpty(WebService.API_USERNAME) && !TextUtils.isEmpty(WebService.API_PASSWORD)) {
+            String credentials = WebService.API_USERNAME + ":" + WebService.API_PASSWORD;
+            final String basic =
+                    "Basic " + Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+
+            builder.addInterceptor(new Interceptor() {
+                @Override
+                public Response intercept(Chain chain) throws IOException {
+                    Request original = chain.request();
+
+                    Request.Builder requestBuilder = original.newBuilder()
+                            .header("Authorization", basic)
+                            .header("Accept", "application/json")
+                            .method(original.method(), original.body());
+
+                    Request request = requestBuilder.build();
+                    return chain.proceed(request);
+                }
+            });
+        }
     }
 
     public interface WebService {
