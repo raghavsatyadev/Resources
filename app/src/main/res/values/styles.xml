@@ -1,8 +1,6 @@
 <resources>
 
-
-
-    <style name="AppTheme.Splash" parent="AppTheme">
+    <style name="AppTheme.Splash" parent="AppTheme.FullScreen">
         <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
 </resources>
