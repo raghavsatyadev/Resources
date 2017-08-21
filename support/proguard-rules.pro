@@ -29,7 +29,7 @@
 
 #retrofit models
 -keep class com.google.gson.examples.android.model.** { *; }
--keep class raghav.resources.support.retrofit.model.** { *; }
+-keep class com.support.retrofit.model.** { *; }
 
 -keepattributes InnerClasses
 -keepattributes Deprecated
