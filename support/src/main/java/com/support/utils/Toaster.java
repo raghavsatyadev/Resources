@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 import com.support.base.CoreApp;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 public class Toaster {
 
     public static void shortToast(View view, Window window, @StringRes int text) {
@@ -59,6 +62,7 @@ public class Toaster {
         makeToast(text, length).show();
     }
 
+    @Retention(RetentionPolicy.SOURCE)
     @IntDef({Toast.LENGTH_LONG, Toast.LENGTH_SHORT})
     private @interface ToastLength {
     }
