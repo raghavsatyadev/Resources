@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -34,14 +35,14 @@ import com.support.R;
 //        }
 
 public class PermissionUtil {
-    public static boolean getPermission(final Context context, final String permission, final
+    public static boolean getPermission(final Activity activity, final String permission, final
     int permissionCode, String permissionDialogTitle, String permissionDialogMessage) {
         int currentAPIVersion = Build.VERSION.SDK_INT;
         if (currentAPIVersion >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager
+            if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager
                     .PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, permission)) {
-                    final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
+                if (activity.shouldShowRequestPermissionRationale(permission)) {
+                    final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(activity);
                     alertBuilder.setCancelable(true);
                     if (TextUtils.isEmpty(permissionDialogMessage)) {
                         alertBuilder.setMessage(permissionDialogTitle);
@@ -52,7 +53,7 @@ public class PermissionUtil {
                     alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions((Activity) context, new String[]{permission}, permissionCode);
+                            ActivityCompat.requestPermissions(activity, new String[]{permission}, permissionCode);
                         }
                     });
 
@@ -60,7 +61,45 @@ public class PermissionUtil {
                     alert.show();
 
                 } else {
-                    ActivityCompat.requestPermissions((Activity) context, new String[]{permission},
+                    activity.requestPermissions(new String[]{permission},
+                            permissionCode);
+                }
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    public static boolean getPermission(final Fragment fragment, final String permission, final
+    int permissionCode, String permissionDialogTitle, String permissionDialogMessage) {
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(fragment.getContext(), permission) != PackageManager
+                    .PERMISSION_GRANTED) {
+                if (fragment.shouldShowRequestPermissionRationale(permission)) {
+                    final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(fragment.getContext());
+                    alertBuilder.setCancelable(true);
+                    if (TextUtils.isEmpty(permissionDialogMessage)) {
+                        alertBuilder.setMessage(permissionDialogTitle);
+                    } else {
+                        alertBuilder.setTitle(permissionDialogTitle);
+                        alertBuilder.setMessage(permissionDialogMessage);
+                    }
+                    alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            fragment.requestPermissions(new String[]{permission}, permissionCode);
+                        }
+                    });
+
+                    final AlertDialog alert = alertBuilder.create();
+                    alert.show();
+
+                } else {
+                    fragment.requestPermissions(new String[]{permission},
                             permissionCode);
                 }
                 return false;
