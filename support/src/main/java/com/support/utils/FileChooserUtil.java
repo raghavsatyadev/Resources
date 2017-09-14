@@ -48,7 +48,7 @@ import java.io.File;
       @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
-            case PermissionUtil.PermissionCode.WRITE_EXTERNAL_STORAGE:
+            case FileChooserUtil.PERMISSION_WRITE_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager
                         .PERMISSION_GRANTED) {
                     FileChooserUtil.openChooserDialog(getCoreFragment());
@@ -62,7 +62,8 @@ import java.io.File;
 
 public class FileChooserUtil {
 
-    public static final int FILE_CHOOSER = 1235;
+    public static final int FILE_CHOOSER = 1238;
+    public static final int PERMISSION_WRITE_STORAGE = 1239;
     public static final int MB = 1024;
 
     public static void openChooserDialog(final Activity activity) {
@@ -71,7 +72,7 @@ public class FileChooserUtil {
         } else {
             PermissionUtil.getPermission(activity,
                     PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE,
-                    PermissionUtil.PermissionCode.WRITE_EXTERNAL_STORAGE,
+                    PERMISSION_WRITE_STORAGE,
                     PermissionUtil.PermissionMessage.WRITE_EXTERNAL_STORAGE,
                     null);
         }
@@ -83,7 +84,7 @@ public class FileChooserUtil {
         } else {
             PermissionUtil.getPermission(fragment,
                     PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE,
-                    PermissionUtil.PermissionCode.WRITE_EXTERNAL_STORAGE,
+                    PERMISSION_WRITE_STORAGE,
                     PermissionUtil.PermissionMessage.WRITE_EXTERNAL_STORAGE,
                     null);
         }

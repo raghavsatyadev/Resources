@@ -60,18 +60,18 @@ import java.util.List;
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
             switch (requestCode) {
-                case PermissionUtil.PermissionCode.WRITE_EXTERNAL_STORAGE:
-                    if (grantResults.length > 0 && grantResults[0] == PackageManager
-                            .PERMISSION_GRANTED) {
-                        ImageChooserUtil.openChooserDialog(activity, String.valueOf(fileName));
-                    }
-                    break;
-                case PermissionUtil.PermissionCode.CAMERA:
-                    if (grantResults.length > 0 && grantResults[0] == PackageManager
-                            .PERMISSION_GRANTED) {
-                        ImageChooserUtil.startCameraIntent(activity, String.valueOf(fileName));
-                    }
-                    break;
+                case ImageChooserUtil.PERMISSION_WRITE_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager
+                        .PERMISSION_GRANTED) {
+                    ImageChooserUtil.openChooserDialog(getCoreFragment(), getViewModel().cvPhotoName);
+                }
+                break;
+            case ImageChooserUtil.REQUEST_CAMERA:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager
+                        .PERMISSION_GRANTED) {
+                    ImageChooserUtil.startCameraIntent(getCoreFragment(), getViewModel().cvPhotoName);
+                }
+                break;
             }
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
@@ -104,8 +104,10 @@ import java.util.List;
 
 public class ImageChooserUtil {
 
-    public static final int REQUEST_GALLERY = 123;
+    public static final int REQUEST_GALLERY = 1235;
     public static final int REQUEST_CAMERA = 1234;
+    public static final int PERMISSION_CAMERA = 1236;
+    public static final int PERMISSION_WRITE_STORAGE = 1237;
     private static final String IMAGE_DIRECTORY = "Images";
     private static final String CAPTURE_IMAGE_FILE_PROVIDER = ".fileprovider";
     private static String FILE_EXTENSION = ".png";
@@ -125,7 +127,7 @@ public class ImageChooserUtil {
                             } else {
                                 PermissionUtil.getPermission(activity,
                                         PermissionUtil.Permissions.CAMERA,
-                                        PermissionUtil.PermissionCode.CAMERA,
+                                        PERMISSION_CAMERA,
                                         PermissionUtil.PermissionMessage.CAMERA,
                                         null);
                             }
@@ -152,7 +154,7 @@ public class ImageChooserUtil {
         } else {
             PermissionUtil.getPermission(activity,
                     PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE,
-                    PermissionUtil.PermissionCode.WRITE_EXTERNAL_STORAGE,
+                    PERMISSION_WRITE_STORAGE,
                     PermissionUtil.PermissionMessage.WRITE_EXTERNAL_STORAGE,
                     null);
         }
@@ -174,7 +176,7 @@ public class ImageChooserUtil {
                             } else {
                                 PermissionUtil.getPermission(fragment,
                                         PermissionUtil.Permissions.CAMERA,
-                                        PermissionUtil.PermissionCode.CAMERA,
+                                        PERMISSION_CAMERA,
                                         PermissionUtil.PermissionMessage.CAMERA,
                                         null);
                             }
@@ -201,7 +203,7 @@ public class ImageChooserUtil {
         } else {
             PermissionUtil.getPermission(fragment,
                     PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE,
-                    PermissionUtil.PermissionCode.WRITE_EXTERNAL_STORAGE,
+                    PERMISSION_WRITE_STORAGE,
                     PermissionUtil.PermissionMessage.WRITE_EXTERNAL_STORAGE,
                     null);
         }
