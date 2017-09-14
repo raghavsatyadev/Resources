@@ -3,7 +3,6 @@ package com.support.utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentUris;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -12,6 +11,8 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+
+import com.support.base.CoreApp;
 
 import java.io.File;
 
@@ -80,7 +81,7 @@ public class FileChooserUtil {
         if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE)) {
             fragment.startActivityForResult(Intent.createChooser(setupIntent(), "Select File"), FILE_CHOOSER);
         } else {
-            PermissionUtil.getPermission(fragment.getContext(),
+            PermissionUtil.getPermission(fragment,
                     PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE,
                     PermissionUtil.PermissionCode.WRITE_EXTERNAL_STORAGE,
                     PermissionUtil.PermissionMessage.WRITE_EXTERNAL_STORAGE,
@@ -92,6 +93,8 @@ public class FileChooserUtil {
         Intent intent = new Intent();
         intent.setType("*/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
         return intent;
     }
 
@@ -118,10 +121,10 @@ public class FileChooserUtil {
     }
 
 
-    public static File getFileFromStorage(Context context, Intent data) {
+    public static File getFileFromStorage(Intent data) {
         if (data != null) {
             Uri uri = data.getData();
-            String path = getPath(context, uri);
+            String path = getPath(uri);
             if (path != null) {
                 return new File(path);
             } else return null;
@@ -135,16 +138,15 @@ public class FileChooserUtil {
      * Framework Documents, as well as the _data field for the MediaStore and
      * other file-based ContentProviders.
      *
-     * @param context The context.
-     * @param uri     The Uri to query.
+     * @param uri The Uri to query.
      */
     @SuppressLint("NewApi")
-    public static String getPath(final Context context, final Uri uri) {
+    private static String getPath(final Uri uri) {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
         // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+        if (isKitKat && DocumentsContract.isDocumentUri(CoreApp.getInstance(), uri)) {
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
@@ -163,7 +165,7 @@ public class FileChooserUtil {
                 final Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
 
-                return getDataColumn(context, contentUri, null, null);
+                return getDataColumn(contentUri, null, null);
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
@@ -185,12 +187,12 @@ public class FileChooserUtil {
                         split[1]
                 };
 
-                return getDataColumn(context, contentUri, selection, selectionArgs);
+                return getDataColumn(contentUri, selection, selectionArgs);
             }
         }
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            return getDataColumn(context, uri, null, null);
+            return getDataColumn(uri, null, null);
         }
         // File
         else if ("file".equalsIgnoreCase(uri.getScheme())) {
@@ -204,13 +206,12 @@ public class FileChooserUtil {
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
      *
-     * @param context       The context.
      * @param uri           The Uri to query.
      * @param selection     (Optional) Filter used in the query.
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    private static String getDataColumn(Context context, Uri uri, String selection,
+    private static String getDataColumn(Uri uri, String selection,
                                         String[] selectionArgs) {
 
         Cursor cursor = null;
@@ -220,7 +221,7 @@ public class FileChooserUtil {
         };
 
         try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+            cursor = CoreApp.getInstance().getContentResolver().query(uri, projection, selection, selectionArgs,
                     null);
             if (cursor != null && cursor.moveToFirst()) {
                 final int column_index = cursor.getColumnIndexOrThrow(column);

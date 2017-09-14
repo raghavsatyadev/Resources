@@ -171,7 +171,7 @@ public class ImageChooserUtil {
                             if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.CAMERA)) {
                                 startCameraIntent(fragment, fileName);
                             } else {
-                                PermissionUtil.getPermission(fragment.getContext(),
+                                PermissionUtil.getPermission(fragment,
                                         PermissionUtil.Permissions.CAMERA,
                                         PermissionUtil.PermissionCode.CAMERA,
                                         PermissionUtil.PermissionMessage.CAMERA,
