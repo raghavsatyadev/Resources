@@ -16,7 +16,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 
-import com.support.BuildConfig;
 import com.support.base.CoreApp;
 
 import java.io.File;
@@ -108,7 +107,7 @@ public class ImageChooserUtil {
     public static final int REQUEST_GALLERY = 123;
     public static final int REQUEST_CAMERA = 1234;
     private static final String IMAGE_DIRECTORY = "Images";
-    private static final String CAPTURE_IMAGE_FILE_PROVIDER = BuildConfig.APPLICATION_ID + ".fileprovider";
+    private static final String CAPTURE_IMAGE_FILE_PROVIDER = ".fileprovider";
     private static String FILE_EXTENSION = ".png";
 
     /**
@@ -150,10 +149,12 @@ public class ImageChooserUtil {
             dialog.setCanceledOnTouchOutside(true);
             dialog.setCancelable(true);
             builder.show();
-        } else
-
-        {
-            Toaster.shortToast("No permission to write");
+        } else {
+            PermissionUtil.getPermission(activity,
+                    PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE,
+                    PermissionUtil.PermissionCode.WRITE_EXTERNAL_STORAGE,
+                    PermissionUtil.PermissionMessage.WRITE_EXTERNAL_STORAGE,
+                    null);
         }
     }
 
@@ -197,10 +198,12 @@ public class ImageChooserUtil {
             dialog.setCanceledOnTouchOutside(true);
             dialog.setCancelable(true);
             builder.show();
-        } else
-
-        {
-            Toaster.shortToast("No permission to write");
+        } else {
+            PermissionUtil.getPermission(fragment,
+                    PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE,
+                    PermissionUtil.PermissionCode.WRITE_EXTERNAL_STORAGE,
+                    PermissionUtil.PermissionMessage.WRITE_EXTERNAL_STORAGE,
+                    null);
         }
     }
 
@@ -225,7 +228,7 @@ public class ImageChooserUtil {
 
         File image = new File(path, fileName + FILE_EXTENSION);
 
-        Uri imageUri = FileProvider.getUriForFile(activity, CAPTURE_IMAGE_FILE_PROVIDER, image);
+        Uri imageUri = FileProvider.getUriForFile(activity, activity.getPackageName() + CAPTURE_IMAGE_FILE_PROVIDER, image);
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
@@ -253,14 +256,14 @@ public class ImageChooserUtil {
         activity.startActivityForResult(intent, REQUEST_CAMERA);
     }
 
-    private static void startCameraIntent(Fragment fragment, String fileName) {
+    public static void startCameraIntent(Fragment fragment, String fileName) {
         File path = new File(StorageUtils.createInternalDirectory(), IMAGE_DIRECTORY);
 
         if (!path.exists()) path.mkdirs();
 
         File image = new File(path, fileName + FILE_EXTENSION);
 
-        Uri imageUri = FileProvider.getUriForFile(fragment.getContext(), CAPTURE_IMAGE_FILE_PROVIDER, image);
+        Uri imageUri = FileProvider.getUriForFile(fragment.getContext(), fragment.getContext().getPackageName() + CAPTURE_IMAGE_FILE_PROVIDER, image);
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
