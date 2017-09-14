@@ -17,6 +17,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 
 import com.support.BuildConfig;
+import com.support.base.CoreApp;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,6 +51,10 @@ import java.util.List;
      <paths>
         <files-path name="captured_image" path="Images/" />
      </paths>
+
+     4. calling code
+
+        ImageChooserUtil.openChooserDialog(coreFragment,"fileName");
 
      4. add in requesting activity
 
@@ -87,7 +92,7 @@ import java.util.List;
                                 new ImageChooserUtil.SaveImageTask.FileSaveListener() {
                                     @Override
                                     public void fileSaved(File file) {
-                                        goodsPhotoAdapter.addItem(file.getAbsolutePath());
+
                                     }
                                 }).execute();
                     }
@@ -104,8 +109,11 @@ public class ImageChooserUtil {
     public static final int REQUEST_CAMERA = 1234;
     private static final String IMAGE_DIRECTORY = "Images";
     private static final String CAPTURE_IMAGE_FILE_PROVIDER = BuildConfig.APPLICATION_ID + ".fileprovider";
-    private static String FILE_EXTENSION = ".jpg";
+    private static String FILE_EXTENSION = ".png";
 
+    /**
+     * @param fileName keep file name in field. this will be required when getting permission.
+     */
     public static void openChooserDialog(final Activity activity, final String fileName) {
         if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
@@ -149,6 +157,9 @@ public class ImageChooserUtil {
         }
     }
 
+    /**
+     * @param fileName keep file name in field. this will be required when getting permission.
+     */
     public static void openChooserDialog(final Fragment fragment, final String fileName) {
         if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getContext());
@@ -193,14 +204,14 @@ public class ImageChooserUtil {
         }
     }
 
-    public static void startGalleryIntent(Activity activity) {
+    private static void startGalleryIntent(Activity activity) {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         activity.startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
     }
 
-    public static void startGalleryIntent(Fragment fragment) {
+    private static void startGalleryIntent(Fragment fragment) {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -242,7 +253,7 @@ public class ImageChooserUtil {
         activity.startActivityForResult(intent, REQUEST_CAMERA);
     }
 
-    public static void startCameraIntent(Fragment fragment, String fileName) {
+    private static void startCameraIntent(Fragment fragment, String fileName) {
         File path = new File(StorageUtils.createInternalDirectory(), IMAGE_DIRECTORY);
 
         if (!path.exists()) path.mkdirs();
@@ -311,7 +322,7 @@ public class ImageChooserUtil {
         }
         try {
             FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            finalBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();
             out.close();
             return file;
@@ -323,18 +334,15 @@ public class ImageChooserUtil {
 
     public static class SaveImageTask extends AsyncTask<Void, Void, File> {
 
-        private Activity activity;
         private Intent data;
         private int requestCode;
         private String fileName;
         private FileSaveListener listener;
 
-        public SaveImageTask(Activity activity,
-                             Intent data,
+        public SaveImageTask(Intent data,
                              int requestCode,
                              String fileName,
                              FileSaveListener listener) {
-            this.activity = activity;
             this.data = data;
             this.requestCode = requestCode;
             this.fileName = fileName;
@@ -348,7 +356,7 @@ public class ImageChooserUtil {
             if (requestCode == ImageChooserUtil.REQUEST_GALLERY) {
                 file = ImageChooserUtil
                         .getGalleryImageFile(data,
-                                activity.getContentResolver()
+                                CoreApp.getInstance().getContentResolver()
                                 , String.valueOf(fileName));
             } else if (requestCode == ImageChooserUtil.REQUEST_CAMERA) {
                 file = ImageChooserUtil.getCameraImageFile(String.valueOf(fileName));

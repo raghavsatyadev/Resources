@@ -15,100 +15,72 @@ import android.support.v4.app.Fragment;
 
 import java.io.File;
 
-
-
 /* Usage:
 
-     1. declare provider in manifest
+     1. write permission and feature in manifest
 
-     <provider
-        android:name="android.support.v4.content.FileProvider"
-        android:authorities="${applicationId}.fileprovider"
-        android:exported="false"
-        android:grantUriPermissions="true">
-        <meta-data
-        android:name="android.support.FILE_PROVIDER_PATHS"
-        android:resource="@xml/image_path" />
-        </provider>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-     2. write permission and feature in manifest
+     2. calling code
 
-     <uses-permission android:name="android.permission.CAMERA" />
+      FileChooserUtil.openChooserDialog(coreFragment);
 
-     <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
-
-     3. xml file for provider resource
-
-     <paths>
-        <files-path name="captured_image" path="Images/" />
-     </paths>
-
-     4. add in requesting activity
+     3. Add onActivityResult
 
         @Override
-        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-            switch (requestCode) {
-                case PermissionUtil.PermissionCode.WRITE_EXTERNAL_STORAGE:
-                    if (grantResults.length > 0 && grantResults[0] == PackageManager
-                            .PERMISSION_GRANTED) {
-                        ImageChooserUtil.openChooserDialog(activity, String.valueOf(fileName));
-                    }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case FileChooserUtil.FILE_CHOOSER:
+                File fileFromStorage = FileChooserUtil.getFileFromStorage(getContext(), data);
+                if (FileChooserUtil.getFileSize(fileFromStorage) <= FileChooserUtil.MB)
                     break;
-                case PermissionUtil.PermissionCode.CAMERA:
-                    if (grantResults.length > 0 && grantResults[0] == PackageManager
-                            .PERMISSION_GRANTED) {
-                        ImageChooserUtil.startCameraIntent(activity, String.valueOf(fileName));
-                    }
-                    break;
-            }
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
 
-      5. Add onActivityResult
+      4. Add onRequestPermissionsResult
 
-       @Override
-        public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            switch (requestCode) {
-                case ImageChooserUtil.FILE_CHOOSER:
-                case ImageChooserUtil.REQUEST_CAMERA:
-                    if (resultCode == RESULT_OK) {
-                        new ImageChooserUtil.SaveImageTask(activity,
-                                data,
-                                requestCode,
-                                String.valueOf(goodsFileName),
-                                new ImageChooserUtil.SaveImageTask.FileSaveListener() {
-                                    @Override
-                                    public void fileSaved(File file) {
-                                        goodsPhotoAdapter.addItem(file.getAbsolutePath());
-                                    }
-                                }).execute();
-                    }
-                    break;
-            }
-            super.onActivityResult(requestCode, resultCode, data);
+      @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PermissionUtil.PermissionCode.WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager
+                        .PERMISSION_GRANTED) {
+                    FileChooserUtil.openChooserDialog(getCoreFragment());
+                }
+                break;
         }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 
       */
 
 public class FileChooserUtil {
 
     public static final int FILE_CHOOSER = 1235;
+    public static final int MB = 1024;
 
-    public static void openChooserDialog(final Activity activity, final String fileName) {
+    public static void openChooserDialog(final Activity activity) {
         if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE)) {
             activity.startActivityForResult(Intent.createChooser(setupIntent(), "Select File"), FILE_CHOOSER);
         } else {
-            Toaster.shortToast("No permission to write");
+            PermissionUtil.getPermission(activity,
+                    PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE,
+                    PermissionUtil.PermissionCode.WRITE_EXTERNAL_STORAGE,
+                    PermissionUtil.PermissionMessage.WRITE_EXTERNAL_STORAGE,
+                    null);
         }
     }
 
-    public static void openChooserDialog(final Fragment fragment, final String fileName) {
+    public static void openChooserDialog(final Fragment fragment) {
         if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE)) {
             fragment.startActivityForResult(Intent.createChooser(setupIntent(), "Select File"), FILE_CHOOSER);
         } else {
-            Toaster.shortToast("No permission to write");
+            PermissionUtil.getPermission(fragment.getContext(),
+                    PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE,
+                    PermissionUtil.PermissionCode.WRITE_EXTERNAL_STORAGE,
+                    PermissionUtil.PermissionMessage.WRITE_EXTERNAL_STORAGE,
+                    null);
         }
     }
 
@@ -129,7 +101,7 @@ public class FileChooserUtil {
     /**
      * @return will return file size in Bytes
      */
-    public static double getFolderSize(File f) {
+    private static double getFolderSize(File f) {
         double size = 0;
         if (f.isDirectory()) {
             for (File file : f.listFiles()) {
@@ -234,8 +206,8 @@ public class FileChooserUtil {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    public static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
+    private static String getDataColumn(Context context, Uri uri, String selection,
+                                        String[] selectionArgs) {
 
         Cursor cursor = null;
         final String column = "_data";
@@ -262,7 +234,7 @@ public class FileChooserUtil {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
      */
-    public static boolean isExternalStorageDocument(Uri uri) {
+    private static boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
 
@@ -270,7 +242,7 @@ public class FileChooserUtil {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
      */
-    public static boolean isDownloadsDocument(Uri uri) {
+    private static boolean isDownloadsDocument(Uri uri) {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
@@ -278,7 +250,7 @@ public class FileChooserUtil {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is MediaProvider.
      */
-    public static boolean isMediaDocument(Uri uri) {
+    private static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 }
