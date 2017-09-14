@@ -32,9 +32,13 @@ import java.io.File;
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case FileChooserUtil.FILE_CHOOSER:
-                File fileFromStorage = FileChooserUtil.getFileFromStorage(getContext(), data);
-                if (FileChooserUtil.getFileSize(fileFromStorage) <= FileChooserUtil.MB)
-                    break;
+                 if (resultCode == Activity.RESULT_OK) {
+                    File fileFromStorage = FileChooserUtil.getFileFromStorage(getContext(), data);
+                    if (FileChooserUtil.getFileSize(fileFromStorage) <= FileChooserUtil.MB) {
+                        SnackBarUtil.showSnackBar(getView(), fileFromStorage.getName());
+                    }
+                }
+                  break;
         }
     }
 
