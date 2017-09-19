@@ -110,7 +110,7 @@ public class ImageChooserUtil {
     public static final int PERMISSION_WRITE_STORAGE = 1237;
     private static final String IMAGE_DIRECTORY = "Images";
     private static final String CAPTURE_IMAGE_FILE_PROVIDER = ".fileprovider";
-    private static String FILE_EXTENSION = ".png";
+    private static String FILE_EXTENSION = ".jpg";
 
     /**
      * @param fileName keep file name in field. this will be required when getting permission.
@@ -327,7 +327,7 @@ public class ImageChooserUtil {
         }
         try {
             FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
             out.flush();
             out.close();
             return file;
