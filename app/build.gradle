@@ -10,8 +10,6 @@ android {
 
         versionCode VERSION_CODE
         versionName VERSION_NAME
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -20,12 +18,30 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
+def googleVersion = GOOGLE_VERSION
+def retrofitVersion = RETROFIT_VERSION
 def supportLibVersion = SUPPORT_LIB_VERSION
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    debugCompile project(path: ':support', configuration: "debug")
-    releaseCompile project(path: ':support', configuration: "release")
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':support')
+    implementation "com.android.support:appcompat-v7:$supportLibVersion"
+    implementation "com.android.support:design:$supportLibVersion"
+
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+
+    implementation ("com.google.firebase:firebase-messaging:$googleVersion"){
+        exclude group: 'com.android.support', module: 'support-v4'
+    }
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+
 }
 apply plugin: 'com.google.gms.google-services'
