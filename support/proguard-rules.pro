@@ -1,3 +1,4 @@
+-keep class com.support.** { *; }
 
 #Retrofit Start
 # Platform calls Class.forName on types which do not exist on Android to determine platform.
