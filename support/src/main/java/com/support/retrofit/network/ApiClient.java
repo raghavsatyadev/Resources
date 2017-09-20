@@ -21,7 +21,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class ApiClient {
 
@@ -45,7 +44,6 @@ public class ApiClient {
                     .baseUrl(WebService.BaseLink + WebService.Version)
                     .client(getOKHttpClient())
                     .addConverterFactory(GsonConverterFactory.create(gson))
-                    .addConverterFactory(ScalarsConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();
         }

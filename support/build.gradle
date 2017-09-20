@@ -14,6 +14,10 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
+    defaultConfig {
+        defaultPublishConfig 'release'
+        publishNonDefault true
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -36,7 +40,6 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     compile "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
-    compile "com.squareup.retrofit2:converter-scalars:$retrofitVersion"
 
     //OkHttp Interceptor
     compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
