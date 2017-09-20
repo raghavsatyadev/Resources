@@ -93,7 +93,7 @@ public class FileChooserUtil {
     private static Intent setupIntent() {
         Intent intent = new Intent();
         intent.setType("*/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         return intent;

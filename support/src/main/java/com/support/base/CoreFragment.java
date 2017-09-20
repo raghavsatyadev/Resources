@@ -34,9 +34,9 @@ public abstract class CoreFragment extends Fragment {
         return compositeDisposable;
     }
 
-    @Override
-    public void onDestroyView() {
-        compositeDisposable.clear();
-        super.onDestroyView();
+    public void cancelCalls() {
+        if (compositeDisposable != null) {
+            compositeDisposable.clear();
+        }
     }
 }
