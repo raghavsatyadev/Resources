@@ -38,7 +38,7 @@ dependencies {
     implementation ("com.google.firebase:firebase-messaging:$googleVersion"){
         exclude group: 'com.android.support', module: 'support-v4'
     }
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta1'
 
     implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
