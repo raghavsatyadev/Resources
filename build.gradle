@@ -17,6 +17,7 @@ allprojects {
 }
 
 project.ext {
+    APPLICATION_ID = "raghav.resources"
     BUILD_TOOLS_VERSION = "26.0.1"
 
     COMPILE_SDK_VERSION = 26
