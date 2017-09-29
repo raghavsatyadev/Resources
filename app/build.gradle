@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-
 android {
     compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
@@ -26,22 +25,25 @@ android {
 def googleVersion = GOOGLE_VERSION
 def retrofitVersion = RETROFIT_VERSION
 def supportLibVersion = SUPPORT_LIB_VERSION
+def glideVersion = GLIDE_VERSION
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':support')
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
     implementation "com.android.support:design:$supportLibVersion"
 
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
 
-    implementation ("com.google.firebase:firebase-messaging:$googleVersion"){
+    implementation("com.google.firebase:firebase-messaging:$googleVersion") {
         exclude group: 'com.android.support', module: 'support-v4'
     }
+
     implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta1'
 
     implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
-    implementation 'com.github.bumptech.glide:glide:3.7.0'
-
 }
 apply plugin: 'com.google.gms.google-services'

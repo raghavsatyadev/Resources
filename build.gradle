@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         jcenter()
+        maven { url 'https://maven.google.com' }
         google()
     }
     dependencies {
@@ -12,6 +13,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven { url 'https://maven.google.com' }
         google()
     }
 }
@@ -29,7 +31,7 @@ project.ext {
 
     SUPPORT_LIB_VERSION = "26.1.0"
     RETROFIT_VERSION = "2.3.0"
-    GOOGLE_VERSION = "11.2.2"
+    GOOGLE_VERSION = "11.4.0"
     GLIDE_VERSION = "3.7.0"
 
     MINIFY_ENABLE = true
