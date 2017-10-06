@@ -35,6 +35,7 @@ dependencies {
     implementation project(':support')
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
     implementation "com.android.support:design:$supportLibVersion"
+    implementation "com.android.support:percent:$supportLibVersion"
 
     implementation "com.github.bumptech.glide:glide:$glideVersion"
 
@@ -45,8 +46,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-v4'
     }
 
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta2'
 
     implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
 }
 apply plugin: 'com.google.gms.google-services'

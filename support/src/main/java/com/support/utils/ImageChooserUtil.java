@@ -1,5 +1,6 @@
 package com.support.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ContentResolver;
@@ -12,9 +13,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 
 import com.support.base.CoreApp;
 
@@ -22,6 +25,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 /* Usage:
 
@@ -104,18 +109,57 @@ import java.util.List;
 
 public class ImageChooserUtil {
 
-    public static final int REQUEST_GALLERY = 1235;
-    public static final int REQUEST_CAMERA = 1234;
-    public static final int PERMISSION_CAMERA = 1236;
-    public static final int PERMISSION_WRITE_STORAGE = 1237;
-    private static final String IMAGE_DIRECTORY = "Images";
-    private static final String CAPTURE_IMAGE_FILE_PROVIDER = ".fileprovider";
-    private static String FILE_EXTENSION = ".jpg";
+    public final int REQUEST_GALLERY;
+    public final int REQUEST_CAMERA;
+    public final int PERMISSION_CAMERA;
+    public final int PERMISSION_WRITE_STORAGE;
+    private final String IMAGE_DIRECTORY = "Images";
+    private final String CAPTURE_IMAGE_FILE_PROVIDER = ".fileprovider";
+    private String FILE_EXTENSION = ".jpg";
+    private String fileName;
+
+    private ImageChooserUtil() {
+        REQUEST_GALLERY = 1233;
+        REQUEST_CAMERA = 1234;
+        PERMISSION_CAMERA = 1236;
+        PERMISSION_WRITE_STORAGE = 1237;
+    }
+
+    private ImageChooserUtil(int requestCode) {
+        if (requestCode != 0) {
+            REQUEST_CAMERA = requestCode + 1;
+            REQUEST_GALLERY = requestCode;
+            PERMISSION_CAMERA = requestCode + 1;
+            PERMISSION_WRITE_STORAGE = requestCode;
+        } else {
+            REQUEST_GALLERY = 1233;
+            REQUEST_CAMERA = 1234;
+            PERMISSION_CAMERA = 1236;
+            PERMISSION_WRITE_STORAGE = 1237;
+        }
+    }
+
+    public static ImageChooserUtil getInstance(int requestCode) {
+        return new ImageChooserUtil(requestCode);
+    }
+
+    public static ImageChooserUtil getInstance() {
+        return new ImageChooserUtil();
+    }
+
+    public void openChooserDialog(final Activity activity) {
+        if (!TextUtils.isEmpty(fileName)) {
+            openChooserDialog(activity, fileName);
+        } else
+            throw new RuntimeException("you have to call openChooserDialog(final Activity activity, final String fileName) first");
+    }
 
     /**
      * @param fileName keep file name in field. this will be required when getting permission.
      */
-    public static void openChooserDialog(final Activity activity, final String fileName) {
+    public void openChooserDialog(final Activity activity, final String fileName) {
+        this.fileName = fileName;
+
         if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             builder.setTitle("Choose Image")
@@ -123,7 +167,7 @@ public class ImageChooserUtil {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.CAMERA)) {
-                                startCameraIntent(activity, fileName);
+                                startCameraIntent(activity);
                             } else {
                                 PermissionUtil.getPermission(activity,
                                         PermissionUtil.Permissions.CAMERA,
@@ -160,10 +204,19 @@ public class ImageChooserUtil {
         }
     }
 
+    public void openChooserDialog(final Fragment fragment) {
+        if (!TextUtils.isEmpty(fileName)) {
+            openChooserDialog(fragment, fileName);
+        } else
+            throw new RuntimeException("you have to call openChooserDialog(final Fragment fragment, final String fileName) first");
+    }
+
     /**
      * @param fileName keep file name in field. this will be required when getting permission.
      */
-    public static void openChooserDialog(final Fragment fragment, final String fileName) {
+    public void openChooserDialog(final Fragment fragment, final String fileName) {
+        this.fileName = fileName;
+
         if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getContext());
 
@@ -172,7 +225,7 @@ public class ImageChooserUtil {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.CAMERA)) {
-                                startCameraIntent(fragment, fileName);
+                                startCameraIntent(fragment);
                             } else {
                                 PermissionUtil.getPermission(fragment,
                                         PermissionUtil.Permissions.CAMERA,
@@ -209,21 +262,22 @@ public class ImageChooserUtil {
         }
     }
 
-    private static void startGalleryIntent(Activity activity) {
+    private void startGalleryIntent(Activity activity) {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         activity.startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
     }
 
-    private static void startGalleryIntent(Fragment fragment) {
+    private void startGalleryIntent(Fragment fragment) {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         fragment.startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
     }
 
-    public static void startCameraIntent(Activity activity, String fileName) {
+    @SuppressLint("ObsoleteSdkInt")
+    public void startCameraIntent(Activity activity) {
         File path = new File(StorageUtils.createInternalDirectory(), IMAGE_DIRECTORY);
 
         if (!path.exists()) path.mkdirs();
@@ -258,7 +312,8 @@ public class ImageChooserUtil {
         activity.startActivityForResult(intent, REQUEST_CAMERA);
     }
 
-    public static void startCameraIntent(Fragment fragment, String fileName) {
+    @SuppressLint("ObsoleteSdkInt")
+    public void startCameraIntent(Fragment fragment) {
         File path = new File(StorageUtils.createInternalDirectory(), IMAGE_DIRECTORY);
 
         if (!path.exists()) path.mkdirs();
@@ -293,7 +348,7 @@ public class ImageChooserUtil {
         fragment.startActivityForResult(intent, REQUEST_CAMERA);
     }
 
-    public static File getGalleryImageFile(Intent data, ContentResolver resolver, String fileName) {
+    private File getGalleryImageFile(Intent data, ContentResolver resolver) {
         if (data != null) {
             try {
                 return saveImageToStorage(
@@ -309,13 +364,13 @@ public class ImageChooserUtil {
         }
     }
 
-    public static File getCameraImageFile(String fileName) {
+    private File getCameraImageFile() {
         File path = new File(StorageUtils.createInternalDirectory(), IMAGE_DIRECTORY);
         if (!path.exists()) path.mkdirs();
         return new File(path, fileName + FILE_EXTENSION);
     }
 
-    public static File saveImageToStorage(Bitmap finalBitmap, String path, String imageName) {
+    private File saveImageToStorage(Bitmap finalBitmap, String path, String imageName) {
         String root = StorageUtils.createInternalDirectory();
         File myDir = new File(root + "/" + path);
         if (!myDir.exists()) {
@@ -337,34 +392,82 @@ public class ImageChooserUtil {
         }
     }
 
-    public static class SaveImageTask extends AsyncTask<Void, Void, File> {
+    public boolean resolveOnActivityResult(int requestCode, int resultCode, Intent data, FileSaveListener fileSaveListener) {
+        if (requestCode == REQUEST_CAMERA || requestCode == REQUEST_GALLERY) {
+            if (resultCode == RESULT_OK) {
+                saveImage(data, requestCode, fileSaveListener);
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean resolveOnRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults, Activity activity) {
+
+        if (PERMISSION_WRITE_STORAGE == requestCode) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager
+                    .PERMISSION_GRANTED) {
+                openChooserDialog(activity);
+            }
+            return true;
+        } else if (REQUEST_CAMERA == requestCode) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager
+                    .PERMISSION_GRANTED) {
+                startCameraIntent(activity);
+            }
+            return true;
+        } else return false;
+    }
+
+    public boolean resolveOnRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults, Fragment fragment) {
+
+        if (PERMISSION_WRITE_STORAGE == requestCode) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager
+                    .PERMISSION_GRANTED) {
+                openChooserDialog(fragment);
+            }
+            return true;
+        } else if (REQUEST_CAMERA == requestCode) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager
+                    .PERMISSION_GRANTED) {
+                startCameraIntent(fragment);
+            }
+            return true;
+        } else return false;
+    }
+
+    public void saveImage(Intent data, int requestCode,
+                          FileSaveListener listener) {
+        new SaveImageTask(data, requestCode, listener).execute();
+    }
+
+    public interface FileSaveListener {
+        void fileSaved(File file);
+    }
+
+    public class SaveImageTask extends AsyncTask<Void, Void, File> {
 
         private Intent data;
         private int requestCode;
-        private String fileName;
         private FileSaveListener listener;
 
         public SaveImageTask(Intent data,
-                             int requestCode,
-                             String fileName,
-                             FileSaveListener listener) {
+                             int requestCode, FileSaveListener listener) {
             this.data = data;
             this.requestCode = requestCode;
-            this.fileName = fileName;
             this.listener = listener;
         }
 
         @Override
         protected File doInBackground(Void... pObjects) {
             File file = null;
-
-            if (requestCode == ImageChooserUtil.REQUEST_GALLERY) {
-                file = ImageChooserUtil
-                        .getGalleryImageFile(data,
-                                CoreApp.getInstance().getContentResolver()
-                                , String.valueOf(fileName));
-            } else if (requestCode == ImageChooserUtil.REQUEST_CAMERA) {
-                file = ImageChooserUtil.getCameraImageFile(String.valueOf(fileName));
+            if (requestCode == REQUEST_GALLERY) {
+                file = getGalleryImageFile(data,
+                        CoreApp.getInstance().getContentResolver()
+                );
+            } else if (requestCode == REQUEST_CAMERA) {
+                file = getCameraImageFile();
             }
 
             return file;
@@ -377,8 +480,5 @@ public class ImageChooserUtil {
             super.onPostExecute(file);
         }
 
-        public interface FileSaveListener {
-            void fileSaved(File file);
-        }
     }
 }
