@@ -58,23 +58,23 @@ import static android.app.Activity.RESULT_OK;
 
      4. calling code
 
-        ImageChooserUtil.openChooserDialog(coreFragment,"fileName");
+        MultiImageChooserUtil.openChooserDialog(coreFragment,"fileName");
 
      4. add in requesting activity
 
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
             switch (requestCode) {
-                case ImageChooserUtil.PERMISSION_WRITE_STORAGE:
+                case MultiImageChooserUtil.PERMISSION_WRITE_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager
                         .PERMISSION_GRANTED) {
-                    ImageChooserUtil.openChooserDialog(getCoreFragment(), getViewModel().cvPhotoName);
+                    MultiImageChooserUtil.openChooserDialog(getCoreFragment(), getViewModel().cvPhotoName);
                 }
                 break;
-            case ImageChooserUtil.REQUEST_CAMERA:
+            case MultiImageChooserUtil.REQUEST_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager
                         .PERMISSION_GRANTED) {
-                    ImageChooserUtil.startCameraIntent(getCoreFragment(), getViewModel().cvPhotoName);
+                    MultiImageChooserUtil.startCameraIntent(getCoreFragment(), getViewModel().cvPhotoName);
                 }
                 break;
             }
@@ -86,14 +86,14 @@ import static android.app.Activity.RESULT_OK;
        @Override
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
             switch (requestCode) {
-                case ImageChooserUtil.REQUEST_GALLERY:
-                case ImageChooserUtil.REQUEST_CAMERA:
+                case MultiImageChooserUtil.REQUEST_GALLERY:
+                case MultiImageChooserUtil.REQUEST_CAMERA:
                     if (resultCode == RESULT_OK) {
-                        new ImageChooserUtil.SaveImageTask(activity,
+                        new MultiImageChooserUtil.SaveImageTask(activity,
                                 data,
                                 requestCode,
                                 String.valueOf(goodsFileName),
-                                new ImageChooserUtil.SaveImageTask.FileSaveListener() {
+                                new MultiImageChooserUtil.SaveImageTask.FileSaveListener() {
                                     @Override
                                     public void fileSaved(File file) {
 
@@ -107,7 +107,7 @@ import static android.app.Activity.RESULT_OK;
 
       */
 
-public class ImageChooserUtil {
+public class MultiImageChooserUtil {
 
     public final int REQUEST_GALLERY;
     public final int REQUEST_CAMERA;
@@ -118,14 +118,14 @@ public class ImageChooserUtil {
     private String FILE_EXTENSION = ".jpg";
     private String fileName;
 
-    private ImageChooserUtil() {
+    private MultiImageChooserUtil() {
         REQUEST_GALLERY = 1233;
         REQUEST_CAMERA = 1234;
         PERMISSION_CAMERA = 1236;
         PERMISSION_WRITE_STORAGE = 1237;
     }
 
-    private ImageChooserUtil(int requestCode) {
+    private MultiImageChooserUtil(int requestCode) {
         if (requestCode != 0) {
             REQUEST_CAMERA = requestCode + 1;
             REQUEST_GALLERY = requestCode;
@@ -139,12 +139,12 @@ public class ImageChooserUtil {
         }
     }
 
-    public static ImageChooserUtil getInstance(int requestCode) {
-        return new ImageChooserUtil(requestCode);
+    public static MultiImageChooserUtil getInstance(int requestCode) {
+        return new MultiImageChooserUtil(requestCode);
     }
 
-    public static ImageChooserUtil getInstance() {
-        return new ImageChooserUtil();
+    public static MultiImageChooserUtil getInstance() {
+        return new MultiImageChooserUtil();
     }
 
     public void openChooserDialog(final Activity activity) {
@@ -356,7 +356,7 @@ public class ImageChooserUtil {
                         IMAGE_DIRECTORY,
                         fileName);
             } catch (IOException e) {
-                AppLog.log(false, "ImageChooserUtil " + "getGalleryImageFile: ", e);
+                AppLog.log(false, "MultiImageChooserUtil " + "getGalleryImageFile: ", e);
                 return null;
             }
         } else {
@@ -387,7 +387,7 @@ public class ImageChooserUtil {
             out.close();
             return file;
         } catch (Exception e) {
-            AppLog.log(false, "ImageChooserUtil " + "saveImageToStorage: ", e);
+            AppLog.log(false, "MultiImageChooserUtil " + "saveImageToStorage: ", e);
             return file;
         }
     }

@@ -8,14 +8,14 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.support.base.CoreActivity;
-import com.support.utils.ImageChooserUtil;
+import com.support.utils.MultiImageChooserUtil;
 
 import java.io.File;
 
 import raghav.resources.R;
 
 public class ImageSelectorActivity extends CoreActivity {
-    private ImageChooserUtil firstImageChooser, secondImageChooser, thirdImageChooser;
+    private MultiImageChooserUtil firstImageChooser, secondImageChooser, thirdImageChooser;
     private AppCompatImageView imageView, imageView2, imageView3;
 
     @Override
@@ -37,17 +37,18 @@ public class ImageSelectorActivity extends CoreActivity {
     }
 
     public void firstImageClick(View view) {
-        if (firstImageChooser == null) firstImageChooser = ImageChooserUtil.getInstance(1001);
+        if (firstImageChooser == null) firstImageChooser = MultiImageChooserUtil.getInstance(1001);
         firstImageChooser.openChooserDialog(this, "firstImage");
     }
 
     public void secondImageClick(View view) {
-        if (secondImageChooser == null) secondImageChooser = ImageChooserUtil.getInstance(1003);
+        if (secondImageChooser == null)
+            secondImageChooser = MultiImageChooserUtil.getInstance(1003);
         secondImageChooser.openChooserDialog(this, "secondImage");
     }
 
     public void thirdImageClick(View view) {
-        if (thirdImageChooser == null) thirdImageChooser = ImageChooserUtil.getInstance(1005);
+        if (thirdImageChooser == null) thirdImageChooser = MultiImageChooserUtil.getInstance(1005);
         thirdImageChooser.openChooserDialog(this, "thirdImage");
     }
 
@@ -64,19 +65,19 @@ public class ImageSelectorActivity extends CoreActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (firstImageChooser != null && firstImageChooser.resolveOnActivityResult(requestCode, resultCode, data, new ImageChooserUtil.FileSaveListener() {
+        if (firstImageChooser != null && firstImageChooser.resolveOnActivityResult(requestCode, resultCode, data, new MultiImageChooserUtil.FileSaveListener() {
             @Override
             public void fileSaved(File file) {
                 Glide.with(ImageSelectorActivity.this).load(file).centerCrop().into(imageView);
             }
         })) {
-        } else if (secondImageChooser != null && secondImageChooser.resolveOnActivityResult(requestCode, resultCode, data, new ImageChooserUtil.FileSaveListener() {
+        } else if (secondImageChooser != null && secondImageChooser.resolveOnActivityResult(requestCode, resultCode, data, new MultiImageChooserUtil.FileSaveListener() {
             @Override
             public void fileSaved(File file) {
                 Glide.with(ImageSelectorActivity.this).load(file).centerCrop().into(imageView2);
             }
         })) {
-        } else if (thirdImageChooser != null && thirdImageChooser.resolveOnActivityResult(requestCode, resultCode, data, new ImageChooserUtil.FileSaveListener() {
+        } else if (thirdImageChooser != null && thirdImageChooser.resolveOnActivityResult(requestCode, resultCode, data, new MultiImageChooserUtil.FileSaveListener() {
             @Override
             public void fileSaved(File file) {
                 Glide.with(ImageSelectorActivity.this).load(file).centerCrop().into(imageView3);
