@@ -17,6 +17,9 @@ allprojects {
 }
 
 project.ext {
+//    this is for APK name
+    APP_NAME = "Resources"
+
     APPLICATION_ID = "raghav.resources"
     BUILD_TOOLS_VERSION = "26.0.2"
 
