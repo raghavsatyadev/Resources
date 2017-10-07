@@ -1,8 +1,0 @@
-git add .
-git commit -am "Message"
-git push
-
-
-//for saving id & pwd 
-git config credential.helper store
-git push
