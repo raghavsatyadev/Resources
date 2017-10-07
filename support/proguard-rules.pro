@@ -27,6 +27,10 @@
 -keep interface com.squareup.** { *; }
 -dontwarn rx.**
 -dontwarn retrofit.**
+-dontwarn javax.annotation.**
+-dontwarn okio.**
+-dontwarn okhttp3.**
+-dontwarn javax.annotation.Nullable
 
 #retrofit models
 -keep class com.google.gson.examples.android.model.** { *; }
@@ -55,12 +59,10 @@
 
 #Glide Module
 -keep public class * implements com.bumptech.glide.module.GlideModule
--keep public class * extends com.bumptech.glide.AppGlideModule
--keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
-  **[] $VALUES;
-  public *;
-}
 
 #Support Library
 -keep class android.support.v7.** { *; }
 -keep interface android.support.v7.** { *; }
+
+#RXJava
+-dontwarn io.reactivex.**
