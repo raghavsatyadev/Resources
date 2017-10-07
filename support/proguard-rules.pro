@@ -62,3 +62,7 @@
 
 #RXJava
 -dontwarn io.reactivex.**
+
+#Support Library
+-keep class android.support.v7.** { *; }
+-keep interface android.support.v7.** { *; }
