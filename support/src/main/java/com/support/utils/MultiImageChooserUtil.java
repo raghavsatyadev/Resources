@@ -40,13 +40,6 @@ public class MultiImageChooserUtil {
     private String FILE_EXTENSION = ".jpg";
     private String fileName;
 
-    private MultiImageChooserUtil() {
-        REQUEST_GALLERY = 1233;
-        REQUEST_CAMERA = 1234;
-        PERMISSION_CAMERA = 1236;
-        PERMISSION_WRITE_STORAGE = 1237;
-    }
-
     private MultiImageChooserUtil(int requestCode) {
         if (requestCode != 0) {
             REQUEST_CAMERA = requestCode + 1;
@@ -63,10 +56,6 @@ public class MultiImageChooserUtil {
 
     public static MultiImageChooserUtil getInstance(int requestCode) {
         return new MultiImageChooserUtil(requestCode);
-    }
-
-    public static MultiImageChooserUtil getInstance() {
-        return new MultiImageChooserUtil();
     }
 
     public void openChooserDialog(final Activity activity) {
