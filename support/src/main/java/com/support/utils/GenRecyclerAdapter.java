@@ -70,7 +70,7 @@ public abstract class GenRecyclerAdapter
     }
 
     public void deleteItem(int index) {
-        if (index > 0 && index < getItemCount())
+        if (index >= 0 && index < getItemCount())
             getModels().remove(index);
     }
 
