@@ -53,7 +53,7 @@ import java.util.List;
 
      4. calling code
 
-        ImageChooserUtil.openChooserDialog(coreFragment,"fileName");
+        ImageChooserUtil.openChooserDialog(getCoreFragment(),fileName);
 
      4. add in requesting activity
 
@@ -63,13 +63,13 @@ import java.util.List;
                 case ImageChooserUtil.PERMISSION_WRITE_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager
                         .PERMISSION_GRANTED) {
-                    ImageChooserUtil.openChooserDialog(getCoreFragment(), getViewModel().cvPhotoName);
+                    ImageChooserUtil.openChooserDialog(getCoreFragment(), fileName);
                 }
                 break;
             case ImageChooserUtil.REQUEST_CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager
                         .PERMISSION_GRANTED) {
-                    ImageChooserUtil.startCameraIntent(getCoreFragment(), getViewModel().cvPhotoName);
+                    ImageChooserUtil.startCameraIntent(getCoreFragment(), fileName);
                 }
                 break;
             }
@@ -84,10 +84,10 @@ import java.util.List;
                 case ImageChooserUtil.REQUEST_GALLERY:
                 case ImageChooserUtil.REQUEST_CAMERA:
                     if (resultCode == RESULT_OK) {
-                        new ImageChooserUtil.SaveImageTask(activity,
+                        new ImageChooserUtil.SaveImageTask(
                                 data,
                                 requestCode,
-                                String.valueOf(goodsFileName),
+                                fileName,
                                 new ImageChooserUtil.SaveImageTask.FileSaveListener() {
                                     @Override
                                     public void fileSaved(File file) {
@@ -101,6 +101,7 @@ import java.util.List;
         }
 
       */
+
 public class ImageChooserUtil {
 
     public static final int REQUEST_GALLERY = 1235;
@@ -109,7 +110,7 @@ public class ImageChooserUtil {
     public static final int PERMISSION_WRITE_STORAGE = 1237;
     private static final String IMAGE_DIRECTORY = "Images";
     private static final String CAPTURE_IMAGE_FILE_PROVIDER = ".fileprovider";
-    private static String FILE_EXTENSION = ".jpg";
+    private static String FILE_EXTENSION = ".png";
 
     /**
      * @param fileName keep file name in field. this will be required when getting permission.
@@ -326,7 +327,7 @@ public class ImageChooserUtil {
         }
         try {
             FileOutputStream out = new FileOutputStream(file);
-            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            finalBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();
             out.close();
             return file;
@@ -371,7 +372,7 @@ public class ImageChooserUtil {
 
         @Override
         protected void onPostExecute(File file) {
-            if (listener != null)
+            if (listener != null && file != null)
                 listener.fileSaved(file);
             super.onPostExecute(file);
         }

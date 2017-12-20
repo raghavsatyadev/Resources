@@ -65,6 +65,12 @@ public abstract class GenRecyclerAdapter
         notifyDataSetChanged();
     }
 
+    public void replaceAll(ArrayList<Model> models) {
+        getModels().clear();
+        getModels().addAll(models);
+        notifyDataSetChanged();
+    }
+
     public Model getItem(int index) {
         return getModels().get(index);
     }
