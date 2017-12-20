@@ -6,8 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
 
-import com.bumptech.glide.Glide;
 import com.support.base.CoreActivity;
+import com.support.utils.GlideApp;
 import com.support.utils.MultiImageChooserUtil;
 
 import java.io.File;
@@ -68,19 +68,19 @@ public class ImageSelectorActivity extends CoreActivity {
         if (firstImageChooser != null && firstImageChooser.resolveOnActivityResult(requestCode, resultCode, data, new MultiImageChooserUtil.FileSaveListener() {
             @Override
             public void fileSaved(File file) {
-                Glide.with(ImageSelectorActivity.this).load(file).centerCrop().into(imageView);
+                GlideApp.with(ImageSelectorActivity.this).load(file).centerCrop().into(imageView);
             }
         })) {
         } else if (secondImageChooser != null && secondImageChooser.resolveOnActivityResult(requestCode, resultCode, data, new MultiImageChooserUtil.FileSaveListener() {
             @Override
             public void fileSaved(File file) {
-                Glide.with(ImageSelectorActivity.this).load(file).centerCrop().into(imageView2);
+                GlideApp.with(ImageSelectorActivity.this).load(file).centerCrop().into(imageView2);
             }
         })) {
         } else if (thirdImageChooser != null && thirdImageChooser.resolveOnActivityResult(requestCode, resultCode, data, new MultiImageChooserUtil.FileSaveListener() {
             @Override
             public void fileSaved(File file) {
-                Glide.with(ImageSelectorActivity.this).load(file).centerCrop().into(imageView3);
+                GlideApp.with(ImageSelectorActivity.this).load(file).centerCrop().into(imageView3);
             }
         })) {
         }

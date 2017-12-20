@@ -33,7 +33,7 @@ project.ext {
     SUPPORT_LIB_VERSION = "27.0.2"
     RETROFIT_VERSION = "2.3.0"
     GOOGLE_VERSION = "11.6.0"
-    GLIDE_VERSION = "3.7.0"
+    GLIDE_VERSION = "4.4.0"
 
     MINIFY_ENABLE = true
     SHRINK_RESOURCES = true

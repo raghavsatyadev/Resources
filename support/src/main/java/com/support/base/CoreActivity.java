@@ -15,8 +15,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.support.R;
+import com.support.utils.GlideApp;
 import com.support.utils.ResourceUtils;
 import com.support.widgets.TextViewPlus;
 
@@ -102,7 +102,7 @@ public abstract class CoreActivity extends AppCompatActivity {
      */
     private void setToolBar(boolean isToolBarEnabled, boolean isBackEnabled, String title) {
         if (isToolBarEnabled) {
-            toolbar = (Toolbar) coreActivity.findViewById(R.id.tool_bar);
+            toolbar = coreActivity.findViewById(R.id.tool_bar);
             coreActivity.setSupportActionBar(toolbar);
 
             ActionBar actionBar = coreActivity.getSupportActionBar();
@@ -161,9 +161,10 @@ public abstract class CoreActivity extends AppCompatActivity {
      * @param backgroundDrawable ID of background drawable
      */
     private void setScreenBackground(@IdRes int backgroundID, @DrawableRes int backgroundDrawable) {
-        if (backgroundDrawable != 0 && backgroundID != 0)
-            Glide.with(this).load(backgroundDrawable).centerCrop().dontAnimate()
+        if (backgroundDrawable != 0 && backgroundID != 0) {
+            GlideApp.with(this).load(backgroundDrawable).centerCrop().dontAnimate()
                     .into((ImageView) findViewById(backgroundID));
+        }
     }
 
     /**
@@ -173,7 +174,7 @@ public abstract class CoreActivity extends AppCompatActivity {
      */
     private void changeTitleTV(String title) {
         if (toolbar != null && title != null) {
-            TextViewPlus toolBarTitle = (TextViewPlus) toolbar.findViewById(R.id.txt_tool_bar_title);
+            TextViewPlus toolBarTitle = toolbar.findViewById(R.id.txt_tool_bar_title);
             toolBarTitle.setTextColor(ResourceUtils.getColor(R.color.tool_bar_text_color));
             toolBarTitle.setText(title);
         }
