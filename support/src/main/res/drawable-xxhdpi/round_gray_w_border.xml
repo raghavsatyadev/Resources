@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+            <solid android:color="#DDD" />
+            <padding android:bottom="@dimen/image_chooser_dialog_background_padding" android:left="@dimen/image_chooser_dialog_background_padding" android:right="@dimen/image_chooser_dialog_background_padding" android:top="@dimen/image_chooser_dialog_background_padding" />
+            <stroke android:width="@dimen/space_5" android:color="#BBB" />
+        </shape>
+    </item>
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+            <solid android:color="#CCC" />
+            <padding android:bottom="@dimen/image_chooser_dialog_background_padding" android:left="@dimen/image_chooser_dialog_background_padding" android:right="@dimen/image_chooser_dialog_background_padding" android:top="@dimen/image_chooser_dialog_background_padding" />
+            <stroke android:width="@dimen/space_5" android:color="#AAA" />
+        </shape>
+    </item>
+</selector>

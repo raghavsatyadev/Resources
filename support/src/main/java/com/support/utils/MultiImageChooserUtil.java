@@ -74,18 +74,15 @@ public class MultiImageChooserUtil {
         if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             builder.setTitle("Choose Image")
-                    .setPositiveButton("Camera", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.CAMERA)) {
-                                startCameraIntent(activity);
-                            } else {
-                                PermissionUtil.getPermission(activity,
-                                        PermissionUtil.Permissions.CAMERA,
-                                        PERMISSION_CAMERA,
-                                        PermissionUtil.PermissionMessage.CAMERA,
-                                        null);
-                            }
+                    .setPositiveButton("Camera", (dialog, id) -> {
+                        if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.CAMERA)) {
+                            startCameraIntent(activity);
+                        } else {
+                            PermissionUtil.getPermission(activity,
+                                    PermissionUtil.Permissions.CAMERA,
+                                    PERMISSION_CAMERA,
+                                    PermissionUtil.PermissionMessage.CAMERA,
+                                    null);
                         }
                     })
                     .setNegativeButton("Gallery", new DialogInterface.OnClickListener() {
@@ -132,32 +129,19 @@ public class MultiImageChooserUtil {
             AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getContext());
 
             builder.setTitle("Choose Image")
-                    .setPositiveButton("Camera", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.CAMERA)) {
-                                startCameraIntent(fragment);
-                            } else {
-                                PermissionUtil.getPermission(fragment,
-                                        PermissionUtil.Permissions.CAMERA,
-                                        PERMISSION_CAMERA,
-                                        PermissionUtil.PermissionMessage.CAMERA,
-                                        null);
-                            }
+                    .setPositiveButton("Camera", (dialog, id) -> {
+                        if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.CAMERA)) {
+                            startCameraIntent(fragment);
+                        } else {
+                            PermissionUtil.getPermission(fragment,
+                                    PermissionUtil.Permissions.CAMERA,
+                                    PERMISSION_CAMERA,
+                                    PermissionUtil.PermissionMessage.CAMERA,
+                                    null);
                         }
                     })
-                    .setNegativeButton("Gallery", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            startGalleryIntent(fragment);
-                        }
-                    })
-                    .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+                    .setNegativeButton("Gallery", (dialog, id) -> startGalleryIntent(fragment))
+                    .setNeutralButton("Cancel", (dialog, which) -> dialog.dismiss());
 
             AlertDialog dialog = builder.create();
 

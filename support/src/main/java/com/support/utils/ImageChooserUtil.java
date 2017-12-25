@@ -1,28 +1,5 @@
 package com.support.utils;
 
-import android.app.Activity;
-import android.content.ClipData;
-import android.content.ContentResolver;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
-
-import com.support.base.CoreApp;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.List;
-
 /* Usage:
 
      1. declare provider in manifest
@@ -102,6 +79,40 @@ import java.util.List;
 
       */
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.ClipData;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AppCompatDialog;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.Window;
+
+import com.support.R;
+import com.support.base.CoreApp;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
+
 public class ImageChooserUtil {
 
     public static final int REQUEST_GALLERY = 1235;
@@ -112,32 +123,18 @@ public class ImageChooserUtil {
     private static final String CAPTURE_IMAGE_FILE_PROVIDER = ".fileprovider";
     private static String FILE_EXTENSION = ".png";
 
-    /**
-     * @param fileName keep file name in field. this will be required when getting permission.
-     */
+
     public static void openChooserDialog(final Activity activity, final String fileName) {
+        openChooserDialog(activity, fileName, null);
+    }
+
+    /**
+     * @param fileName   keep file name in field. this will be required when getting permission.
+     * @param targetView it will trigger in an animation on device above lollipop.
+     */
+    public static void openChooserDialog(final Activity activity, final String fileName, View targetView) {
         if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder.setTitle("Choose Image")
-                    .setPositiveButton("Camera", (dialog, id) -> {
-                        if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.CAMERA)) {
-                            startCameraIntent(activity, fileName);
-                        } else {
-                            PermissionUtil.getPermission(activity,
-                                    PermissionUtil.Permissions.CAMERA,
-                                    PERMISSION_CAMERA,
-                                    PermissionUtil.PermissionMessage.CAMERA,
-                                    null);
-                        }
-                    })
-                    .setNegativeButton("Gallery", (dialog, id) -> startGalleryIntent(activity))
-                    .setNeutralButton("Cancel", (dialog, which) -> dialog.dismiss());
-
-            AlertDialog dialog = builder.create();
-
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.setCancelable(true);
-            builder.show();
+            showDialog(activity, targetView, fileName);
         } else {
             PermissionUtil.getPermission(activity,
                     PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE,
@@ -147,33 +144,64 @@ public class ImageChooserUtil {
         }
     }
 
-    /**
-     * @param fileName keep file name in field. this will be required when getting permission.
-     */
+    private static void showDialog(Activity activity, View targetView, String fileName) {
+        final View dialogView = View.inflate(activity, R.layout.image_chooser_dialog, null);
+        AppCompatDialog appCompatDialog = new AppCompatDialog(activity);
+        appCompatDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        appCompatDialog.setContentView(dialogView);
+
+        Window window = appCompatDialog.getWindow();
+        if (window != null) {
+            window.setLayout(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+        if (targetView != null && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            appCompatDialog.setOnShowListener(dialogInterface -> revealShow(dialogView, true, appCompatDialog, targetView));
+        }
+        appCompatDialog.setCancelable(true);
+        appCompatDialog.show();
+
+        appCompatDialog.findViewById(R.id.btn_gallery).setOnClickListener(view -> startGalleryIntent(activity));
+        appCompatDialog.findViewById(R.id.btn_camera).setOnClickListener(view -> {
+            if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.CAMERA)) {
+                startCameraIntent(activity, fileName);
+            } else {
+                PermissionUtil.getPermission(activity,
+                        PermissionUtil.Permissions.CAMERA,
+                        PERMISSION_CAMERA,
+                        PermissionUtil.PermissionMessage.CAMERA,
+                        null);
+            }
+        });
+
+        appCompatDialog.findViewById(R.id.btn_cancel).setOnClickListener(view -> {
+            if (targetView != null && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                revealShow(dialogView, false, appCompatDialog, targetView);
+            }
+        });
+        appCompatDialog.setOnKeyListener((dialogInterface, i, keyEvent) -> {
+            if (i == KeyEvent.KEYCODE_BACK) {
+                if (targetView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    revealShow(dialogView, false, appCompatDialog, targetView);
+                }
+                return true;
+            }
+
+            return false;
+        });
+    }
+
     public static void openChooserDialog(@NonNull Fragment fragment, final String fileName) {
+        openChooserDialog(fragment, fileName, null);
+    }
+
+    /**
+     * @param fileName   keep file name in field. this will be required when getting permission.
+     * @param targetView it will trigger in an animation on device above lollipop.
+     */
+    public static void openChooserDialog(@NonNull Fragment fragment, final String fileName, View targetView) {
         if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(fragment.getContext());
-
-            builder.setTitle("Choose Image")
-                    .setPositiveButton("Camera", (dialog, id) -> {
-                        if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.CAMERA)) {
-                            startCameraIntent(fragment, fileName);
-                        } else {
-                            PermissionUtil.getPermission(fragment,
-                                    PermissionUtil.Permissions.CAMERA,
-                                    PERMISSION_CAMERA,
-                                    PermissionUtil.PermissionMessage.CAMERA,
-                                    null);
-                        }
-                    })
-                    .setNegativeButton("Gallery", (dialog, id) -> startGalleryIntent(fragment))
-                    .setNeutralButton("Cancel", (dialog, which) -> dialog.dismiss());
-
-            AlertDialog dialog = builder.create();
-
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.setCancelable(true);
-            builder.show();
+            showDialog(fragment, fileName, targetView);
         } else {
             PermissionUtil.getPermission(fragment,
                     PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE,
@@ -181,6 +209,88 @@ public class ImageChooserUtil {
                     PermissionUtil.PermissionMessage.WRITE_EXTERNAL_STORAGE,
                     null);
         }
+    }
+
+    private static void showDialog(Fragment fragment, String fileName, View targetView) {
+        final View dialogView = View.inflate(fragment.getContext(), R.layout.image_chooser_dialog, null);
+        AppCompatDialog appCompatDialog = new AppCompatDialog(fragment.getContext());
+        appCompatDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        appCompatDialog.setContentView(dialogView);
+
+        Window window = appCompatDialog.getWindow();
+        if (window != null) {
+            window.setLayout(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+        if (targetView != null && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            appCompatDialog.setOnShowListener(dialogInterface -> revealShow(dialogView, true, appCompatDialog, targetView));
+        }
+        appCompatDialog.setCancelable(true);
+        appCompatDialog.show();
+
+        appCompatDialog.findViewById(R.id.btn_gallery).setOnClickListener(view -> startGalleryIntent(fragment));
+        appCompatDialog.findViewById(R.id.btn_camera).setOnClickListener(view -> {
+            if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.CAMERA)) {
+                startCameraIntent(fragment, fileName);
+            } else {
+                PermissionUtil.getPermission(fragment,
+                        PermissionUtil.Permissions.CAMERA,
+                        PERMISSION_CAMERA,
+                        PermissionUtil.PermissionMessage.CAMERA,
+                        null);
+            }
+        });
+
+        appCompatDialog.findViewById(R.id.btn_cancel).setOnClickListener(view -> {
+            if (targetView != null && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                revealShow(dialogView, false, appCompatDialog, targetView);
+            }
+        });
+        appCompatDialog.setOnKeyListener((dialogInterface, i, keyEvent) -> {
+            if (i == KeyEvent.KEYCODE_BACK) {
+                if (targetView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    revealShow(dialogView, false, appCompatDialog, targetView);
+                }
+                return true;
+            }
+
+            return false;
+        });
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private static void revealShow(View dialogView, boolean show, AppCompatDialog dialog, View targetView) {
+
+        int w = dialogView.getWidth();
+        int h = dialogView.getHeight();
+
+        int endRadius = (int) Math.hypot(w, h);
+
+        int cx = (int) (targetView.getX() + (targetView.getWidth() / 2));
+        int cy = (int) (targetView.getY()) + targetView.getHeight() + 56;
+
+
+        if (show) {
+            dialogView.setVisibility(View.VISIBLE);
+            Animator revealAnimator = ViewAnimationUtils.createCircularReveal(dialogView, cx, cy, 0, endRadius);
+            revealAnimator.setDuration(700);
+            revealAnimator.start();
+        } else {
+
+            Animator anim = ViewAnimationUtils.createCircularReveal(dialogView, cx, cy, endRadius, 0);
+
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    dialog.dismiss();
+                    dialogView.setVisibility(View.INVISIBLE);
+                }
+            });
+            anim.setDuration(700);
+            anim.start();
+        }
+
     }
 
     private static void startGalleryIntent(Activity activity) {

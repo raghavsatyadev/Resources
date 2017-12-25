@@ -12,4 +12,5 @@
     <dimen name="space_25">25dp</dimen>
     <dimen name="space_30">30dp</dimen>
     <dimen name="space_40">40dp</dimen>
+    <dimen name="image_chooser_dialog_background_padding">25dp</dimen>
 </resources>
