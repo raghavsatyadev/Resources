@@ -1,5 +1,39 @@
 package com.support.utils;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.ClipData;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AppCompatDialog;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.Window;
+
+import com.support.R;
+import com.support.base.CoreApp;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
+
 /* Usage:
 
      1. declare provider in manifest
@@ -79,40 +113,6 @@ package com.support.utils;
 
       */
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.ClipData;
-import android.content.ContentResolver;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatDialog;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.Window;
-
-import com.support.R;
-import com.support.base.CoreApp;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.List;
-
 public class ImageChooserUtil {
 
     public static final int REQUEST_GALLERY = 1235;
@@ -160,15 +160,16 @@ public class ImageChooserUtil {
         appCompatDialog.setCancelable(true);
         appCompatDialog.show();
 
-        appCompatDialog.findViewById(R.id.btn_gallery).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                appCompatDialog.dismiss();
-                startGalleryIntent(activity);
+        appCompatDialog.findViewById(R.id.btn_gallery).setOnClickListener(view -> {
+            if (targetView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                revealShow(dialogView, false, appCompatDialog, targetView);
             }
+            startGalleryIntent(activity);
         });
         appCompatDialog.findViewById(R.id.btn_camera).setOnClickListener(view -> {
-            appCompatDialog.dismiss();
+            if (targetView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                revealShow(dialogView, false, appCompatDialog, targetView);
+            }
             if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.CAMERA)) {
                 startCameraIntent(activity, fileName);
             } else {
@@ -234,15 +235,16 @@ public class ImageChooserUtil {
         appCompatDialog.setCancelable(true);
         appCompatDialog.show();
 
-        appCompatDialog.findViewById(R.id.btn_gallery).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                appCompatDialog.dismiss();
-                startGalleryIntent(fragment);
+        appCompatDialog.findViewById(R.id.btn_gallery).setOnClickListener(view -> {
+            if (targetView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                revealShow(dialogView, false, appCompatDialog, targetView);
             }
+            startGalleryIntent(fragment);
         });
         appCompatDialog.findViewById(R.id.btn_camera).setOnClickListener(view -> {
-            appCompatDialog.dismiss();
+            if (targetView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                revealShow(dialogView, false, appCompatDialog, targetView);
+            }
             if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.CAMERA)) {
                 startCameraIntent(fragment, fileName);
             } else {
