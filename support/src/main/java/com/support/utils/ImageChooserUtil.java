@@ -74,7 +74,7 @@ import java.util.List;
                 case ImageChooserUtil.PERMISSION_WRITE_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager
                         .PERMISSION_GRANTED) {
-                    ImageChooserUtil.openChooserDialog(getCoreFragment(), fileName);
+                    ImageChooserUtil.openChooserDialog(getCoreFragment(), fileName,targetView);
                 }
                 break;
             case ImageChooserUtil.PERMISSION_CAMERA:
