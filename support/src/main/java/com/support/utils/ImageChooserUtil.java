@@ -30,7 +30,7 @@ package com.support.utils;
 
      4. calling code
 
-        ImageChooserUtil.openChooserDialog(getCoreFragment(),fileName);
+        ImageChooserUtil.openChooserDialog(getCoreFragment(),fileName,targetView);
 
      4. add in requesting activity
 
@@ -123,7 +123,6 @@ public class ImageChooserUtil {
     private static final String CAPTURE_IMAGE_FILE_PROVIDER = ".fileprovider";
     private static String FILE_EXTENSION = ".png";
 
-
     public static void openChooserDialog(final Activity activity, final String fileName) {
         openChooserDialog(activity, fileName, null);
     }
@@ -161,8 +160,15 @@ public class ImageChooserUtil {
         appCompatDialog.setCancelable(true);
         appCompatDialog.show();
 
-        appCompatDialog.findViewById(R.id.btn_gallery).setOnClickListener(view -> startGalleryIntent(activity));
+        appCompatDialog.findViewById(R.id.btn_gallery).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                appCompatDialog.dismiss();
+                startGalleryIntent(activity);
+            }
+        });
         appCompatDialog.findViewById(R.id.btn_camera).setOnClickListener(view -> {
+            appCompatDialog.dismiss();
             if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.CAMERA)) {
                 startCameraIntent(activity, fileName);
             } else {
@@ -228,8 +234,15 @@ public class ImageChooserUtil {
         appCompatDialog.setCancelable(true);
         appCompatDialog.show();
 
-        appCompatDialog.findViewById(R.id.btn_gallery).setOnClickListener(view -> startGalleryIntent(fragment));
+        appCompatDialog.findViewById(R.id.btn_gallery).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                appCompatDialog.dismiss();
+                startGalleryIntent(fragment);
+            }
+        });
         appCompatDialog.findViewById(R.id.btn_camera).setOnClickListener(view -> {
+            appCompatDialog.dismiss();
             if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.CAMERA)) {
                 startCameraIntent(fragment, fileName);
             } else {
