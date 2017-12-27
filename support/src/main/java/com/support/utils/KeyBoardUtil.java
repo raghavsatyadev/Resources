@@ -16,11 +16,11 @@ public class KeyBoardUtil {
         getInstance(v.getContext()).hideSoftKeyboard(v);
     }
 
-    public static KeyBoardUtil getInstance(Context context) {
+    private static KeyBoardUtil getInstance(Context context) {
         return new KeyBoardUtil(context);
     }
 
-    public void hideSoftKeyboard(View v) {
+    private void hideSoftKeyboard(View v) {
         if (context != null) {
             inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         }
