@@ -34,6 +34,9 @@ public abstract class CoreFragment extends Fragment {
         return compositeDisposable;
     }
 
+    /**
+     * add this method call in onDestroyView
+     */
     public void cancelCalls() {
         if (compositeDisposable != null) {
             compositeDisposable.clear();
