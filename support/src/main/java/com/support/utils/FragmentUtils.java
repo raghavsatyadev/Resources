@@ -6,7 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
 
 import com.support.R;
 
@@ -14,6 +16,9 @@ public class FragmentUtils {
 
     private Bundle savedInstance = null;
     private FragmentManager fragmentManager;
+    /**
+     * make true to enable animations
+     */
     private boolean SHOW_ANIMATION = false;
 
     private FragmentUtils(AppCompatActivity activity, Bundle savedInstance) {
@@ -21,9 +26,9 @@ public class FragmentUtils {
         fragmentManager = activity.getSupportFragmentManager();
     }
 
-    private FragmentUtils(Fragment fragment, Bundle savedInstance) {
+    private FragmentUtils(Fragment nextFragment, Bundle savedInstance) {
         this.savedInstance = savedInstance;
-        fragmentManager = fragment.getChildFragmentManager();
+        fragmentManager = nextFragment.getChildFragmentManager();
     }
 
     /**
@@ -39,31 +44,15 @@ public class FragmentUtils {
     /**
      * Create instance of {@link FragmentUtils}
      *
-     * @param fragment {@link Fragment}
+     * @param nextFragment {@link Fragment}
      * @return {@link FragmentUtils}
      */
-    public static FragmentUtils get(Fragment fragment, @Nullable Bundle savedInstance) {
-        return new FragmentUtils(fragment, savedInstance);
+    public static FragmentUtils get(Fragment nextFragment, @Nullable Bundle savedInstance) {
+        return new FragmentUtils(nextFragment, savedInstance);
     }
 
     public FragmentManager getFragmentManager() {
         return fragmentManager;
-    }
-
-    /**
-     * Call this method start any fragment
-     *
-     * @param fragment       {@link Fragment} object which will be placed upon current view
-     * @param containerID    Container layout id
-     * @param addToBackState whether to add to backstack or not
-     */
-    public void startFragment(Fragment fragment, @IdRes int containerID, boolean addToBackState) {
-        // TODO: 25-09-2017 make show animation true to enable animations
-        loadFragment(fragment, containerID, addToBackState, SHOW_ANIMATION);
-    }
-
-    public void startFragment(Fragment fragment, @IdRes int containerID, boolean addToBackState, boolean showAnimation) {
-        loadFragment(fragment, containerID, addToBackState, showAnimation);
     }
 
     /**
@@ -90,8 +79,74 @@ public class FragmentUtils {
         }
     }
 
-    private void loadFragment(Fragment fragment, int containerID, boolean addToBackState, boolean showAnimation) {
-        String tag = fragment.getClass().getCanonicalName();
+    /**
+     * Call this method replace any fragment
+     *
+     * @param nextFragment {@link Fragment} object which will be placed upon current view
+     * @param containerID  Container layout id
+     */
+    public void replace(Fragment nextFragment, @IdRes int containerID) {
+        startFragment(null, nextFragment, containerID, false, SHOW_ANIMATION, null);
+    }
+
+    /**
+     * Call this method add any fragment
+     *
+     * @param currentFragment {@link Fragment} object which is currently displayed
+     * @param nextFragment    {@link Fragment} object which will be placed upon current view
+     * @param containerID     Container layout id
+     */
+    public void add(Fragment currentFragment, Fragment nextFragment, @IdRes int containerID) {
+        startFragment(currentFragment, nextFragment, containerID, true, SHOW_ANIMATION, null);
+    }
+
+    /**
+     * Call this method replace any fragment with fragment animation
+     *
+     * @param nextFragment {@link Fragment} object which will be placed upon current view
+     * @param containerID  Container layout id
+     */
+    public void replaceWithAnimation(Fragment nextFragment, @IdRes int containerID) {
+        startFragment(null, nextFragment, containerID, false, true, null);
+    }
+
+    /**
+     * Call this method add any fragment with fragment animation
+     *
+     * @param currentFragment {@link Fragment} object which is currently displayed
+     * @param nextFragment    {@link Fragment} object which will be placed upon current view
+     * @param containerID     Container layout id
+     */
+    public void addAnimation(Fragment currentFragment, Fragment nextFragment, @IdRes int containerID) {
+        startFragment(currentFragment, nextFragment, containerID, true, true, null);
+    }
+
+    /**
+     * Call this method replace any fragment with fragment animation and image shared transition
+     *
+     * @param nextFragment {@link Fragment} object which will be placed upon current view
+     * @param containerID  Container layout id
+     * @param animatedView {@link ImageView} object which will shared for transition
+     */
+    public void replaceWithAnimationTransition(Fragment nextFragment, @IdRes int containerID, ImageView animatedView) {
+        startFragment(null, nextFragment, containerID, false, true, animatedView);
+    }
+
+    /**
+     * Call this method replace any fragment with fragment animation and image shared transition
+     *
+     * @param currentFragment {@link Fragment} object which is currently displayed
+     * @param nextFragment    {@link Fragment} object which will be placed upon current view
+     * @param containerID     Container layout id
+     * @param animatedView    {@link ImageView} object which will shared for transition
+     */
+
+    public void addWithAnimationTransition(Fragment currentFragment, Fragment nextFragment, @IdRes int containerID, ImageView animatedView) {
+        startFragment(currentFragment, nextFragment, containerID, true, true, animatedView);
+    }
+
+    private void startFragment(Fragment currentFragment, Fragment nextFragment, int containerID, boolean addToBackState, boolean showAnimation, ImageView animatedView) {
+        String tag = nextFragment.getClass().getCanonicalName();
         if (fragmentManager.findFragmentByTag(tag) != null && savedInstance != null) {
             fragmentManager.popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -103,16 +158,13 @@ public class FragmentUtils {
                         R.animator.flip_right_out,
                         R.animator.flip_left_in,
                         R.animator.flip_left_out);
-//            if (showAnimation)
-//                fragmentTransaction.setCustomAnimations(R.animator.cube_right_in,
-//                        R.animator.cube_left_out,
-//                        R.animator.cube_left_in,
-//                        R.animator.cube_right_out);
-
-            fragmentTransaction.replace(containerID, fragment, tag);
+            if (animatedView != null) {
+                fragmentTransaction.addSharedElement(animatedView, ViewCompat.getTransitionName(animatedView));
+            }
+            fragmentTransaction.replace(containerID, nextFragment, tag);
             if (addToBackState)
                 fragmentTransaction.addToBackStack(tag);
-            fragmentTransaction.commitAllowingStateLoss();
+            fragmentTransaction.commit();
         }
     }
 }
