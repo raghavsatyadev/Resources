@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ClipData;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -31,7 +30,7 @@ import com.support.base.CoreApp;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /* Usage:
@@ -312,6 +311,7 @@ public class ImageChooserUtil {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         activity.startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
     }
 
@@ -319,6 +319,7 @@ public class ImageChooserUtil {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         fragment.startActivityForResult(Intent.createChooser(intent, "Select File"), REQUEST_GALLERY);
     }
 
@@ -392,19 +393,45 @@ public class ImageChooserUtil {
         fragment.startActivityForResult(intent, REQUEST_CAMERA);
     }
 
-    public static File getGalleryImageFile(Intent data, ContentResolver resolver, String fileName) {
+    public static File getGalleryImageFile(Intent data, String fileName) {
         if (data != null) {
-            try {
-                return saveImageToStorage(
-                        MediaStore.Images.Media.getBitmap(resolver, data.getData()),
-                        IMAGE_DIRECTORY,
-                        fileName);
-            } catch (IOException e) {
-                AppLog.log(false, "ImageChooserUtil " + "getGalleryImageFile: ", e);
-                return null;
-            }
+            return saveImageToStorage(
+                    data.getData(),
+                    IMAGE_DIRECTORY,
+                    fileName);
         } else {
             return null;
+        }
+    }
+
+    private static File saveImageToStorage(Uri uri, String imageDirectory, String fileName) {
+        String root = StorageUtils.createInternalDirectory();
+        File myDir = new File(root + "/" + imageDirectory);
+        if (!myDir.exists()) {
+            myDir.mkdirs();
+        }
+        File file = new File(myDir, fileName + "." + FileChooserUtil.getFileExtension(uri.toString()));
+        if (file.exists()) {
+            file.delete();
+        }
+
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            InputStream in = CoreApp.getInstance().getContentResolver().openInputStream(uri);
+            if (in != null) {
+                byte[] buffer = new byte[1024];
+                int len;
+                while ((len = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, len);
+                }
+                out.flush();
+                out.close();
+                in.close();
+            }
+            return file;
+        } catch (Exception e) {
+            AppLog.log(false, "ImageChooserUtil " + "saveImageToStorage: ", e);
+            return file;
         }
     }
 
@@ -421,6 +448,28 @@ public class ImageChooserUtil {
             myDir.mkdirs();
         }
         File file = new File(myDir, imageName + FILE_EXTENSION);
+        if (file.exists()) {
+            file.delete();
+        }
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            out.flush();
+            out.close();
+            return file;
+        } catch (Exception e) {
+            AppLog.log(false, "ImageChooserUtil " + "saveImageToStorage: ", e);
+            return file;
+        }
+    }
+
+    public static File saveImageToExternalStorage(Bitmap finalBitmap, String path, String imageName, String fileExtension) {
+        String root = StorageUtils.createExternalDirectory();
+        File myDir = new File(root + "/" + path);
+        if (!myDir.exists()) {
+            myDir.mkdirs();
+        }
+        File file = new File(myDir, imageName + "." + fileExtension);
         if (file.exists()) {
             file.delete();
         }
@@ -460,8 +509,7 @@ public class ImageChooserUtil {
             if (requestCode == ImageChooserUtil.REQUEST_GALLERY) {
                 file = ImageChooserUtil
                         .getGalleryImageFile(data,
-                                CoreApp.getInstance().getContentResolver()
-                                , String.valueOf(fileName));
+                                String.valueOf(fileName));
             } else if (requestCode == ImageChooserUtil.REQUEST_CAMERA) {
                 file = ImageChooserUtil.getCameraImageFile(String.valueOf(fileName));
             }

@@ -2,6 +2,7 @@ package com.support.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,6 +12,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.webkit.MimeTypeMap;
 
 import com.support.base.CoreApp;
 
@@ -76,6 +78,31 @@ public class FileChooserUtil {
                     PermissionUtil.PermissionMessage.WRITE_EXTERNAL_STORAGE,
                     null);
         }
+    }
+
+    public static String getFileExtension(String fileLink) {
+
+        String extension;
+        Uri uri = Uri.parse(fileLink);
+        String scheme = uri.getScheme();
+        if (scheme != null && scheme.equals(ContentResolver.SCHEME_CONTENT)) {
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            extension = mime.getExtensionFromMimeType(CoreApp.getInstance().getContentResolver().getType(uri));
+        } else {
+            extension = MimeTypeMap.getFileExtensionFromUrl(fileLink);
+        }
+
+        return extension;
+    }
+
+    public static String getMimeType(String fileLink) {
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getMimeTypeFromExtension(FileChooserUtil.getFileExtension(fileLink));
+    }
+
+    public static String getFileName(String fileLink) {
+        String lastPathSegment = Uri.parse(fileLink).getLastPathSegment();
+        return lastPathSegment.substring(0, lastPathSegment.lastIndexOf(".") - 1);
     }
 
     public static void openChooserDialog(final Fragment fragment) {
