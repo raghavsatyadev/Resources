@@ -2,7 +2,7 @@ package raghav.resources.support.notification;
 
 import raghav.resources.R;
 
-public class NotificationUtils extends com.support.utils.NotificationUtils {
+public class NotificationUtils extends com.support.notification.NotificationUtils {
 
     public int getSmallIcon() {
         boolean useWhiteIcon = (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT);

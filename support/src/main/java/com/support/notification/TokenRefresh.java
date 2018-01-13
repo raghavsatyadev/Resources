@@ -1,4 +1,4 @@
-package com.support.fcm;
+package com.support.notification;
 
 import android.content.Context;
 

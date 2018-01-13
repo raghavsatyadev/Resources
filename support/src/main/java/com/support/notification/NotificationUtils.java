@@ -1,4 +1,4 @@
-package com.support.utils;
+package com.support.notification;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,6 +13,8 @@ import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 
 import com.support.R;
+import com.support.utils.AppLog;
+import com.support.utils.ResourceUtils;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -23,6 +25,7 @@ public abstract class NotificationUtils {
     private static Bitmap icLauncher;
     private static int notificationColor;
     private static NotificationCompat.Builder builder;
+    private String channelId;
 
     private static NotificationCompat.Builder setNotificationStyle(NotificationCompat.Builder builder,
                                                                    String imageURL,
@@ -67,38 +70,41 @@ public abstract class NotificationUtils {
                                                              String title,
                                                              String message,
                                                              String imageURL,
+                                                             String channelId,
                                                              PendingIntent pendingIntent) {
 
-        if (builder == null) {
-            if (defaultSoundUri == null)
-                defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            if (icLauncher == null)
-                icLauncher = ((BitmapDrawable) ResourceUtils.getDrawable(getBigIcon())).getBitmap();
-            if (notificationColor == 0) {
-                notificationColor = ResourceUtils.getColor(R.color.notification_color);
-            }
-            builder = new NotificationCompat.Builder(context)
-                    .setAutoCancel(true)
-                    .setSmallIcon(getSmallIcon())
-                    .setLargeIcon(icLauncher)
-                    .setSound(defaultSoundUri)
-                    .setColor(notificationColor);
+        if (this.channelId == null)
+            this.channelId = ResourceUtils.getString(R.string.default_notification_channel_id);
+        if (defaultSoundUri == null)
+            defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        if (icLauncher == null)
+            icLauncher = ((BitmapDrawable) ResourceUtils.getDrawable(getBigIcon())).getBitmap();
+        if (notificationColor == 0) {
+            notificationColor = ResourceUtils.getColor(R.color.notification_color);
         }
-        builder.setContentTitle(title)
+
+        builder = new NotificationCompat.Builder(context, !TextUtils.isEmpty(channelId) ? channelId : this.channelId)
+                .setAutoCancel(true)
+                .setSmallIcon(getSmallIcon())
+                .setLargeIcon(icLauncher)
+                .setSound(defaultSoundUri)
+                .setColor(notificationColor)
+                .setContentTitle(title)
                 .setContentText(message)
                 .setContentIntent(pendingIntent)
                 .setTicker(message);
         return setNotificationStyle(builder, imageURL, title, message);
     }
 
-    public void sendNotification(Context context, int NOTIFICATION_ID,
-                                 String message, String imageURL,
+    public void sendNotification(Context context, int NOTIFICATION_ID, String title,
+                                 String message, String imageURL, String channelId,
                                  Intent intent, int pendingIntentFlag) {
         NotificationCompat.Builder builder;
         builder = getNotificationBuilder(context,
-                ResourceUtils.getString(R.string.app_name),
+                !TextUtils.isEmpty(title) ? title : ResourceUtils.getString(R.string.app_name),
                 message,
                 imageURL,
+                channelId,
                 PendingIntent.getActivity(context, NOTIFICATION_ID, intent, pendingIntentFlag));
         if (builder != null) {
             getNotificationManager(context).notify(NOTIFICATION_ID, builder.build());

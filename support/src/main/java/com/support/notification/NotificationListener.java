@@ -1,10 +1,9 @@
-package com.support.fcm;
+package com.support.notification;
 
 import android.text.TextUtils;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.support.Constants;
 import com.support.R;
 import com.support.utils.AppLog;
 import com.support.utils.ResourceUtils;
@@ -14,6 +13,8 @@ import org.json.JSONException;
 
 import java.util.Map;
 
+import static com.support.Constants.WebService.NotificationKeys.MAIN_KEY;
+
 public abstract class NotificationListener extends FirebaseMessagingService {
 
     @Override
@@ -22,7 +23,7 @@ public abstract class NotificationListener extends FirebaseMessagingService {
         String message;
         if (packet.getData().size() > 0) {
             Map data = packet.getData();
-            message = String.valueOf(data.get(Constants.WebService.NotificationKeys.MAIN_KEY));
+            message = String.valueOf(data.get(MAIN_KEY));
             if (!TextUtils.isEmpty(message) || message.equals("null")) {
                 if (packet.getNotification() != null && !TextUtils.isEmpty(packet.getNotification().getBody())) {
                     message = packet.getNotification().getBody();
