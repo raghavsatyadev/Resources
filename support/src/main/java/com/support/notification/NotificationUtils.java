@@ -24,7 +24,6 @@ public abstract class NotificationUtils {
     private static Uri defaultSoundUri;
     private static Bitmap icLauncher;
     private static int notificationColor;
-    private static NotificationCompat.Builder builder;
     private String channelId;
 
     private static NotificationCompat.Builder setNotificationStyle(NotificationCompat.Builder builder,
@@ -74,7 +73,7 @@ public abstract class NotificationUtils {
                                                              PendingIntent pendingIntent) {
 
         if (this.channelId == null)
-            this.channelId = ResourceUtils.getString(R.string.default_notification_channel_id);
+            this.channelId = ResourceUtils.getString(R.string.channel_id);
         if (defaultSoundUri == null)
             defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         if (icLauncher == null)
@@ -83,7 +82,7 @@ public abstract class NotificationUtils {
             notificationColor = ResourceUtils.getColor(R.color.notification_color);
         }
 
-        builder = new NotificationCompat.Builder(context, !TextUtils.isEmpty(channelId) ? channelId : this.channelId)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, !TextUtils.isEmpty(channelId) ? channelId : this.channelId)
                 .setAutoCancel(true)
                 .setSmallIcon(getSmallIcon())
                 .setLargeIcon(icLauncher)
@@ -93,21 +92,55 @@ public abstract class NotificationUtils {
                 .setContentText(message)
                 .setContentIntent(pendingIntent)
                 .setTicker(message);
+
         return setNotificationStyle(builder, imageURL, title, message);
     }
 
     public void sendNotification(Context context, int NOTIFICATION_ID, String title,
                                  String message, String imageURL, String channelId,
                                  Intent intent, int pendingIntentFlag) {
+        NotificationManager notificationManager = getNotificationManager(context);
+        String appName = ResourceUtils.getString(R.string.app_name);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getNotificationChannel(notificationManager, appName);
+        }
+
         NotificationCompat.Builder builder;
         builder = getNotificationBuilder(context,
-                !TextUtils.isEmpty(title) ? title : ResourceUtils.getString(R.string.app_name),
+                !TextUtils.isEmpty(title) ? title : appName,
                 message,
                 imageURL,
                 channelId,
                 PendingIntent.getActivity(context, NOTIFICATION_ID, intent, pendingIntentFlag));
         if (builder != null) {
-            getNotificationManager(context).notify(NOTIFICATION_ID, builder.build());
+
+            notificationManager.notify(NOTIFICATION_ID, builder.build());
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void getNotificationChannel(NotificationManager notificationManager, String appName) {
+        String id = ResourceUtils.getString(R.string.channel_id);
+
+        // The user-visible name of the channel.
+        String channelName = ResourceUtils.getString(R.string.channel_name);
+
+        // The user-visible description of the channel.
+        String channelDescription = ResourceUtils.getString(R.string.channel_description) + appName;
+
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel mChannel = new NotificationChannel(id, channelName, importance);
+
+        // Configure the notification channel.
+        mChannel.setDescription(channelDescription);
+        mChannel.enableLights(true);
+
+        // Sets the notification light color for notifications posted to this
+        // channel, if the device supports this feature.
+        mChannel.setLightColor(Color.RED);
+        mChannel.enableVibration(true);
+        mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+        notificationManager.createNotificationChannel(mChannel);
     }
 }

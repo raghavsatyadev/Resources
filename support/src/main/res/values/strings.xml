@@ -7,5 +7,7 @@
 
     <string name="default_notification_message">You have a new notifications</string>
     <string name="default_font">abel.TTF</string>
-    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="channel_id" translatable="false">fcm_default_channel</string>
+    <string name="channel_name">Notifications</string>
+    <string name="channel_description">Notifications of\u0020</string>
 </resources>
