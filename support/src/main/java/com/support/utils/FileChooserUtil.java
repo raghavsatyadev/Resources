@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
 import com.support.base.CoreApp;
@@ -96,6 +97,8 @@ public class FileChooserUtil {
     }
 
     public static String getMimeType(String fileLink) {
+        String type = CoreApp.getInstance().getContentResolver().getType(Uri.parse(fileLink));
+        if (!TextUtils.isEmpty(type)) return type;
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getMimeTypeFromExtension(FileChooserUtil.getFileExtension(fileLink));
     }
