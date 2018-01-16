@@ -12,7 +12,6 @@ public abstract class GenRecyclerAdapter
     private static GenRecyclerAdapter.MyClickListener myClickListener;
     private ArrayList<Model> models;
 
-
     public GenRecyclerAdapter(ArrayList<Model> models) {
         this.models = models;
     }
@@ -37,47 +36,54 @@ public abstract class GenRecyclerAdapter
 
     @Override
     public int getItemCount() {
-        return models.size();
+        return getItems().size();
     }
 
     public void addAll(ArrayList<Model> models) {
         int position = getItemCount() - 1;
-        this.getModels().addAll(models);
+        this.getItems().addAll(models);
         notifyItemRangeInserted(position, models.size());
     }
 
     public void addItem(Model model, int index) {
-        getModels().add(model);
+        getItems().add(model);
         notifyItemInserted(index);
     }
 
     public void addItem(Model model) {
-        getModels().add(model);
+        getItems().add(model);
         notifyItemInserted(getItemCount() - 1);
     }
 
-    private ArrayList<Model> getModels() {
+    private ArrayList<Model> getItems() {
         return models;
     }
 
     public void deleteAll() {
-        getModels().clear();
-        notifyDataSetChanged();
+        int itemCount = getItemCount();
+        getItems().clear();
+        notifyItemRangeRemoved(0, itemCount);
     }
 
     public void replaceAll(ArrayList<Model> models) {
-        getModels().clear();
-        getModels().addAll(models);
-        notifyDataSetChanged();
+        int previousSize = getItemCount();
+        getItems().clear();
+        notifyItemRangeRemoved(0, previousSize);
+        getItems().addAll(models);
+        notifyItemRangeInserted(0, getItemCount());
+//        notifyDataSetChanged();
     }
 
+
     public Model getItem(int index) {
-        return getModels().get(index);
+        return getItems().get(index);
     }
 
     public void deleteItem(int index) {
-        if (index >= 0 && index < getItemCount())
-            getModels().remove(index);
+        if (index >= 0 && index < getItemCount()) {
+            getItems().remove(index);
+            notifyItemRemoved(index);
+        }
     }
 
     public void setOnItemClickListener(GenRecyclerAdapter.MyClickListener myClickListener) {
