@@ -13,19 +13,17 @@ import com.support.utils.AppLog;
 
 import raghav.resources.R;
 
-public class SingleActivity extends CoreActivity implements SingleCallback {
+public class SingleActivity extends CoreActivity<SingleActivity> implements SingleCallback {
 
     private AppCompatTextView txtNameVal;
     private AppCompatTextView txtEmailVal;
     private AppCompatTextView txtPhoneHomeVal;
     private AppCompatTextView txtPhoneMobileVal;
-    private SingleActivity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = this;
-        setDefaults(activity, R.layout.activity_single, "", true, true);
+        setDefaults(this, R.layout.activity_single, "", true, true);
     }
 
     private void callAPI() {
@@ -36,10 +34,10 @@ public class SingleActivity extends CoreActivity implements SingleCallback {
 
     @Override
     public void createReference() {
-        txtNameVal = (AppCompatTextView) findViewById(R.id.txt_name_val);
-        txtEmailVal = (AppCompatTextView) findViewById(R.id.txt_email_val);
-        txtPhoneHomeVal = (AppCompatTextView) findViewById(R.id.txt_phone_home_val);
-        txtPhoneMobileVal = (AppCompatTextView) findViewById(R.id.txt_phone_mobile_val);
+        txtNameVal = findViewById(R.id.txt_name_val);
+        txtEmailVal = findViewById(R.id.txt_email_val);
+        txtPhoneHomeVal = findViewById(R.id.txt_phone_home_val);
+        txtPhoneMobileVal = findViewById(R.id.txt_phone_mobile_val);
         callAPI();
     }
 

@@ -14,7 +14,7 @@ import java.io.File;
 
 import raghav.resources.R;
 
-public class ImageSelectorActivity extends CoreActivity {
+public class ImageSelectorActivity extends CoreActivity<ImageSelectorActivity> {
     private MultiImageChooserUtil firstImageChooser, secondImageChooser, thirdImageChooser;
     private AppCompatImageView imageView, imageView2, imageView3;
 

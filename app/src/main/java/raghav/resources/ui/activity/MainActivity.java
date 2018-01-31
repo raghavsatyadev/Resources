@@ -9,15 +9,12 @@ import com.support.base.CoreActivity;
 
 import raghav.resources.R;
 
-public class MainActivity extends CoreActivity {
-
-    private MainActivity activity;
+public class MainActivity extends CoreActivity<MainActivity> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = this;
-        setDefaults(activity, R.layout.activity_main, "", false, true);
+        setDefaults(this, R.layout.activity_main, "", false, true);
     }
 
     public void openListActivity(View view) {

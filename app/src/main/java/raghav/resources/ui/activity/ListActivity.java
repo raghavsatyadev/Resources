@@ -20,27 +20,25 @@ import io.reactivex.Observable;
 import raghav.resources.R;
 import raghav.resources.ui.adapter.ContactInfoAdapter;
 
-public class ListActivity extends CoreActivity implements ListCallback {
+public class ListActivity extends CoreActivity<ListActivity> implements ListCallback {
 
-    private ListActivity activity;
     private ContactInfoAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = this;
-        setDefaults(activity, R.layout.activity_list, "", true, true);
+        setDefaults(this, R.layout.activity_list, "", true, true);
     }
 
     @Override
     public void createReference() {
 
-        RecyclerView listContact = (RecyclerView) findViewById(R.id.list_contact);
+        RecyclerView listContact = findViewById(R.id.list_contact);
         listContact.setHasFixedSize(false);
-        listContact.setLayoutManager(new LinearLayoutManager(activity));
-        adapter = new ContactInfoAdapter(activity, new ArrayList<ContactInfoModel>());
+        listContact.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new ContactInfoAdapter(new ArrayList<>());
         listContact.setAdapter(adapter);
-        listContact.addItemDecoration(new HorizontalDividerItemDecoration.Builder(activity)
+        listContact.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getActivity())
                 .colorProvider(adapter)
                 .build());
 

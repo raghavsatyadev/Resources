@@ -1,96 +1,139 @@
 package com.support.base;
 
-import android.graphics.Typeface;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.IdRes;
+import android.graphics.PorterDuff;
+import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.support.R;
-import com.support.utils.GlideApp;
+import com.support.utils.AppLog;
+import com.support.utils.KeyBoardUtil;
 import com.support.utils.ResourceUtils;
-import com.support.widgets.TextViewPlus;
 
 import io.reactivex.disposables.CompositeDisposable;
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
-public abstract class CoreActivity extends AppCompatActivity {
-    Toolbar toolbar = null;
+public abstract class CoreActivity<T extends CoreActivity> extends AppCompatActivity {
+    private final static String APP_THEME_NAME = ResourceUtils.getThemeName(R.style.AppTheme);
+    private Toolbar toolbar = null;
     private CompositeDisposable compositeDisposable;
-    private CoreActivity coreActivity;
+    private T activity;
+    private LinearLayout progressBar;
+    private Bundle savedInstanceState;
+    private ActionBar actionBar;
+    private boolean isThemeDefault;
 
     /**
      * apply fonts on toolbar title
      *
      * @param toolbar {@link Toolbar}
      */
-    public static void applyFontForToolbarTitle(Toolbar toolbar) {
+    public void applyFontForToolbarTitle(Toolbar toolbar) {
         for (int i = 0; i < toolbar.getChildCount(); i++) {
             View view = toolbar.getChildAt(i);
             if (view instanceof TextView) {
                 TextView tv = (TextView) view;
-                Typeface titleFont = Typeface.
-                        createFromAsset(CoreApp.getInstance().getAssets(), "font/" + ResourceUtils.getString(R.string.default_font));
                 if (tv.getText().equals(toolbar.getTitle())) {
-                    tv.setTypeface(titleFont);
+                    tv.setTextAppearance(activity, R.style.ToolBarTitleFont);
                     break;
                 }
             }
         }
     }
 
-    public void setDefaults(CoreActivity coreActivity, @LayoutRes int layoutRes, @StringRes int title, @DrawableRes int backgroundDrawable, @IdRes int backgroundID) {
-        setDefaults(coreActivity, layoutRes, ResourceUtils.getString(title), backgroundDrawable, backgroundID, false, false);
+    public Bundle getSavedInstanceState() {
+        return savedInstanceState;
     }
 
-    public void setDefaults(CoreActivity coreActivity, @LayoutRes int layoutRes, @StringRes int title, boolean isBackEnabled,
+    public void setSavedInstanceState(Bundle savedInstanceState) {
+        this.savedInstanceState = savedInstanceState;
+    }
+
+    public void setDefaults(T coreActivity, @LayoutRes int layoutRes, @StringRes int title) {
+        setDefaults(coreActivity, layoutRes, ResourceUtils.getString(title), false, false);
+    }
+
+    public void setDefaults(T coreActivity, @LayoutRes int layoutRes, @StringRes int title, boolean isBackEnabled,
                             boolean isToolBarEnabled) {
-        setDefaults(coreActivity, layoutRes, ResourceUtils.getString(title), 0, 0, isBackEnabled, isToolBarEnabled);
+        setDefaults(coreActivity, layoutRes, ResourceUtils.getString(title), isBackEnabled, isToolBarEnabled);
     }
 
-    public void setDefaults(CoreActivity coreActivity, @LayoutRes int layoutRes, String title, @DrawableRes int backgroundDrawable, @IdRes int backgroundID) {
-        setDefaults(coreActivity, layoutRes, title, backgroundDrawable, backgroundID, false, false);
+    public void setDefaults(T coreActivity, @LayoutRes int layoutRes, String title) {
+        setDefaults(coreActivity, layoutRes, title, false, false);
     }
 
-    public void setDefaults(CoreActivity coreActivity, @LayoutRes int layoutRes, String title, boolean isBackEnabled,
-                            boolean isToolBarEnabled) {
-        setDefaults(coreActivity, layoutRes, title, 0, 0, isBackEnabled, isToolBarEnabled);
+    public void setDefaults(T coreActivity, @LayoutRes int layoutRes) {
+        setDefaults(coreActivity, layoutRes, null, false, false);
     }
 
-    public void setDefaults(CoreActivity coreActivity, @LayoutRes int layoutRes) {
-        setDefaults(coreActivity, layoutRes, null, 0, 0, false, false);
-    }
-
-    public void setDefaults(CoreActivity coreActivity, @LayoutRes int layoutRes, @StringRes int title, @DrawableRes int backgroundDrawable, @IdRes int backgroundID, boolean isBackEnabled, boolean isToolBarEnabled) {
-        setDefaults(coreActivity, layoutRes, ResourceUtils.getString(title), backgroundDrawable, backgroundID, isBackEnabled, isToolBarEnabled);
+    public T getActivity() {
+        return activity;
     }
 
     /**
-     * @param layoutRes          id of layout file
-     * @param title              activity title in String or @StringRes
-     * @param backgroundDrawable background image drawable
-     * @param backgroundID       background image resource id
-     * @param isBackEnabled      enable going back into previous activity with toolbar back button
-     * @param isToolBarEnabled   enable toolbar
+     * @param layoutRes        id of layout file
+     * @param title            activity title in String or @StringRes
+     * @param isBackEnabled    enable going back into previous activity with toolbar back button
+     * @param isToolBarEnabled enable toolbar
      */
-    public void setDefaults(CoreActivity coreActivity, @LayoutRes int layoutRes, String title, @DrawableRes int backgroundDrawable, @IdRes int backgroundID, boolean isBackEnabled, boolean isToolBarEnabled) {
-        this.coreActivity = coreActivity;
-        coreActivity.setContentView(layoutRes);
-
-        setScreenBackground(backgroundID, backgroundDrawable);
-
+    public void setDefaults(T activity, @LayoutRes int layoutRes, String title, boolean isBackEnabled, boolean isToolBarEnabled) {
+        this.activity = activity;
+        activity.setContentView(layoutRes);
+        isThemeDefault = ResourceUtils
+                .getThemeName(activity, getTheme())
+                .equals(APP_THEME_NAME);
         setToolBar(isToolBarEnabled, isBackEnabled, title);
-
+        setProgressBarColor();
         createReference();
         setListeners(true);
+    }
+
+    private void setProgressBarColor() {
+        LinearLayout linearLayout = getProgressBar();
+        if (linearLayout != null) {
+            MaterialProgressBar progressBar = linearLayout.findViewById(R.id.progress_bar);
+            progressBar.getIndeterminateDrawable().setColorFilter(
+                    isThemeDefault ? ResourceUtils.getColor(R.color.colorPrimary) : ResourceUtils.getColor(R.color.colorAccent),
+                    PorterDuff.Mode.SRC_ATOP);
+        }
+    }
+
+    public void hideProgressBar() {
+        setProgressBar(false);
+    }
+
+    public void showProgressBar() {
+        setProgressBar(true);
+    }
+
+    public LinearLayout getProgressBar() {
+        return activity.findViewById(R.id.box_progress_bar);
+    }
+
+    public void setProgressBar(boolean showProgressBar) {
+        if (progressBar == null) progressBar = getProgressBar();
+        if (progressBar != null)
+            progressBar.setVisibility(showProgressBar ? View.VISIBLE : View.GONE);
+
+        disableScreen(showProgressBar);
+    }
+
+    public void disableScreen(boolean disable) {
+        if (disable) {
+            if (progressBar != null)
+                KeyBoardUtil.hideKeyBoard(progressBar);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
     }
 
     /**
@@ -102,12 +145,13 @@ public abstract class CoreActivity extends AppCompatActivity {
      */
     private void setToolBar(boolean isToolBarEnabled, boolean isBackEnabled, String title) {
         if (isToolBarEnabled) {
-            toolbar = coreActivity.findViewById(R.id.tool_bar);
-            coreActivity.setSupportActionBar(toolbar);
+            toolbar = activity.findViewById(R.id.tool_bar);
 
-            ActionBar actionBar = coreActivity.getSupportActionBar();
+            activity.setSupportActionBar(toolbar);
+
+            actionBar = activity.getSupportActionBar();
             assert actionBar != null;
-            setBackButton(actionBar, isBackEnabled);
+            setBackButton(isBackEnabled);
             enableTitle(title, actionBar);
             formatTitle();
         }
@@ -121,7 +165,6 @@ public abstract class CoreActivity extends AppCompatActivity {
     private void enableTitle(String title, ActionBar actionBar) {
         if (title != null) {
             actionBar.setDisplayShowTitleEnabled(false);
-
             changeTitle(title);
         }
     }
@@ -131,7 +174,6 @@ public abstract class CoreActivity extends AppCompatActivity {
      */
     private void formatTitle() {
         if (toolbar != null) {
-            toolbar.setTitleTextColor(ResourceUtils.getColor(R.color.tool_bar_text_color));
             applyFontForToolbarTitle(toolbar);
         }
     }
@@ -139,55 +181,15 @@ public abstract class CoreActivity extends AppCompatActivity {
     /**
      * set back button of toolbar
      *
-     * @param actionBar     {@link ActionBar}
      * @param isBackEnabled true for enabling back button
      */
-    private void setBackButton(ActionBar actionBar, boolean isBackEnabled) {
-        if (isBackEnabled) {
-            try {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-                if (toolbar != null)
-                    toolbar.setNavigationIcon(ResourceUtils.getDrawable(R.drawable.ic_left_arrow));
-            } catch (NullPointerException ignored) {
-
-            }
+    public void setBackButton(boolean isBackEnabled) {
+        try {
+            if (actionBar != null)
+                actionBar.setDisplayHomeAsUpEnabled(isBackEnabled);
+        } catch (NullPointerException ignored) {
+            AppLog.log(false, "CoreActivity: " + "setBackButton: ", ignored);
         }
-    }
-
-    /**
-     * setting background of activity
-     *
-     * @param backgroundID       ID of background layout
-     * @param backgroundDrawable ID of background drawable
-     */
-    private void setScreenBackground(@IdRes int backgroundID, @DrawableRes int backgroundDrawable) {
-        if (backgroundDrawable != 0 && backgroundID != 0) {
-            GlideApp.with(this).load(backgroundDrawable).centerCrop().dontAnimate()
-                    .into((ImageView) findViewById(backgroundID));
-        }
-    }
-
-    /**
-     * to set title in the middle of toolbar
-     *
-     * @param title in {@link String}
-     */
-    private void changeTitleTV(String title) {
-        if (toolbar != null && title != null) {
-            TextViewPlus toolBarTitle = toolbar.findViewById(R.id.txt_tool_bar_title);
-            toolBarTitle.setTextColor(ResourceUtils.getColor(R.color.tool_bar_text_color));
-            toolBarTitle.setText(title);
-        }
-    }
-
-    /**
-     * to set title in the middle of toolbar
-     *
-     * @param titleRes ID of string resource
-     */
-    public void changeTitleTV(@StringRes int titleRes) {
-        String title = ResourceUtils.getString(titleRes);
-        changeTitleTV(title);
     }
 
     /**
@@ -196,7 +198,7 @@ public abstract class CoreActivity extends AppCompatActivity {
      * @param title in {@link String}
      */
     public void changeTitle(String title) {
-        if (toolbar != null && !TextUtils.isEmpty(title)) {
+        if (toolbar != null && title != null) {
             toolbar.setTitle(title);
         }
     }
@@ -209,11 +211,6 @@ public abstract class CoreActivity extends AppCompatActivity {
     public void changeTitle(@StringRes int titleRes) {
         String title = ResourceUtils.getString(titleRes);
         changeTitle(title);
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T extends View> T _findViewById(int viewId) {
-        return (T) findViewById(viewId);
     }
 
     /**
@@ -236,7 +233,7 @@ public abstract class CoreActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                coreActivity.finish();
+                activity.onBackPressed();
                 return true;
         }
 
@@ -249,22 +246,17 @@ public abstract class CoreActivity extends AppCompatActivity {
      * @return {@link CompositeDisposable}
      */
     public CompositeDisposable getCompositeDisposable() {
-        if (compositeDisposable != null) {
+        if (compositeDisposable == null) {
             compositeDisposable = new CompositeDisposable();
         }
+        if (compositeDisposable.isDisposed()) compositeDisposable = new CompositeDisposable();
         return compositeDisposable;
     }
 
-    /**
-     * call this in {@link android.app.Activity}.onDestroy()
-     */
     public void cancelCalls() {
+        hideProgressBar();
         if (compositeDisposable != null) {
-            compositeDisposable.clear();
+            compositeDisposable.dispose();
         }
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return true;
     }
 }

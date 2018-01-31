@@ -9,34 +9,29 @@ import com.support.base.CoreActivity;
 
 import raghav.resources.R;
 
-public class SplashActivity extends CoreActivity {
+public class SplashActivity extends CoreActivity<SplashActivity> {
 
     private boolean isTimerFinished = false;
     private boolean isStopped = false;
-    private SplashActivity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = this;
-        setDefaults(activity, R.layout.activity_splash);
+        setDefaults(this, R.layout.activity_splash);
     }
 
     @Override
     public void createReference() {
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                isTimerFinished = true;
-                startNewActivity();
-            }
+        new Handler().postDelayed(() -> {
+            isTimerFinished = true;
+            startNewActivity();
         }, Constants.Other.SPLASH_COUNTER);
     }
 
     private void startNewActivity() {
         if (!isStopped && isTimerFinished) {
-            startActivity(new Intent(activity, MainActivity.class));
+            startActivity(new Intent(getActivity(), MainActivity.class));
             finish();
         }
     }
