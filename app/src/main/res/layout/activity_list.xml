@@ -6,9 +6,7 @@
     android:orientation="vertical"
     tools:context=".ui.activity.ListActivity">
 
-    <include
-        android:id="@+id/tool_bar"
-        layout="@layout/tool_bar" />
+    <include layout="@layout/tool_bar" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_contact"

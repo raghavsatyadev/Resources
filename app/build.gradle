@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply from: "$project.rootDir/dependencies.gradle"
+apply from: "$project.rootDir/app.gradle"
 android {
     compileSdkVersion COMPILE_SDK_VERSION
     buildToolsVersion BUILD_TOOLS_VERSION
@@ -17,9 +19,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    dataBinding {
-        enabled true
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -28,31 +27,36 @@ android {
         variant.outputs.all {
             def date = new Date()
             def formattedDate = date.format('dd_MM_yy')
-            outputFileName = "${APP_NAME}-${variant.name}-${formattedDate}.apk"
+            outputFileName = "${APK_NAME}-${variant.name}-${formattedDate}.apk"
         }
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':support')
-    implementation "com.android.support:appcompat-v7:$SUPPORT_LIB_VERSION"
-    implementation "com.android.support:design:$SUPPORT_LIB_VERSION"
-    implementation "com.android.support:percent:$SUPPORT_LIB_VERSION"
 
-    implementation "com.github.bumptech.glide:glide:$GLIDE_VERSION"
-    annotationProcessor "com.github.bumptech.glide:compiler:$GLIDE_VERSION"
+//    Support
+    supportDependencies.each {
+        implementation it.value
+    }
 
-    implementation "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$RETROFIT_VERSION"
+//    Glide
+    implementation glideDependencies.glideLib
+    annotationProcessor glideDependencies.glideCompiler
 
-    implementation("com.google.firebase:firebase-messaging:$GOOGLE_VERSION") {
+//    Retrofit
+    retrofitDependencies.each {
+        implementation it.value
+    }
+
+//    Google
+    implementation(googleDependencies.firebaseMessaging) {
         exclude group: 'com.android.support', module: 'support-v4'
     }
 
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0-beta4'
-
-    implementation 'me.zhanghai.android.materialprogressbar:library:1.4.2'
-    implementation 'com.yqritc:recyclerview-flexibledivider:1.4.0'
+    otherDependencies.each {
+        implementation it.value
+    }
 }
 apply plugin: 'com.google.gms.google-services'

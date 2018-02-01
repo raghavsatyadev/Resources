@@ -23,6 +23,17 @@
         <!--<item name="android:fontFamily">@font/roboto_regular</item>-->
     </style>
 
+    <style name="WhiteToolbar">
+        <item name="actionBarTheme">@style/MyApp.ActionBarTheme</item>
+        <item name="colorControlNormal">@color/toolbar_button</item>
+        <item name="colorPrimary">@color/toolbar_background</item>
+    </style>
+
+    <style name="MyApp.ActionBarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <!--back arrow color will be changed here-->
+        <item name="colorControlNormal">@color/toolbar_button</item>
+    </style>
+
     <style name="AppTheme.FullScreen" parent="AppTheme">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
@@ -54,27 +65,5 @@
     <style name="MatchHeight">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
-    </style>
-
-    <style name="CustomProgressDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/progress_dialog_ring</item>
-        <item name="android:alertDialogStyle">@style/CustomAlertDialogStyle</item>
-        <item name="android:textColorPrimary">@color/progress_dialog_text</item>
-        <item name="android:textColorSecondary">@color/progress_dialog_text</item>
-        <item name="android:textColor">@color/progress_dialog_text</item>
-        <item name="android:windowBackground">@color/progress_dialog_background</item>
-    </style>
-
-    <style name="CustomAlertDialogStyle">
-        <item name="android:bottomBright">@color/progress_dialog_background</item>
-        <item name="android:bottomDark">@color/progress_dialog_background</item>
-        <item name="android:bottomMedium">@color/progress_dialog_background</item>
-        <item name="android:centerBright">@color/progress_dialog_background</item>
-        <item name="android:centerDark">@color/progress_dialog_background</item>
-        <item name="android:centerMedium">@color/progress_dialog_background</item>
-        <item name="android:fullBright">@color/progress_dialog_background</item>
-        <item name="android:fullDark">@color/progress_dialog_background</item>
-        <item name="android:topBright">@color/progress_dialog_background</item>
-        <item name="android:topDark">@color/progress_dialog_background</item>
     </style>
 </resources>

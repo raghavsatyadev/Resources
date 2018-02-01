@@ -7,9 +7,7 @@
     android:orientation="vertical"
     tools:context=".ui.activity.MainActivity">
 
-    <include
-        android:id="@+id/tool_bar"
-        layout="@layout/tool_bar" />
+    <include layout="@layout/tool_bar" />
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

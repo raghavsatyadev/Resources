@@ -16,29 +16,6 @@ allprojects {
     }
 }
 
-project.ext {
-//    this is for APK name
-    APP_NAME = "Resources"
-
-    APPLICATION_ID = "raghav.resources"
-    BUILD_TOOLS_VERSION = "27.0.3"
-
-    COMPILE_SDK_VERSION = 27
-    TARGET_SDK_VERSION = 27
-    MIN_SDK_VERSION = 19
-
-    VERSION_CODE = 1
-    VERSION_NAME = "1.0"
-
-    SUPPORT_LIB_VERSION = "27.0.2"
-    RETROFIT_VERSION = "2.3.0"
-    GOOGLE_VERSION = "11.8.0"
-    GLIDE_VERSION = "4.4.0"
-
-    MINIFY_ENABLE = true
-    SHRINK_RESOURCES = true
-}
-
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

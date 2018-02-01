@@ -41,7 +41,7 @@ public class ApiClient {
                     .create();
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl(WebService.BaseLink + WebService.Version)
+                    .baseUrl(WebService.BaseLink)
                     .client(getOKHttpClient())
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -103,7 +103,7 @@ public class ApiClient {
     }
 
     public interface WebService {
-        String BaseLink = "http://api.androidhive.info";
+        String BaseLink = "http://api.androidhive.info/";
         String Version = "";
         String API_USERNAME = null;
         String API_PASSWORD = null;

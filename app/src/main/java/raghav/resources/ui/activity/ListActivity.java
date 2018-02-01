@@ -27,7 +27,7 @@ public class ListActivity extends CoreActivity<ListActivity> implements ListCall
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setDefaults(this, R.layout.activity_list, "", true, true);
+        setDefaults(this, R.layout.activity_list, "List", true, true);
     }
 
     @Override

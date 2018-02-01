@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/tool_bar"
+    android:id="@+id/app_bar"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/tool_bar_height"
-    android:background="@color/toolbar_background"
-    app:elevation="@dimen/space_5"
-    app:theme="@style/ThemeOverlay.AppCompat.Dark">
+    android:layout_height="wrap_content"
+    android:theme="@style/WhiteToolbar">
 
-    <android.support.percent.PercentRelativeLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tool_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/space_15"
-        android:layout_marginRight="@dimen/space_15">
-
-        <com.support.widgets.TextViewPlus
-            android:id="@+id/txt_tool_bar_title"
-            style="@style/WrapContent"
-            android:layout_centerInParent="true"
-            android:textSize="@dimen/tool_bar_text_size" />
-    </android.support.percent.PercentRelativeLayout>
-</android.support.v7.widget.Toolbar>
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/WhiteToolbar"
+        app:elevation="4dp"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+        app:titleTextColor="@color/tool_bar_text_color" />
+</android.support.design.widget.AppBarLayout>

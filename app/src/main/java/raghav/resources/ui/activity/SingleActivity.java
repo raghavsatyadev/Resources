@@ -23,7 +23,7 @@ public class SingleActivity extends CoreActivity<SingleActivity> implements Sing
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setDefaults(this, R.layout.activity_single, "", true, true);
+        setDefaults(this, R.layout.activity_single, "Single", true, true);
     }
 
     private void callAPI() {

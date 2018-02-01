@@ -1,0 +1,10 @@
+ext {
+//    this is for APK name
+    APK_NAME = "Resources"
+
+    APPLICATION_ID = "raghav.resources"
+
+    AppConstants = [
+            "API_LINK" : '"http://api.androidhive.info/"'
+    ]
+}

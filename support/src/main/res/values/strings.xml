@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">Support</string>
-
     <string name="phone_state_permission_title">Phone State Permission is necessary</string>
     <string name="camera_title">Camera Permission is necessary</string>
     <string name="write_external_storage_title">Write external storage Permission is necessary</string>

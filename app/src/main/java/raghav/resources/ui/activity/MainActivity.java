@@ -14,7 +14,7 @@ public class MainActivity extends CoreActivity<MainActivity> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setDefaults(this, R.layout.activity_main, "", false, true);
+        setDefaults(this, R.layout.activity_main, "Main", false, true);
     }
 
     public void openListActivity(View view) {
