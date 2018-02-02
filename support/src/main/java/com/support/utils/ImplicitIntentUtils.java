@@ -29,6 +29,18 @@ public class ImplicitIntentUtils {
         }
     }
 
+    public static void openWhatsapp(String phoneNumberWithCountryCode, Context context) {
+        if (phoneNumberWithCountryCode.contains("+")) {
+            phoneNumberWithCountryCode = phoneNumberWithCountryCode
+                    .replaceAll("\\+", "")
+                    .replaceAll(" ", "")
+                    .replaceAll("\\.", "")
+                    .replaceAll("\\(", "")
+                    .replaceAll("\\)", "");
+        }
+        openBrowser("https://api.whatsapp.com/send?phone=" + phoneNumberWithCountryCode, context);
+    }
+
     public static void openBrowser(String url, Context context) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         context.startActivity(browserIntent);
