@@ -9,14 +9,14 @@ import java.util.ArrayList;
 public abstract class GenRecyclerAdapter
         <ViewHolder extends RecyclerView.ViewHolder, Model>
         extends RecyclerView.Adapter<ViewHolder> {
-    private static GenRecyclerAdapter.MyClickListener myClickListener;
+    private GenRecyclerAdapter.MyClickListener myClickListener;
     private ArrayList<Model> models;
 
     public GenRecyclerAdapter(ArrayList<Model> models) {
         this.models = models;
     }
 
-    public static MyClickListener getMyClickListener() {
+    public MyClickListener getMyClickListener() {
         return myClickListener;
     }
 
@@ -87,7 +87,7 @@ public abstract class GenRecyclerAdapter
     }
 
     public void setOnItemClickListener(GenRecyclerAdapter.MyClickListener myClickListener) {
-        GenRecyclerAdapter.myClickListener = myClickListener;
+        this.myClickListener = myClickListener;
     }
 
     public interface MyClickListener {
