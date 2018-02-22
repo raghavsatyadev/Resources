@@ -25,10 +25,6 @@ public class MainActivity extends CoreActivity<MainActivity> {
         startActivity(new Intent(this, SingleActivity.class));
     }
 
-    public void openImageSelectorActivity(View view) {
-        startActivity(new Intent(this, ImageSelectorActivity.class));
-    }
-
     @Override
     public void createReference() {
 

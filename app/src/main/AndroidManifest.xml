@@ -47,7 +47,6 @@
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
 
-        <activity android:name=".ui.activity.ImageSelectorActivity" />
     </application>
 
 </manifest>
