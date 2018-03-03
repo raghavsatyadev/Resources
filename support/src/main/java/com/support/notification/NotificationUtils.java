@@ -7,11 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.AdaptiveIconDrawable;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
@@ -80,8 +84,9 @@ public abstract class NotificationUtils {
             this.channelId = ResourceUtils.getString(R.string.channel_id);
         if (defaultSoundUri == null)
             defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        if (icLauncher == null)
-            icLauncher = ((BitmapDrawable) ResourceUtils.getDrawable(getBigIcon())).getBitmap();
+        if (icLauncher == null) {
+            icLauncher = getBitmapFromDrawable(ResourceUtils.getDrawable(getBigIcon()));
+        }
         if (notificationColor == 0) {
             notificationColor = ResourceUtils.getColor(R.color.notification_color);
         }
@@ -98,6 +103,15 @@ public abstract class NotificationUtils {
                 .setTicker(message);
 
         return setNotificationStyle(builder, imageURL, title, message);
+    }
+
+    @NonNull
+    private Bitmap getBitmapFromDrawable(@NonNull Drawable drawable) {
+        final Bitmap bmp = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(bmp);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bmp;
     }
 
     public void sendNotification(Context context, int NOTIFICATION_ID, String title,
