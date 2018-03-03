@@ -250,13 +250,13 @@ public class ImageChooserUtil {
         appCompatDialog.findViewById(R.id.btn_gallery).setOnClickListener(view -> {
             if (targetView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 revealShow(dialogView, false, appCompatDialog, targetView);
-            }
+            } else appCompatDialog.dismiss();
             startGalleryIntent(fragment);
         });
         appCompatDialog.findViewById(R.id.btn_camera).setOnClickListener(view -> {
             if (targetView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 revealShow(dialogView, false, appCompatDialog, targetView);
-            }
+            } else appCompatDialog.dismiss();
             if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.CAMERA)) {
                 startCameraIntent(fragment, fileName);
             } else {
@@ -271,13 +271,13 @@ public class ImageChooserUtil {
         appCompatDialog.findViewById(R.id.btn_cancel).setOnClickListener(view -> {
             if (targetView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 revealShow(dialogView, false, appCompatDialog, targetView);
-            }
+            } else appCompatDialog.dismiss();
         });
         appCompatDialog.setOnKeyListener((dialogInterface, i, keyEvent) -> {
             if (i == KeyEvent.KEYCODE_BACK) {
                 if (targetView != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     revealShow(dialogView, false, appCompatDialog, targetView);
-                }
+                } else appCompatDialog.dismiss();
                 return true;
             }
 
