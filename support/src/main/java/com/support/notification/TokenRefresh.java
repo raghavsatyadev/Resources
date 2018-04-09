@@ -24,23 +24,25 @@ public class TokenRefresh extends FirebaseInstanceIdService {
         unSubscribeTopics();
         topics.put(ResourceUtils.getString(R.string.app_name));
         FirebaseMessaging pubSub = FirebaseMessaging.getInstance();
+        JSONArray modifiedTopics = new JSONArray();
         for (int i = 0; i < topics.length(); i++) {
             try {
                 String topic = makeTopic(topics.getString(i));
+                modifiedTopics.put(topic);
                 pubSub.subscribeToTopic(topic);
             } catch (JSONException e) {
                 AppLog.log(false, "TokenRefresh " + "subscribeTopics: ", e);
             }
 
         }
-        SharedPrefsUtil.setFCMTopics(topics);
+        SharedPrefsUtil.setFCMTopics(modifiedTopics);
     }
 
     public static void unSubscribeTopics() throws JSONException {
-        JSONArray fcmTopics = SharedPrefsUtil.getFCMTopics();
+        JSONArray fcmTopics = new JSONArray(SharedPrefsUtil.getFCMTopics());
         FirebaseMessaging pubSub = FirebaseMessaging.getInstance();
         for (int i = 0; i < fcmTopics.length(); i++) {
-            pubSub.unsubscribeFromTopic(makeTopic(fcmTopics.getString(i)));
+            pubSub.unsubscribeFromTopic(fcmTopics.getString(i));
         }
         SharedPrefsUtil.setFCMTopics(new JSONArray());
     }

@@ -4,8 +4,8 @@ import org.json.JSONArray;
 
 public class SharedPrefsUtil {
 
-    public static JSONArray getFCMTopics() {
-        return SharedPrefsHelper.getInstance().get(FCM.TOPICS, new JSONArray());
+    public static String getFCMTopics() {
+        return SharedPrefsHelper.getInstance().get(FCM.TOPICS, "[]");
     }
 
     public static void setFCMTopics(JSONArray topics) {
