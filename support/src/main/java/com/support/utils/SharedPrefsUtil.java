@@ -1,16 +1,15 @@
 package com.support.utils;
 
-import java.util.Set;
-import java.util.TreeSet;
+import org.json.JSONArray;
 
 public class SharedPrefsUtil {
 
-    public static Set<String> getFCMTopics() {
-        return SharedPrefsHelper.getInstance().getSet(FCM.TOPICS, new TreeSet<String>());
+    public static JSONArray getFCMTopics() {
+        return SharedPrefsHelper.getInstance().get(FCM.TOPICS, new JSONArray());
     }
 
-    public static void setFCMTopics(TreeSet<String> topics) {
-        SharedPrefsHelper.getInstance().saveSet(FCM.TOPICS, topics);
+    public static void setFCMTopics(JSONArray topics) {
+        SharedPrefsHelper.getInstance().save(FCM.TOPICS, topics.toString());
     }
 
     public static void setFCMTokenStatus(boolean status) {
@@ -36,7 +35,6 @@ public class SharedPrefsUtil {
     public static void setTokenSavedServer(boolean status) {
         SharedPrefsHelper.getInstance().save(FCM.TOKEN_SERVER_STATUS, status);
     }
-
 
     public interface FCM {
         String TOPICS = "Topics";

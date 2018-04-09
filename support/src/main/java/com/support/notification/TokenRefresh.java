@@ -1,7 +1,5 @@
 package com.support.notification;
 
-import android.content.Context;
-
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -13,92 +11,62 @@ import com.support.utils.SharedPrefsUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.ArrayList;
-import java.util.TreeSet;
-
 public class TokenRefresh extends FirebaseInstanceIdService {
-
-    private TokenRefresh context;
-
-
-    public static void subscribeTopics() {
-        TreeSet<String> TOPICS = new TreeSet<>();
-        TOPICS.add(makeTopic(ResourceUtils.getString(R.string.app_name)));
-        FirebaseMessaging pubSub = FirebaseMessaging.getInstance();
-        for (String topic : TOPICS) {
-            pubSub.subscribeToTopic(topic);
-        }
-        SharedPrefsUtil.setFCMTopics(TOPICS);
+    public static void subscribeTopics() throws JSONException {
+        subscribeTopics(new JSONArray());
     }
 
     private static String makeTopic(String string) {
         return string.replaceAll("(\\W|^_)*", "");
     }
 
-    public static void subscribeTopics(JSONArray topics) {
-        TreeSet<String> TOPICS = new TreeSet<>();
+    public static void subscribeTopics(JSONArray topics) throws JSONException {
+        unSubscribeTopics();
+        topics.put(ResourceUtils.getString(R.string.app_name));
         FirebaseMessaging pubSub = FirebaseMessaging.getInstance();
         for (int i = 0; i < topics.length(); i++) {
             try {
                 String topic = makeTopic(topics.getString(i));
-                TOPICS.add(topic);
                 pubSub.subscribeToTopic(topic);
             } catch (JSONException e) {
                 AppLog.log(false, "TokenRefresh " + "subscribeTopics: ", e);
             }
 
         }
-        SharedPrefsUtil.setFCMTopics(TOPICS);
+        SharedPrefsUtil.setFCMTopics(topics);
     }
 
-    public static void unSubscribeTopics() {
-        ArrayList<String> strings = new ArrayList<>(SharedPrefsUtil.getFCMTopics());
+    public static void unSubscribeTopics() throws JSONException {
+        JSONArray fcmTopics = SharedPrefsUtil.getFCMTopics();
         FirebaseMessaging pubSub = FirebaseMessaging.getInstance();
-        for (int i = 0; i < strings.size(); i++) {
-            pubSub.unsubscribeFromTopic(strings.get(i));
+        for (int i = 0; i < fcmTopics.length(); i++) {
+            pubSub.unsubscribeFromTopic(makeTopic(fcmTopics.getString(i)));
         }
+        SharedPrefsUtil.setFCMTopics(new JSONArray());
     }
 
-    public static void updateToken(Context context) {
-//        if (!SharedPrefsUtil.isTokenSavedServer()
-//                && SharedPrefsUtil.isTokenSaved() && !TextUtils.isEmpty(SharedPrefsUtil.getFCMToken())) {
-//            if (PermissionUtil.checkPermission(context, PermissionUtil.Permissions.READ_PHONE_STATE)) {
-//                HashMap<String, String> headers = new HashMap<>();
-//                headers.put(Constants.WebService.FCMUpdateKeys.DEVICE_ID, DeviceUtils.getDeviceUid());
-//                headers.put(Constants.WebService.FCMUpdateKeys.DEVICE_TOKEN, SharedPrefsUtil.getFCMToken());
-//
-//                new CustomRequest(context, new StringRequestListener() {
-//                    @Override
-//                    public void onTaskCompleted(String response) {
-//                        SharedPrefsUtil.setTokenSavedServer(true);
-//                    }
-//
-//                    @Override
-//                    public void onTaskFailed(String status) {
-//                        SharedPrefsUtil.setTokenSavedServer(false);
-//                    }
-//                }).createRequest(Constants.WebService.DEVICE_LINK, CustomRequest.methodTypes.POST, headers, null, null);
-//            }
-//        }
+    public static void updateToken() {
     }
 
     @Override
     public void onTokenRefresh() {
-        context = this;
-
         String token = FirebaseInstanceId.getInstance().getToken();
         if ((token == null || token.equals("null")) && !SharedPrefsUtil.isTokenSaved()) {
             SharedPrefsUtil.setFCMTokenStatus(false);
         } else {
-            saveTokenProcess(token);
+            try {
+                saveTokenProcess(token);
+            } catch (JSONException e) {
+                AppLog.log(false, "TokenRefresh: " + "onTokenRefresh: ", e);
+            }
         }
     }
 
-    private void saveTokenProcess(String token) {
+    private void saveTokenProcess(String token) throws JSONException {
         SharedPrefsUtil.setFCMTokenStatus(true);
         SharedPrefsUtil.setFCMToken(token);
         subscribeTopics();
         SharedPrefsUtil.setTokenSavedServer(false);
-        updateToken(context);
+        updateToken();
     }
 }
