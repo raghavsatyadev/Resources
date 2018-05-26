@@ -11,7 +11,7 @@ ext {
 
     SUPPORT_LIB_VERSION = "27.1.1"
     RETROFIT_VERSION = "2.4.0"
-    GOOGLE_VERSION = "15.0.0"
+    GOOGLE_VERSION = "15.0.2"
     GLIDE_VERSION = "4.7.1"
 
     MINIFY_ENABLE = true
