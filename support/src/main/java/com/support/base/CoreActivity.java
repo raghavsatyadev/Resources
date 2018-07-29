@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.support.R;
 import com.support.utils.AppLog;
@@ -30,24 +29,6 @@ public abstract class CoreActivity<T extends CoreActivity> extends AppCompatActi
     private Bundle savedInstanceState;
     private ActionBar actionBar;
     private boolean isThemeDefault;
-
-    /**
-     * apply fonts on toolbar title
-     *
-     * @param toolbar {@link Toolbar}
-     */
-    public void applyFontForToolbarTitle(Toolbar toolbar) {
-        for (int i = 0; i < toolbar.getChildCount(); i++) {
-            View view = toolbar.getChildAt(i);
-            if (view instanceof TextView) {
-                TextView tv = (TextView) view;
-                if (tv.getText().equals(toolbar.getTitle())) {
-                    tv.setTextAppearance(activity, R.style.ToolBarTitleFont);
-                    break;
-                }
-            }
-        }
-    }
 
     public Bundle getSavedInstanceState() {
         return savedInstanceState;
@@ -153,7 +134,6 @@ public abstract class CoreActivity<T extends CoreActivity> extends AppCompatActi
             assert actionBar != null;
             setBackButton(isBackEnabled);
             enableTitle(title, actionBar);
-            formatTitle();
         }
     }
 
@@ -166,15 +146,6 @@ public abstract class CoreActivity<T extends CoreActivity> extends AppCompatActi
         if (title != null) {
             actionBar.setDisplayShowTitleEnabled(false);
             changeTitle(title);
-        }
-    }
-
-    /**
-     * set font and color of title
-     */
-    private void formatTitle() {
-        if (toolbar != null) {
-            applyFontForToolbarTitle(toolbar);
         }
     }
 

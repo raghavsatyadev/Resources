@@ -11,7 +11,7 @@ ext {
 
     SUPPORT_LIB_VERSION = "27.1.1"
     RETROFIT_VERSION = "2.4.0"
-    GOOGLE_VERSION = "15.0.2"
+    FIREBASE_MESSAGE = "17.1.0"
     GLIDE_VERSION = "4.7.1"
 
     MINIFY_ENABLE = true
@@ -35,7 +35,7 @@ ext {
             glideCompiler: "com.github.bumptech.glide:compiler:$GLIDE_VERSION",
     ]
     googleDependencies = [
-            firebaseMessaging: "com.google.firebase:firebase-messaging:$GOOGLE_VERSION",
+            firebaseMessaging: "com.google.firebase:firebase-messaging:$FIREBASE_MESSAGE",
     ]
     rxDependencies = [
             rxAndroid: "io.reactivex.rxjava2:rxandroid:2.0.2",
