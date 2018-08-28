@@ -9,8 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.AdaptiveIconDrawable;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -24,6 +22,7 @@ import com.support.R;
 import com.support.utils.AppLog;
 import com.support.utils.ResourceUtils;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -39,11 +38,16 @@ public abstract class NotificationUtils {
                                                                    String title,
                                                                    String message) {
         if (!TextUtils.isEmpty(imageURL)) {
-            builder.setStyle(new NotificationCompat.BigPictureStyle()
+            NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle()
                     .bigLargeIcon(icLauncher)
                     .setSummaryText(message)
-                    .setBigContentTitle(title)
-                    .bigPicture(getBitmapFromUrl(imageURL)));
+                    .setBigContentTitle(title);
+            Bitmap bitmapFromUrl = getBitmapFromUrl(imageURL);
+            if (bitmapFromUrl != null) {
+                bigPictureStyle = bigPictureStyle
+                        .bigPicture(bitmapFromUrl);
+            }
+            builder.setStyle(bigPictureStyle);
         } else {
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
         }
@@ -59,7 +63,7 @@ public abstract class NotificationUtils {
             InputStream input = connection.getInputStream();
             return BitmapFactory.decodeStream(input);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             AppLog.log(false, "NotificationUtils " + "getBitmapFromUrl: ", e);
             return null;
         }

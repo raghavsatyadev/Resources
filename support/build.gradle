@@ -46,10 +46,11 @@ dependencies {
     }
 
 //    Google
-    implementation(googleDependencies.firebaseMessaging) {
-        exclude group: 'com.android.support', module: 'support-v4'
+    googleDependencies.each {
+        implementation(it.value) {
+            exclude group: 'com.android.support', module: 'support-v4'
+        }
     }
-
 //    RxJava
     rxDependencies.each {
         implementation it.value

@@ -40,7 +40,7 @@ public abstract class GenRecyclerAdapter
     }
 
     public void addAll(ArrayList<Model> models) {
-        int position = getItemCount() - 1;
+        int position = getItemCount();
         this.getItems().addAll(models);
         notifyItemRangeInserted(position, models.size());
     }
