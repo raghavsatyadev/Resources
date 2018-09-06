@@ -28,6 +28,15 @@ android {
             def date = new Date()
             def formattedDate = date.format('dd_MM_yy')
             outputFileName = "${APK_NAME}-${variant.name}-${formattedDate}.apk"
+            variant.assemble.doLast {
+                if (variant.mappingFile != null &&
+                        variant.mappingFile.exists()) {
+                    copy {
+                        from variant.mappingFile
+                        into output.outputFile.parent
+                    }
+                }
+            }
         }
     }
 }
