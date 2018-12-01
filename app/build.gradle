@@ -8,7 +8,6 @@ android {
         applicationId APPLICATION_ID
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-
         versionCode VERSION_CODE
         versionName VERSION_NAME
     }
