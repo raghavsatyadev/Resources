@@ -194,7 +194,7 @@ public class FileUtil {
     }
 
     public static String getInterStorageDirectory(Context context) {
-        return context.getFilesDir().getAbsolutePath();
+        return Environment.getExternalStorageDirectory().getAbsolutePath();
     }
 
     public static File getDecryptVideoFilePath(Context context, String fileName) {
@@ -460,3 +460,4 @@ public class FileUtil {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 }
+
