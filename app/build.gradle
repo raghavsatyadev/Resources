@@ -23,7 +23,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     android.applicationVariants.all { variant ->
-        variant.outputs.all {
+        variant.outputs.all { output ->
             def date = new Date()
             def formattedDate = date.format('dd_MM_yy')
             outputFileName = "${APK_NAME}-${variant.name}-${formattedDate}.apk"

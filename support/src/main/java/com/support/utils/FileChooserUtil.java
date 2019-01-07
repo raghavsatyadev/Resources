@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -27,7 +28,7 @@ import java.io.File;
 
      2. calling code
 
-      FileChooserUtil.openChooserDialog(coreFragment);
+      FileChooserUtil.getPermission(coreFragment);
 
      3. Add onActivityResult
 
@@ -54,7 +55,7 @@ import java.io.File;
             case FileChooserUtil.PERMISSION_WRITE_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager
                         .PERMISSION_GRANTED) {
-                    FileChooserUtil.openChooserDialog(getCoreFragment());
+                    FileChooserUtil.getPermission(getCoreFragment());
                 }
                 break;
         }
@@ -69,9 +70,21 @@ public class FileChooserUtil {
     public static final int PERMISSION_WRITE_STORAGE = 1239;
     public static final int MB = 1024;
 
-    public static void openChooserDialog(final Activity activity) {
+    /**
+     * @param activity context
+     */
+    public static void getPermission(final Activity activity) {
+        getPermission(activity, null, null);
+    }
+
+    /**
+     * @param activity     context
+     * @param fileCategory audio, video, application(for document)
+     * @param extension    specific file extensions such as mp3, mp4, pdf (without . dot)
+     */
+    public static void getPermission(final Activity activity, String fileCategory, String extension) {
         if (PermissionUtil.checkPermission(activity, PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE)) {
-            activity.startActivityForResult(Intent.createChooser(setupIntent(), "Select File"), FILE_CHOOSER);
+            openChooserDialog(activity, fileCategory, extension);
         } else {
             PermissionUtil.getPermission(activity,
                     PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE,
@@ -79,6 +92,38 @@ public class FileChooserUtil {
                     PermissionUtil.PermissionMessage.WRITE_EXTERNAL_STORAGE,
                     null);
         }
+    }
+
+    public static void openChooserDialog(Activity activity, String fileCategory, String extension) {
+        activity.startActivityForResult(Intent.createChooser(setupIntent(fileCategory, extension), "Select File"), FILE_CHOOSER);
+    }
+
+    /**
+     * @param fragment context
+     */
+    public static void getPermission(final Fragment fragment) {
+        getPermission(fragment, null, null);
+    }
+
+    /**
+     * @param fragment     context
+     * @param fileCategory audio, video, application(for document)
+     * @param extension    specific file extensions such as mp3, mp4, pdf (without . dot)
+     */
+    public static void getPermission(final Fragment fragment, String fileCategory, String extension) {
+        if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE)) {
+            openChooserDialog(fragment, fileCategory, extension);
+        } else {
+            PermissionUtil.getPermission(fragment,
+                    PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE,
+                    PERMISSION_WRITE_STORAGE,
+                    PermissionUtil.PermissionMessage.WRITE_EXTERNAL_STORAGE,
+                    null);
+        }
+    }
+
+    private static void openChooserDialog(Fragment fragment, String fileCategory, String extension) {
+        fragment.startActivityForResult(Intent.createChooser(setupIntent(fileCategory, extension), "Select File"), FILE_CHOOSER);
     }
 
     public static String getFileExtension(String fileLink) {
@@ -108,21 +153,9 @@ public class FileChooserUtil {
         return lastPathSegment.substring(0, lastPathSegment.lastIndexOf(".") - 1);
     }
 
-    public static void openChooserDialog(final Fragment fragment) {
-        if (PermissionUtil.checkPermission(fragment.getContext(), PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE)) {
-            fragment.startActivityForResult(Intent.createChooser(setupIntent(), "Select File"), FILE_CHOOSER);
-        } else {
-            PermissionUtil.getPermission(fragment,
-                    PermissionUtil.Permissions.WRITE_EXTERNAL_STORAGE,
-                    PERMISSION_WRITE_STORAGE,
-                    PermissionUtil.PermissionMessage.WRITE_EXTERNAL_STORAGE,
-                    null);
-        }
-    }
-
-    private static Intent setupIntent() {
+    private static Intent setupIntent(String fileCategory, String extension) {
         Intent intent = new Intent();
-        intent.setType("*/*");
+        intent.setType((!TextUtils.isEmpty(fileCategory) ? "*" : fileCategory) + "/" + (!TextUtils.isEmpty(extension) ? "*" : extension));
         intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -152,10 +185,10 @@ public class FileChooserUtil {
     }
 
 
-    public static File getFileFromStorage(Intent data) {
+    public static File getFileFromStorage(Context context, Intent data) {
         if (data != null) {
             Uri uri = data.getData();
-            String path = getPath(uri);
+            String path = getPath(context, uri);
             if (path != null) {
                 return new File(path);
             } else return null;
@@ -172,31 +205,59 @@ public class FileChooserUtil {
      * @param uri The Uri to query.
      */
     @SuppressLint("NewApi")
-    private static String getPath(final Uri uri) {
+    public static String getPath(Context context, final Uri uri) {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
         // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(CoreApp.getInstance(), uri)) {
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
+                final String path = split[1];
 
                 if ("primary".equalsIgnoreCase(type)) {
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
+                } else if (context.getExternalCacheDirs().length > 0) {
+                    String[] temp = null;
+                    for (File f : context.getExternalCacheDirs()) {
+                        if (!f.getAbsolutePath().contains(Environment.getExternalStorageDirectory().getAbsolutePath())) {
+                            temp = f.getParent().split("/");
+                            break;
+                        }
+                    }
+                    String tempresult = "";
+                    if (temp != null) {
+                        for (String s : temp) {
+                            if (s.equals("Android"))
+                                break;
+                            if (!android.text.TextUtils.isEmpty(s))
+                                tempresult += "/" + s;
+                        }
+                    }
+                    String result = tempresult + "/" + path;
+                    File file = new File(result);
+                    if (file.exists() && file.canRead()) {
+                        return result;
+                    }
+                } else {
+                    String result = System.getenv("SECONDARY_STORAGE") + "/" + path;
+                    File file = new File(result);
+                    if (file.exists() && file.canRead()) {
+                        return result;
+                    }
                 }
 
-            }
-            // DownloadsProvider
+            }// DownloadsProvider
             else if (isDownloadsDocument(uri)) {
 
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
 
-                return getDataColumn(contentUri, null, null);
+                return getDataColumn(context, contentUri, null, null);
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
@@ -218,12 +279,12 @@ public class FileChooserUtil {
                         split[1]
                 };
 
-                return getDataColumn(contentUri, selection, selectionArgs);
+                return getDataColumn(context, contentUri, selection, selectionArgs);
             }
         }
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            return getDataColumn(uri, null, null);
+            return getDataColumn(context, uri, null, null);
         }
         // File
         else if ("file".equalsIgnoreCase(uri.getScheme())) {
@@ -242,7 +303,7 @@ public class FileChooserUtil {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    private static String getDataColumn(Uri uri, String selection,
+    private static String getDataColumn(Context context, Uri uri, String selection,
                                         String[] selectionArgs) {
 
         Cursor cursor = null;
@@ -252,7 +313,7 @@ public class FileChooserUtil {
         };
 
         try {
-            cursor = CoreApp.getInstance().getContentResolver().query(uri, projection, selection, selectionArgs,
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
                     null);
             if (cursor != null && cursor.moveToFirst()) {
                 final int column_index = cursor.getColumnIndexOrThrow(column);
