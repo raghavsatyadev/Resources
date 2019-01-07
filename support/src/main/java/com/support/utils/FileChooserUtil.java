@@ -155,7 +155,7 @@ public class FileChooserUtil {
 
     private static Intent setupIntent(String fileCategory, String extension) {
         Intent intent = new Intent();
-        intent.setType((!TextUtils.isEmpty(fileCategory) ? "*" : fileCategory) + "/" + (!TextUtils.isEmpty(extension) ? "*" : extension));
+        intent.setType((TextUtils.isEmpty(fileCategory) ? "*" : fileCategory) + "/" + (TextUtils.isEmpty(extension) ? "*" : extension));
         intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
