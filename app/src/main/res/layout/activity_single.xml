@@ -4,16 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        layout="@layout/tool_bar" />
+    <include layout="@layout/tool_bar" />
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="5dp"
         android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         tools:context=".ui.activity.SingleActivity">
 
         <android.support.constraint.Guideline
@@ -37,17 +36,18 @@
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.95" />
 
-        <com.support.widgets.TextViewPlus
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/txt_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Name"
             android:textColor="@android:color/black"
             android:textStyle="bold"
-            app:layout_constraintLeft_toLeftOf="@id/guideline2"
-            app:layout_constraintRight_toLeftOf="@id/guideline" />
+            app:layout_constraintRight_toLeftOf="@id/guideline"
+            app:layout_constraintStart_toStartOf="@id/guideline2"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <com.support.widgets.TextViewPlus
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/txt_name_val"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
             app:layout_constraintRight_toLeftOf="@id/guideline3"
             tools:text="Raghav" />
 
-        <com.support.widgets.TextViewPlus
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/txt_email"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
             app:layout_constraintRight_toLeftOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/txt_name" />
 
-        <com.support.widgets.TextViewPlus
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/txt_email_val"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
             app:layout_constraintRight_toLeftOf="@id/guideline3"
             tools:text="RaghavSatyadev@gmail.com" />
 
-        <com.support.widgets.TextViewPlus
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/txt_phone_header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
             app:layout_constraintRight_toLeftOf="@id/guideline3"
             app:layout_constraintTop_toBottomOf="@id/txt_email" />
 
-        <com.support.widgets.TextViewPlus
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/txt_phone_home"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
             app:layout_constraintRight_toLeftOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/txt_phone_header" />
 
-        <com.support.widgets.TextViewPlus
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/txt_phone_home_val"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -113,7 +113,7 @@
             app:layout_constraintRight_toLeftOf="@id/guideline3"
             tools:text="+02812596452" />
 
-        <com.support.widgets.TextViewPlus
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/txt_phone_mobile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
             app:layout_constraintRight_toLeftOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/txt_phone_home" />
 
-        <com.support.widgets.TextViewPlus
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/txt_phone_mobile_val"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

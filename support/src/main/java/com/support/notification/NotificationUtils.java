@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -17,37 +16,31 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.support.R;
-import com.support.utils.AppLog;
 import com.support.utils.ResourceUtils;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Random;
 
 public abstract class NotificationUtils {
-    private static Uri defaultSoundUri;
-    private static Bitmap icLauncher;
-    private static int notificationColor;
-    private String channelId;
+
+    private static final String TAG = NotificationUtils.class.getSimpleName();
+    private static final int MINIMUM = 1;
 
     private static NotificationCompat.Builder setNotificationStyle(NotificationCompat.Builder builder,
-                                                                   String imageURL,
+                                                                   Bitmap icLauncher, String imageURL,
                                                                    String title,
                                                                    String message) {
         if (!TextUtils.isEmpty(imageURL)) {
-            NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle()
+            builder.setStyle(new NotificationCompat.BigPictureStyle()
                     .bigLargeIcon(icLauncher)
                     .setSummaryText(message)
-                    .setBigContentTitle(title);
-            Bitmap bitmapFromUrl = getBitmapFromUrl(imageURL);
-            if (bitmapFromUrl != null) {
-                bigPictureStyle = bigPictureStyle
-                        .bigPicture(bitmapFromUrl);
-            }
-            builder.setStyle(bigPictureStyle);
+                    .setBigContentTitle(title)
+                    .bigPicture(getBitmapFromUrl(imageURL)));
         } else {
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
         }
@@ -63,8 +56,8 @@ public abstract class NotificationUtils {
             InputStream input = connection.getInputStream();
             return BitmapFactory.decodeStream(input);
 
-        } catch (IOException e) {
-            AppLog.log(false, "NotificationUtils " + "getBitmapFromUrl: ", e);
+        } catch (Exception e) {
+            Log.e(TAG, "getBitmapFromUrl: ", e);
             return null;
         }
     }
@@ -77,25 +70,47 @@ public abstract class NotificationUtils {
 
     public abstract int getBigIcon();
 
-    public NotificationCompat.Builder getNotificationBuilder(Context context,
-                                                             String title,
-                                                             String message,
-                                                             String imageURL,
-                                                             String channelId,
-                                                             PendingIntent pendingIntent) {
+    @NonNull
+    private static Bitmap getBitmapFromDrawable(@NonNull Drawable drawable) {
+        final Bitmap bmp = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(bmp);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bmp;
+    }
 
-        if (this.channelId == null)
-            this.channelId = ResourceUtils.getString(R.string.channel_id);
-        if (defaultSoundUri == null)
-            defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        if (icLauncher == null) {
-            icLauncher = getBitmapFromDrawable(ResourceUtils.getDrawable(getBigIcon()));
-        }
-        if (notificationColor == 0) {
-            notificationColor = ResourceUtils.getColor(R.color.notification_color);
-        }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private static String getNotificationChannel(NotificationManager notificationManager, String channelId) {
+        String id = TextUtils.isEmpty(channelId) ? ResourceUtils.getString(R.string.channel_id) : channelId;
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, !TextUtils.isEmpty(channelId) ? channelId : this.channelId)
+        // The user-visible name of the channel.
+        String channelName = ResourceUtils.getString(R.string.channel_name);
+
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel mChannel = new NotificationChannel(id, channelName, importance);
+
+        notificationManager.createNotificationChannel(mChannel);
+        return id;
+    }
+
+    public static int getRandomNotificationID() {
+        return new Random().nextInt(Integer.MAX_VALUE - MINIMUM) + MINIMUM;
+    }
+
+    private NotificationCompat.Builder getNotificationBuilder(Context context,
+                                                              String title,
+                                                              String message,
+                                                              String imageURL,
+                                                              String channelId,
+                                                              PendingIntent pendingIntent) {
+
+        if (!TextUtils.isEmpty(channelId))
+            channelId = ResourceUtils.getString(R.string.channel_id);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Bitmap icLauncher = getBitmapFromDrawable(ResourceUtils.getDrawable(getBigIcon()));
+        int notificationColor = ResourceUtils.getColor(R.color.notification_color);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
                 .setAutoCancel(true)
                 .setSmallIcon(getSmallIcon())
                 .setLargeIcon(icLauncher)
@@ -106,16 +121,7 @@ public abstract class NotificationUtils {
                 .setContentIntent(pendingIntent)
                 .setTicker(message);
 
-        return setNotificationStyle(builder, imageURL, title, message);
-    }
-
-    @NonNull
-    private Bitmap getBitmapFromDrawable(@NonNull Drawable drawable) {
-        final Bitmap bmp = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        final Canvas canvas = new Canvas(bmp);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bmp;
+        return setNotificationStyle(builder, icLauncher, imageURL, title, message);
     }
 
     public void sendNotification(Context context, int NOTIFICATION_ID, String title,
@@ -125,7 +131,7 @@ public abstract class NotificationUtils {
         String appName = ResourceUtils.getString(R.string.app_name);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            getNotificationChannel(notificationManager, appName);
+            channelId = getNotificationChannel(notificationManager, channelId);
         }
 
         NotificationCompat.Builder builder;
@@ -139,30 +145,5 @@ public abstract class NotificationUtils {
 
             notificationManager.notify(NOTIFICATION_ID, builder.build());
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void getNotificationChannel(NotificationManager notificationManager, String appName) {
-        String id = ResourceUtils.getString(R.string.channel_id);
-
-        // The user-visible name of the channel.
-        String channelName = ResourceUtils.getString(R.string.channel_name);
-
-        // The user-visible description of the channel.
-        String channelDescription = ResourceUtils.getString(R.string.channel_description) + appName;
-
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;
-        NotificationChannel mChannel = new NotificationChannel(id, channelName, importance);
-
-        // Configure the notification channel.
-        mChannel.setDescription(channelDescription);
-        mChannel.enableLights(true);
-
-        // Sets the notification light color for notifications posted to this
-        // channel, if the device supports this feature.
-        mChannel.setLightColor(Color.RED);
-        mChannel.enableVibration(true);
-        mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-        notificationManager.createNotificationChannel(mChannel);
     }
 }
